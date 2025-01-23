@@ -4,20 +4,25 @@
   box-sizing: border-box;
 }
 
+
+
 :root {
+  --header-bg: rgba(255, 255, 255, 0.1);
+  --background: #242424;
+  --text-light-1: rgba(255, 255, 255, 0.87);
+
   margin: 0;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--text-light-1);
+  background-color: var(--background);
 }
 
 body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 320px;
-  min-height: 100vh;
+  margin: 0;
+}
+
+header {
+  background-color: var(--header-bg)
 }
