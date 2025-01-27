@@ -2,7 +2,11 @@
 
 ![Proof HTML](https://github.com/Cesar-Mendoza-V/demo-repository/actions/workflows/proof-html.yml/badge.svg)
 
-# Welcome to your organization's demo respository
-This code repository (or "repo") is designed to demonstrate the best GitHub has to offer with the least amount of noise.
+# Pokemon Battle Arena
 
-The repo includes an `index.html` file (so it can render a web page), two GitHub Actions workflows, and a CSS stylesheet dependency.
+## How do I set up the React environment?
+
+1.  Have `npm` installed in your system.
+2.  Run `npm install` in a terminal inside the repository.
+3.  Finally, once all the dependencies are installed, run `npm run dev`.
+4.  The terminal will show a local address where the page is running with live changes.
