@@ -1,0 +1,25 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 100vw;
+  padding-block: 1rem;
+  padding-inline: 2rem;
+}
+
+img {
+  max-height: 75px;
+}
+
+.links>ul {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  text-decoration: underline;
+}
