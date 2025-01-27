@@ -7,7 +7,7 @@
 ## Frontend FAQ
 
 - Under the `src` folder is the whole project.
-- There you'll find a `pages`, `components`, and `styles`, here you can add or modify the files that you need.
+- There you'll find a `pages`, `components`, and `styles` folders, here you can add or modify the files that you need.
 - Avoid modifing the root files such as `App.tsx`, `main.tsx` and `index.html` unless absolutely necessary.
 
 ### How do I set up the React environment?
