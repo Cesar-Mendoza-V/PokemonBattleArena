@@ -1,19 +1,16 @@
-name: Auto Assign
 on:
-  issues:
-    types: [opened]
   pull_request:
     types: [opened]
 jobs:
-  run:
+  request-reviews:
     runs-on: ubuntu-latest
     permissions:
-      issues: write
       pull-requests: write
     steps:
-    - name: 'Auto-assign issue'
-      uses: pozil/auto-assign-issue@v1
+    - name: Request two code reviews
+      uses: peter-evans/create-or-request-review@v2
       with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          assignees: cesarmendozav
-          numOfAssignee: 1
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        required-reviewers: cesarmendozav
+        num-additional-reviewers: 1
+        require-all-reviews: true
