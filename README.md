@@ -17,6 +17,14 @@
 3.  Finally, once all the dependencies are installed, run `npm run dev`.
 4.  The terminal will show a local address where the page is running with live changes.
 
+```
+VITE v6.0.11  ready in 133 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+```
+
 ### What if I need a new dependency?
 
 1. Head to the `package.json`
