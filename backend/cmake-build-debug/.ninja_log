@@ -1,0 +1,7 @@
+# ninja log v6
+0	27	1738085337362007578	CMakeFiles/backend.dir/src/main.cpp.o	ec6100021b087d12
+1	49	1738085853484131065	build.ninja	d1bd4baeb33f6425
+1	145	1738085277209037003	CMakeFiles/backend.dir/main.cpp.o	9fd5a381d6183bd3
+27	54	1738085337388625775	backend	cb7c30dbe17ca391
+1	45	1738085853484131065	build.ninja	d1bd4baeb33f6425
+0	32	1738085853491796871	/Users/macsava/CLionProjects/PokemonBattleArena/backend/build/backend	9303ac741c12d89f

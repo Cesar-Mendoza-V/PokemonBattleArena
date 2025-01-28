@@ -1,0 +1,3 @@
+/Users/macsava/CLionProjects/PokemonBattleArena/backend/cmake-build-debug/CMakeFiles/backend.dir
+/Users/macsava/CLionProjects/PokemonBattleArena/backend/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/macsava/CLionProjects/PokemonBattleArena/backend/cmake-build-debug/CMakeFiles/rebuild_cache.dir
