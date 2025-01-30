@@ -99,8 +99,17 @@
   color: var(--text-dark-1);
 }
 
+.pass-validation {
+  align-self: flex-start;
+}
+
 .pass-validation>ul {
-  padding-left: 2ch;
+  padding-left: 3ch;
   margin: 0;
   text-align: start;
+
+}
+
+.pass-validation>ul>li::marker {
+  color: var(--text-dark-1);
 }

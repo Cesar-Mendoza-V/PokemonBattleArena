@@ -46,7 +46,7 @@ function Signup() {
 
   const [validPassText, setValidPassText] = useState<boolean>(false);
   const [validPass, setValidPass] = useState<ValidPass>({
-    length: true,
+    length: false,
     caps: false,
     numbers: false,
     special: false,
@@ -141,9 +141,9 @@ function Signup() {
               <div className="pass-validation">
                 <ul>
                   {validPass.length && <li><p className="signup-warning">Must be at least 8 characters long</p></li>}
-                  {validPass.caps && <li>Must include one uppercase letter</li>}
-                  {validPass.numbers && <li>Must include one number</li>}
-                  {validPass.special && <li>Must include one special character (!#$%&=)</li>}
+                  {validPass.caps && <li><p className="signup-warning">Must include one uppercase letter</p></li>}
+                  {validPass.numbers && <li><p className="signup-warning">Must include one number</p></li>}
+                  {validPass.special && <li><p className="signup-warning">Must include one special character (!#$%&=)</p></li>}
                 </ul>
               </div>
               <input
