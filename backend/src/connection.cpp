@@ -1,3 +1,14 @@
+/* 
+
+Para compilar (Ingresar paths manualmente):
+g++ -o connection connection.cpp -I../include/jdbc -L../lib -lmysqlcppconn -std=c++11
+
+Para correr(se debe de estar en la carpeta donde se encuentra el archivo): 
+./connection
+
+*/
+
+
 #include <iostream>
 #include <mysql_connection.h>
 #include <mysql_driver.h>
@@ -13,8 +24,10 @@ int main() {
         sql::ResultSet *res;
 
         // Crear conexión
+        system("clear"); 
         driver = sql::mysql::get_mysql_driver_instance();
         conn = driver->connect("tcp://localhost:3306", "root", "12345678");
+        std::cout << "Conexión a la Base de Datos Exitosa!!\n" << std::endl;
 
         // Seleccionar base de datos
         conn->setSchema("test");
@@ -27,6 +40,8 @@ int main() {
         while (res->next()) {
             std::cout << "Username: " << res->getString("username") << " - Password: " << res->getString("password") << std::endl;
         }
+
+        std::cout << "\n" << std::endl;
 
 
         // Liberar memoria

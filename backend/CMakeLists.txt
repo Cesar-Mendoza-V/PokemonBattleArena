@@ -1,18 +1,17 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.10)
 project(backend_main)
 
 set(CMAKE_CXX_STANDARD 23)
 
-# Add include path directories
+# Directorios de encabezados (desde el directorio backend)
 include_directories(
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_LIST_DIR}/include/jdbc  # Ruta relativa desde backend
 )
 
-# Add lib path directories
+# Directorios de bibliotecas (si es necesario)
 link_directories(
-    ${CMAKE_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_LIST_DIR}/lib  # Ruta relativa desde backend
 )
 
-# Setting up stuff
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build) # Path for build executable
-add_executable(backend main.cpp) # Executable name and files needed
+# Configurar el ejecutable
+add_executable(backend src/connection.cpp)  # connection.cpp está dentro de src

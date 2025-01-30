@@ -1,0 +1,3 @@
+/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles/backend.dir
+/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles/edit_cache.dir
+/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles/rebuild_cache.dir
