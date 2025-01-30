@@ -2,25 +2,26 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
 }
-
-
 
 :root {
   --header-bg: rgba(255, 255, 255, 0.1);
-  --background: #242424;
-  --text-light-1: rgba(255, 255, 255, 0.87);
+  --background-dark: #242424;
+  --background-dark-2: #496182;
+  --background-light: #ffffff;
+  --background-light-2: #a9b4c2;
+  --text-light-1: rgba(255, 255, 255);
+  --text-dark-1: #486182;
+  --input-bg-1: #f0f0f0;
+  --input-text-1: #000000;
 
   margin: 0;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color: var(--text-light-1);
-  background-color: var(--background);
-}
-
-body {
-  margin: 0;
+  background-color: var(--background-dark);
 }
 
 header {

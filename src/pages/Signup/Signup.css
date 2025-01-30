@@ -1,66 +1,101 @@
-body {
+.general-container {
+  min-width: 100vw;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 
-h1 {
-  font-size: 3rem;
+.general-container>div {
+  width: 100%;
 }
 
-h3 {
-  font-size: 1.125rem;
-  margin-top: -1rem;
-  margin-bottom: 0.5rem;
+.general-container>div:nth-child(1) {
+  background-color: var(--background-light-2);
 }
 
-input {
-  border: 1px black solid;
-  background-color: var(--background);
-  padding: 1rem 1.25rem;
-  color: var(--text-light-1);
+.general-container>div:nth-child(2) {
+  background-color: var(--background-light);
 }
 
-input:focus {
-  border: 1px black solid;
-  outline: none;
-}
-
-form {
+.side-container {
+  margin: 0 auto;
+  height: 100%;
+  width: 70%;
+  max-width: 450px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+}
+
+.signup-h1 {
+  font-size: 3rem;
+  color: var(--text-dark-1);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 0.85rem;
 }
 
-form > label,
-form > p {
+.signup-form>p {
+  font-size: 10px;
   margin: 0;
   text-align: start;
   padding-left: 1ch;
 }
 
-.signup-container {
-  min-width: 30ch;
+.signup-input {
+  width: 100%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 15px;
+  background-color: var(--input-bg-1);
+  color: var(--input-text-1);
+  padding: 1rem 1.25rem;
+}
+
+.signup-input:focus {
+  border: none;
+  outline: none;
 }
 
 .submit-btn {
-  border-radius: 5px;
-  padding-block: 0.75rem;
-  font-size: 1.5rem;
-  margin-top: 1rem;
-  background-color: var(--text-light-1);
-  color: var(--background);
-  font-weight: 800;
+  border: none;
+  margin-top: 2rem;
+  border-radius: 50px;
+  padding: 0.75rem 5rem;
+  font-size: 1rem;
+  background-color: var(--background-dark-2);
+  color: var(--text-light-1);
+
 }
 
-form > p {
-  font-size: 10px;
-}
-
-.pass-validation > ul {
+.pass-validation>ul {
   padding-left: 2ch;
   margin: 0;
   text-align: start;
+}
+
+.signup-info-p {
+  margin: 0 auto;
+  color: var(--text-light-1);
+  font-size: 1.125rem;
+  max-width: 26ch;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+.signup-info-btn {
+  margin: 0 auto;
+  width: fit-content;
+  border: none;
+  margin-top: 2rem;
+  border-radius: 50px;
+  padding: 0.75rem 5rem;
+  font-size: 1rem;
+  background-color: var(--background-light);
+  color: var(--background-light-2);
 }
