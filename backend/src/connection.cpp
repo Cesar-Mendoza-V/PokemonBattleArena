@@ -23,33 +23,32 @@ int main() {
         sql::Statement *stmt;
         sql::ResultSet *res;
 
-        // Crear conexión
-        system("clear"); 
+        // Create connection
+        system("clear");
         driver = sql::mysql::get_mysql_driver_instance();
         conn = driver->connect("tcp://localhost:3306", "root", "12345678");
-        std::cout << "Conexión a la Base de Datos Exitosa!!\n" << std::endl;
+        std::cout << "Database connection successful!!\n" << std::endl;
 
-        // Seleccionar base de datos
+        // Select database
         conn->setSchema("test");
 
-        // Crear y ejecutar consulta
+        // Create and execute query
         stmt = conn->createStatement();
         res = stmt->executeQuery("SELECT * FROM users");
         
-        // Mostrar resultados
+        // Display results
         while (res->next()) {
             std::cout << "Username: " << res->getString("username") << " - Password: " << res->getString("password") << std::endl;
         }
 
         std::cout << "\n" << std::endl;
 
-
-        // Liberar memoria
+        // Free memory
         delete res;
         delete stmt;
         delete conn;
     } catch (sql::SQLException &e) {
-        std::cerr << "Error MySQL: " << e.what() << std::endl;
+        std::cerr << "MySQL Error: " << e.what() << std::endl;
     }
 
     return 0;
