@@ -21,6 +21,12 @@ interface PostFormData {
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+function isValidPassword(currPass: ValidPass) {
+  return (
+    currPass.length && currPass.caps && currPass.numbers && currPass.special
+  );
+}
+
 function Signup() {
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -31,8 +37,16 @@ function Signup() {
   const [validEmailText, setValidEmailText] = useState<boolean>(false);
   const [validEmail, setValidEmail] = useState<boolean>(false);
 
+  const [confirmedPassText, setConfirmedPassText] = useState<boolean>(false);
+  const [confirmedPass, setConfirmedPass] = useState<boolean>(false);
+
   const [validPassText, setValidPassText] = useState<boolean>(false);
-  const [validPass, setValidPass] = useState<boolean>(false);
+  const [validPass, setValidPass] = useState<ValidPass>({
+    length: false,
+    caps: false,
+    numbers: false,
+    special: false,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,14 +54,14 @@ function Signup() {
     setFormData((prev) => {
       const updatedFormData = { ...prev, [name]: value };
 
-      // if (updatedFormData.password && updatedFormData.confirmedPassword) {
-      //   setConfirmedPassText(true);
-      //   setConfirmedPass(
-      //     updatedFormData.password === updatedFormData.confirmedPassword
-      //   );
-      // } else {
-      //   setConfirmedPassText(false);
-      // }
+      if (updatedFormData.password && updatedFormData.confirmedPassword) {
+        setConfirmedPassText(true);
+        setConfirmedPass(
+          updatedFormData.password === updatedFormData.confirmedPassword
+        );
+      } else {
+        setConfirmedPassText(false);
+      }
 
       if (updatedFormData.email) {
         if (emailRegex.test(updatedFormData.email)) {
@@ -103,6 +117,26 @@ function Signup() {
             value={formData.password}
             onChange={handleChange}
           />
+          <div className="pass-validation">
+            <ul>
+              {validPass.length ? (
+                <li>Must be at least 8 characters long</li>
+              ) : (
+                <></>
+              )}
+              {validPass.caps ? (
+                <li>Must include one uppercase letter</li>
+              ) : (
+                <></>
+              )}
+              {validPass.numbers ? <li>Must include one number</li> : <></>}
+              {validPass.special ? (
+                <li>Must include one special character (!#$%&=)</li>
+              ) : (
+                <></>
+              )}
+            </ul>
+          </div>
           <input
             type="password"
             name="confirmedPassword"
@@ -110,13 +144,13 @@ function Signup() {
             value={formData.confirmedPassword}
             onChange={handleChange}
           />
-          {/* {confirmedPassText && (
+          {confirmedPassText && (
             <p>
               {confirmedPass
                 ? "Las contraseñas coinciden"
                 : "Las contraseñas no coinciden"}
             </p>
-          )} */}
+          )}
           <input className="submit-btn" type="submit" value="Sign up" />
         </form>
       </div>

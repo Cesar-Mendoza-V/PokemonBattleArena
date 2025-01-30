@@ -58,3 +58,9 @@ form > p {
 form > p {
   font-size: 10px;
 }
+
+.pass-validation > ul {
+  padding-left: 2ch;
+  margin: 0;
+  text-align: start;
+}
