@@ -3,15 +3,20 @@ project(backend_main)
 
 set(CMAKE_CXX_STANDARD 23)
 
-# Directorios de encabezados (desde el directorio backend)
+# Header directories (from the backend directory)
 include_directories(
-    ${CMAKE_CURRENT_LIST_DIR}/include/jdbc  # Ruta relativa desde backend
+    ${CMAKE_CURRENT_LIST_DIR}/include/jdbc
 )
 
-# Directorios de bibliotecas (si es necesario)
+# Library directories (if needed)
 link_directories(
-    ${CMAKE_CURRENT_LIST_DIR}/lib  # Ruta relativa desde backend
+    ${CMAKE_CURRENT_LIST_DIR}/lib  # Relative path from backend
 )
 
-# Configurar el ejecutable
-add_executable(backend src/connection.cpp)  # connection.cpp está dentro de src
+# Configure the executable
+add_executable(backend src/connection.cpp)  # connection.cpp is inside src
+
+# Specify libraries to link
+target_link_libraries(backend mysqlcppconn)
+
+
