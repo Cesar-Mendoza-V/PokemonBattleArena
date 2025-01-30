@@ -1,0 +1,60 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h3 {
+  font-size: 1.125rem;
+  margin-top: -1rem;
+  margin-bottom: 0.5rem;
+}
+
+input {
+  border: 1px black solid;
+  background-color: var(--background);
+  padding: 1rem 1.25rem;
+  color: var(--text-light-1);
+}
+
+input:focus {
+  border: 1px black solid;
+  outline: none;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+form > label,
+form > p {
+  margin: 0;
+  text-align: start;
+  padding-left: 1ch;
+}
+
+.signup-container {
+  min-width: 30ch;
+}
+
+.submit-btn {
+  border-radius: 5px;
+  padding-block: 0.75rem;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  background-color: var(--text-light-1);
+  color: var(--background);
+  font-weight: 800;
+}
+
+form > p {
+  font-size: 10px;
+}
