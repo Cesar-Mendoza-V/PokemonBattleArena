@@ -1,9 +1,10 @@
 import "./Signup.css";
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 
 interface FormData {
   email: string;
-  user: string,
+  username: string,
   password: string;
   confirmedPassword: string;
 }
@@ -32,7 +33,7 @@ function isValidPassword(currPass: ValidPass) {
 function Signup() {
   const [formData, setFormData] = useState<FormData>({
     email: "",
-    user: "",
+    username: "",
     password: "",
     confirmedPassword: "",
   });
@@ -45,7 +46,7 @@ function Signup() {
 
   const [validPassText, setValidPassText] = useState<boolean>(false);
   const [validPass, setValidPass] = useState<ValidPass>({
-    length: false,
+    length: true,
     caps: false,
     numbers: false,
     special: false,
@@ -102,13 +103,15 @@ function Signup() {
         <div className="side-container">
           <h1 className="signup-h1">Hello, your adventure awaits!</h1>
           <p className="signup-info-p">If you already have an account, login here and have fun.</p>
-          <button className="signup-info-btn">Log in</button>
+          <Link to="/signin">
+            <button className="signup-info-btn">Log in</button>
+          </Link>
         </div>
       </div>
       <div>
         <div className="side-container">
           <h1 className="signup-h1">Create an account</h1>
-          <div className="form">
+          <div className="signup-form-container">
             <form className="signup-form" onSubmit={handleSubmit}>
               <input
                 className="signup-input"
@@ -118,13 +121,13 @@ function Signup() {
                 value={formData.email}
                 onChange={handleChange}
               />
-              {validEmailText && <p>Please write a valid email adress</p>}
+              {validEmailText && <p className="signup-warning">Please write a valid email adress</p>}
               <input
                 className="signup-input"
                 type="text"
-                name="user"
+                name="username"
                 placeholder="User"
-                value={formData.user}
+                value={formData.username}
                 onChange={handleChange}
               />
               <input
@@ -135,15 +138,14 @@ function Signup() {
                 value={formData.password}
                 onChange={handleChange}
               />
-              {/* <div className="pass-validation">
-                {isValidPassword(formData.password)}
+              <div className="pass-validation">
                 <ul>
-                  {validPass.length && <li>Must be at least 8 characters long</li>}
+                  {validPass.length && <li><p className="signup-warning">Must be at least 8 characters long</p></li>}
                   {validPass.caps && <li>Must include one uppercase letter</li>}
                   {validPass.numbers && <li>Must include one number</li>}
                   {validPass.special && <li>Must include one special character (!#$%&=)</li>}
                 </ul>
-              </div> */}
+              </div>
               <input
                 className="signup-input"
                 type="password"
@@ -153,10 +155,10 @@ function Signup() {
                 onChange={handleChange}
               />
               {confirmedPassText && (
-                <p>
+                <p className="signup-warning">
                   {confirmedPass
-                    ? "Las contraseñas coinciden"
-                    : "Las contraseñas no coinciden"}
+                    ? "Passwords match"
+                    : "Passwords don't match"}
                 </p>
               )}
               <input className="submit-btn" type="submit" value="Sign up" />
