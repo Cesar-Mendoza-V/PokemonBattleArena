@@ -64,19 +64,41 @@ CMAKE_BINARY_DIR = /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/
 
 # The main recursive "all" target.
 all: CMakeFiles/backend.dir/all
+all: external/Crow/all
 .PHONY : all
 
 # The main recursive "codegen" target.
 codegen: CMakeFiles/backend.dir/codegen
+codegen: external/Crow/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
-preinstall:
+preinstall: external/Crow/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/backend.dir/clean
+clean: external/Crow/clean
 .PHONY : clean
+
+#=============================================================================
+# Directory level rules for directory external/Crow
+
+# Recursive "all" directory target.
+external/Crow/all:
+.PHONY : external/Crow/all
+
+# Recursive "codegen" directory target.
+external/Crow/codegen:
+.PHONY : external/Crow/codegen
+
+# Recursive "preinstall" directory target.
+external/Crow/preinstall:
+.PHONY : external/Crow/preinstall
+
+# Recursive "clean" directory target.
+external/Crow/clean: external/Crow/CMakeFiles/uninstall.dir/clean
+.PHONY : external/Crow/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/backend.dir
@@ -85,12 +107,12 @@ clean: CMakeFiles/backend.dir/clean
 CMakeFiles/backend.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles --progress-num=1,2 "Built target backend"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles --progress-num=1,2,3 "Built target backend"
 .PHONY : CMakeFiles/backend.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/backend.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/backend.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles 0
 .PHONY : CMakeFiles/backend.dir/rule
@@ -102,13 +124,45 @@ backend: CMakeFiles/backend.dir/rule
 # codegen rule for target.
 CMakeFiles/backend.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles --progress-num=1,2 "Finished codegen for target backend"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles --progress-num=1,2,3 "Finished codegen for target backend"
 .PHONY : CMakeFiles/backend.dir/codegen
 
 # clean rule for target.
 CMakeFiles/backend.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/clean
 .PHONY : CMakeFiles/backend.dir/clean
+
+#=============================================================================
+# Target rules for target external/Crow/CMakeFiles/uninstall.dir
+
+# All Build rule for target.
+external/Crow/CMakeFiles/uninstall.dir/all:
+	$(MAKE) $(MAKESILENT) -f external/Crow/CMakeFiles/uninstall.dir/build.make external/Crow/CMakeFiles/uninstall.dir/depend
+	$(MAKE) $(MAKESILENT) -f external/Crow/CMakeFiles/uninstall.dir/build.make external/Crow/CMakeFiles/uninstall.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles --progress-num= "Built target uninstall"
+.PHONY : external/Crow/CMakeFiles/uninstall.dir/all
+
+# Build rule for subdir invocation for target.
+external/Crow/CMakeFiles/uninstall.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 external/Crow/CMakeFiles/uninstall.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles 0
+.PHONY : external/Crow/CMakeFiles/uninstall.dir/rule
+
+# Convenience name for target.
+uninstall: external/Crow/CMakeFiles/uninstall.dir/rule
+.PHONY : uninstall
+
+# codegen rule for target.
+external/Crow/CMakeFiles/uninstall.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f external/Crow/CMakeFiles/uninstall.dir/build.make external/Crow/CMakeFiles/uninstall.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles --progress-num= "Finished codegen for target uninstall"
+.PHONY : external/Crow/CMakeFiles/uninstall.dir/codegen
+
+# clean rule for target.
+external/Crow/CMakeFiles/uninstall.dir/clean:
+	$(MAKE) $(MAKESILENT) -f external/Crow/CMakeFiles/uninstall.dir/build.make external/Crow/CMakeFiles/uninstall.dir/clean
+.PHONY : external/Crow/CMakeFiles/uninstall.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

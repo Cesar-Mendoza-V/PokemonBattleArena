@@ -4,16 +4,27 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/include"
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/include/jdbc",
+                "${workspaceFolder}/include/database",
+                "${workspaceFolder}/include/models",
+                "${workspaceFolder}/include/utils",
+                "${workspaceFolder}/external/Crow/include",
+                "/opt/homebrew/include",
+                "/opt/homebrew/opt/asio/include",
+                "/opt/homebrew/opt/boost/include"
             ],
-            "defines": [],
+            "defines": [
+                "ASIO_STANDALONE"
+            ],
             "macFrameworkPath": [
                 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"
             ],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/bin/clang++",
             "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "macos-clang-arm64"
+            "cppStandard": "c++23",
+            "intelliSenseMode": "macos-clang-arm64",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

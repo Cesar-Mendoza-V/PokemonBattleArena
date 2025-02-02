@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
-	/opt/homebrew/bin/cpack --config ./CPackConfig.cmake
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -78,7 +78,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
-	/opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CPackSourceConfig.cmake
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -152,14 +152,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build//CMakeFiles/progress.marks
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/external/Crow//CMakeFiles/progress.marks
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 external/Crow/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 clean
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 external/Crow/clean
 .PHONY : clean
 
 # The main clean target
@@ -168,92 +168,32 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 external/Crow/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 external/Crow/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named backend
+# Convenience name for target.
+external/Crow/CMakeFiles/uninstall.dir/rule:
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 external/Crow/CMakeFiles/uninstall.dir/rule
+.PHONY : external/Crow/CMakeFiles/uninstall.dir/rule
 
-# Build rule for target.
-backend: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 backend
-.PHONY : backend
-
-# fast build rule for target.
-backend/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/build
-.PHONY : backend/fast
-
-#=============================================================================
-# Target rules for targets named uninstall
-
-# Build rule for target.
-uninstall: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 uninstall
+# Convenience name for target.
+uninstall: external/Crow/CMakeFiles/uninstall.dir/rule
 .PHONY : uninstall
 
 # fast build rule for target.
 uninstall/fast:
-	$(MAKE) $(MAKESILENT) -f external/Crow/CMakeFiles/uninstall.dir/build.make external/Crow/CMakeFiles/uninstall.dir/build
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && $(MAKE) $(MAKESILENT) -f external/Crow/CMakeFiles/uninstall.dir/build.make external/Crow/CMakeFiles/uninstall.dir/build
 .PHONY : uninstall/fast
-
-src/connection.o: src/connection.cpp.o
-.PHONY : src/connection.o
-
-# target to build an object file
-src/connection.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/connection.cpp.o
-.PHONY : src/connection.cpp.o
-
-src/connection.i: src/connection.cpp.i
-.PHONY : src/connection.i
-
-# target to preprocess a source file
-src/connection.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/connection.cpp.i
-.PHONY : src/connection.cpp.i
-
-src/connection.s: src/connection.cpp.s
-.PHONY : src/connection.s
-
-# target to generate assembly for a file
-src/connection.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/connection.cpp.s
-.PHONY : src/connection.cpp.s
-
-src/database/database_manager.o: src/database/database_manager.cpp.o
-.PHONY : src/database/database_manager.o
-
-# target to build an object file
-src/database/database_manager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/database/database_manager.cpp.o
-.PHONY : src/database/database_manager.cpp.o
-
-src/database/database_manager.i: src/database/database_manager.cpp.i
-.PHONY : src/database/database_manager.i
-
-# target to preprocess a source file
-src/database/database_manager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/database/database_manager.cpp.i
-.PHONY : src/database/database_manager.cpp.i
-
-src/database/database_manager.s: src/database/database_manager.cpp.s
-.PHONY : src/database/database_manager.s
-
-# target to generate assembly for a file
-src/database/database_manager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/database/database_manager.cpp.s
-.PHONY : src/database/database_manager.cpp.s
 
 # Help Target
 help:
@@ -270,13 +210,6 @@ help:
 	@echo "... package_source"
 	@echo "... rebuild_cache"
 	@echo "... uninstall"
-	@echo "... backend"
-	@echo "... src/connection.o"
-	@echo "... src/connection.i"
-	@echo "... src/connection.s"
-	@echo "... src/database/database_manager.o"
-	@echo "... src/database/database_manager.i"
-	@echo "... src/database/database_manager.s"
 .PHONY : help
 
 
@@ -288,6 +221,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

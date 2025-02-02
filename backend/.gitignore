@@ -1,0 +1,6 @@
+# Environment Variables - Database Configuration
+.env
+# Keeps the example file
+!.env.example
+#Ignores .vscode
+.vscode

@@ -1,55 +1,115 @@
-/* 
+// Copyright 2024 Pokemon Battle Arena Project
+// Main server file that implements the REST API for user registration
 
-Para compilar (Ingresar paths manualmente):
-g++ -o connection connection.cpp -I../include/jdbc -L../lib -lmysqlcppconn -std=c++11
+#include <crow.h>
 
-Para correr(se debe de estar en la carpeta donde se encuentra el archivo): 
-./connection
+#include <string>
 
-*/
+#include "database/database_manager.hpp"
+
+#include "models/user.hpp"
+
+// ApiResponse defines the standard structure for all API responses.
+// Used to maintain consistent communication format with the frontend.
+class ApiResponse {
+ public:
+  // Human-readable message describing the operation result
+  std::string message;
+  
+  // Standard HTTP status code indicating the type of response
+  int http_status_code;
+
+  // Converts the ApiResponse object to a JSON format suitable for HTTP responses
+  crow::json::wvalue ToJson() const {
+    crow::json::wvalue response;
+    response["httpStatusCode"] = http_status_code;
+    response["message"] = message;
+    return response;
+  }
+};
 
 
-#include <iostream>
-#include <mysql_connection.h>
-#include <mysql_driver.h>
-#include <cppconn/statement.h>
-#include <cppconn/resultset.h>
-#include <cppconn/exception.h>
 
 int main() {
-    try {
-        sql::mysql::MySQL_Driver *driver;
-        sql::Connection *conn;
-        sql::Statement *stmt;
-        sql::ResultSet *res;
+  // Initialize the Crow application with core components
+  crow::App<> app;
+  
+  // Set logging level to only show warnings and suppress info messages
+  app.loglevel(crow::LogLevel::Warning);
+  
+  // Initialize database connection manager
+  DatabaseManager db;
 
-        // Create connection
-        system("clear");
-        driver = sql::mysql::get_mysql_driver_instance();
-        conn = driver->connect("tcp://localhost:3306", "root", "12345678");
-        std::cout << "Database connection successful!!\n" << std::endl;
+  // Health check endpoint to verify API is operational
+  CROW_ROUTE(app, "/")([]() {
+    return "Registration API is operational";
+  });
 
-        // Select database
-        conn->setSchema("test");
+  // User registration endpoint - handles new user creation
+  CROW_ROUTE(app, "/signup").methods(crow::HTTPMethod::POST)(
+    [&db](const crow::request& req) {
+      try {
+        // Parse the incoming JSON request body
+        auto body = crow::json::load(req.body);
 
-        // Create and execute query
-        stmt = conn->createStatement();
-        res = stmt->executeQuery("SELECT * FROM users");
-        
-        // Display results
-        while (res->next()) {
-            std::cout << "Username: " << res->getString("username") << " - Password: " << res->getString("password") << std::endl;
+        // Verify all required fields are present in the request
+        if (!body.has("username") || !body.has("email") || 
+            !body.has("password")) {
+          ApiResponse response{
+              "Missing required fields in request",
+              400
+          };
+          return crow::response(400, response.ToJson());
         }
 
-        std::cout << "\n" << std::endl;
+        // Create user object from the validated request data
+        User user{
+            body["username"].s(),
+            body["email"].s(),
+            body["password"].s()
+        };
 
-        // Free memory
-        delete res;
-        delete stmt;
-        delete conn;
-    } catch (sql::SQLException &e) {
-        std::cerr << "MySQL Error: " << e.what() << std::endl;
-    }
+        // Validate email format (basic check for @ symbol)
+        if (user.email.find('@') == std::string::npos) {
+          ApiResponse response{
+              "Invalid email format",
+              400
+          };
+          return crow::response(400, response.ToJson());
+        }
 
-    return 0;
+        try {
+          // Attempt to create the user in the database
+          if (db.create_user(user)) {
+            ApiResponse response{
+                "User successfully registered",
+                201
+            };
+            return crow::response(201, response.ToJson());
+          }
+        } catch (const std::runtime_error& e) {
+          // Handle specific database errors (like duplicate users)
+          ApiResponse response{e.what(), 409};
+          return crow::response(409, response.ToJson());
+        }
+      } catch (const std::exception& e) {
+        // Handle malformed JSON or general parsing errors
+        ApiResponse response{
+            "Invalid request format",
+            400
+        };
+        return crow::response(400, response.ToJson());
+      }
+
+      // Handle unexpected server errors
+      ApiResponse response{
+          "Internal server error",
+          500
+      };
+      return crow::response(500, response.ToJson());
+    });
+
+  // Start the server on port 3000 with multi-threading enabled
+  app.port(3000).multithreaded().run();
+  return 0;
 }

@@ -8,8 +8,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/src/connection.cpp" "CMakeFiles/backend.dir/src/connection.cpp.o" "gcc" "CMakeFiles/backend.dir/src/connection.cpp.o.d"
-  "/Users/amirmx2905/Desktop/Pokemon/PokemonBattleArena/backend/src/database/database_manager.cpp" "CMakeFiles/backend.dir/src/database/database_manager.cpp.o" "gcc" "CMakeFiles/backend.dir/src/database/database_manager.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

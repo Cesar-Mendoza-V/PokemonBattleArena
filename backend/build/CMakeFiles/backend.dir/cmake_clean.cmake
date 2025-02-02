@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/backend.dir/src/connection.cpp.o"
   "CMakeFiles/backend.dir/src/connection.cpp.o.d"
+  "CMakeFiles/backend.dir/src/database/database_manager.cpp.o"
+  "CMakeFiles/backend.dir/src/database/database_manager.cpp.o.d"
   "backend"
   "backend.pdb"
 )
