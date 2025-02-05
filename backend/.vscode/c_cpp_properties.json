@@ -9,10 +9,8 @@
                 "${workspaceFolder}/include/database",
                 "${workspaceFolder}/include/models",
                 "${workspaceFolder}/include/utils",
-                "${workspaceFolder}/external/Crow/include",
-                "/opt/homebrew/include",
-                "/opt/homebrew/opt/asio/include",
-                "/opt/homebrew/opt/boost/include"
+                "${workspaceFolder}/include/crow",
+                "${workspaceFolder}/include/asio"
             ],
             "defines": [
                 "ASIO_STANDALONE"
