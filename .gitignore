@@ -15,10 +15,20 @@ dist-ssr
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Resources inside 'backend' folder
+# Environment Variables - Database Configuration
+backend/.env
+# Keeps the example file
+!backend/.env.example
+# Ignores build folder
+backend/build/
+# Ignores cmake-build-debug
+backend/cmake-build-debug/
