@@ -29,5 +29,4 @@ backend/build/
 backend/cmake-build-debug/
 
 # Environment files
-backend/.env
-!backend/.env.example
+*.env
