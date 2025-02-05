@@ -4,8 +4,6 @@
   box-sizing: border-box;
 }
 
-
-
 :root {
   --header-bg: rgba(255, 255, 255, 0.1);
   --background: #242424;
@@ -17,6 +15,22 @@
   font-weight: 400;
   color: var(--text-light-1);
   background-color: var(--background);
+
+  /* Eduardo´s colors and styles */
+  --background-color: #a9b5c3;
+  --box-shadows: #3d3636;
+  --text-color: #e6384f;
+  --btn-color: #e6384f;
+  --btn-hover: #f80021;
+  --form-color: #000000;
+  --overlay: rgba(0, 0, 0, 0.5);
+  --error-message: red;
+
+  /* Colors for text, buttons and forms */
+  --forgot-password-color-hover: lightblue;
+  --form-border: solid var(--text-color);
+  --form-letter: var(--text-color);
+  /* END OF EDUARDO´S COLORS*/
 }
 
 body {
@@ -24,5 +38,5 @@ body {
 }
 
 header {
-  background-color: var(--header-bg)
+  background-color: var(--header-bg);
 }
