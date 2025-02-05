@@ -1,12 +1,12 @@
 import "./Signup.css";
 import { useState } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 interface FormData {
   email: string;
-  username: string,
+  username: string;
   password: string;
   confirmedPassword: string;
 }
@@ -24,17 +24,15 @@ interface PostFormData {
   password: string;
 }
 
-
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const passLengthRegex = /^.{8,}$/;
 const passCapsRegex = /[A-Z]/;
 const passNumRegex = /\d/;
-const passSpecialRegex = /[!#$%&=]/;
+const passSpecialRegex = /[~`!@#$%^&*()\-_+={}[\]\\|;:"<>,./?]/;
 
 function Signup() {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -56,7 +54,7 @@ function Signup() {
     special: false,
   });
 
-  const [submitable, setSubmitable] = useState<boolean>(false)
+  const [submitable, setSubmitable] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -71,7 +69,9 @@ function Signup() {
           : false;
       setConfirmedPass(passwordsMatch);
       setConfirmedPassText(
-        updatedFormData.password && updatedFormData.confirmedPassword ? true : false
+        updatedFormData.password && updatedFormData.confirmedPassword
+          ? true
+          : false
       );
 
       // Email validation logic
@@ -104,10 +104,11 @@ function Signup() {
     });
   };
 
-  const resolveWithSomeData = new Promise(resolve => setTimeout(() => resolve("success"), 3000));
-  const notify = () => (toast.promise(
-    resolveWithSomeData,
-    {
+  const resolveWithSomeData = new Promise((resolve) =>
+    setTimeout(() => resolve("success"), 3000)
+  );
+  const notify = () =>
+    toast.promise(resolveWithSomeData, {
       pending: "Signing up user",
       success: {
         render: "User created succesfully!",
@@ -117,15 +118,21 @@ function Signup() {
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        theme: "light"
+        theme: "light",
       },
       error: "Error creating user",
-    })
-  )
+    });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validEmail && !validPass.caps && !validPass.length && !validPass.numbers && !validPass.special && confirmedPass) {
+    if (
+      validEmail &&
+      !validPass.caps &&
+      !validPass.length &&
+      !validPass.numbers &&
+      !validPass.special &&
+      confirmedPass
+    ) {
       const postData: PostFormData = {
         email: formData.email,
         username: formData.username,
@@ -134,26 +141,25 @@ function Signup() {
       console.log("Submitted Data:", postData);
       notify().then((data) => {
         setTimeout(() => {
-          console.log(data)
+          console.log(data);
           if (data == "success") {
-            navigate('/')
+            navigate("/");
           }
-        }, 1500)
-      })
-
+        }, 1500);
+      });
     } else {
       console.log("not valid data");
     }
   };
 
-
   return (
-
     <div className="general-container">
       <div>
         <div className="side-container">
           <h1 className="signup-h1">Hello, your adventure awaits!</h1>
-          <p className="signup-info-p">If you already have an account, login here and have fun.</p>
+          <p className="signup-info-p">
+            If you already have an account, login here and have fun.
+          </p>
           <Link to="/signin">
             <button className="signup-info-btn">Log in</button>
           </Link>
@@ -172,7 +178,11 @@ function Signup() {
                 value={formData.email}
                 onChange={handleChange}
               />
-              {validEmailText && <p className="signup-warning">Please write a valid email address</p>}
+              {validEmailText && (
+                <p className="signup-warning">
+                  Please write a valid email address
+                </p>
+              )}
               <input
                 className="signup-input"
                 type="text"
@@ -181,7 +191,9 @@ function Signup() {
                 value={formData.username}
                 onChange={handleChange}
               />
-              {formData.username && formData.username.length < 3 && <p className="signup-warning">Must be 3 characters long</p>}
+              {formData.username && formData.username.length < 3 && (
+                <p className="signup-warning">Must be 3 characters long</p>
+              )}
               <input
                 className="signup-input"
                 type="password"
@@ -190,7 +202,7 @@ function Signup() {
                 value={formData.password}
                 onChange={handleChange}
               />
-              {(formData.password) && (
+              {formData.password && (
                 <div className="pass-validation">
                   <AnimatePresence>
                     {validPass.length && (
@@ -223,7 +235,6 @@ function Signup() {
                         initial={{ x: -50, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: -50, opacity: 0 }}
-
                       >
                         Must include one number
                       </motion.p>
@@ -236,7 +247,7 @@ function Signup() {
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: -50, opacity: 0 }}
                       >
-                        Must include one special character (!#$%&=)
+                        Must include one special character
                       </motion.p>
                     )}
                   </AnimatePresence>
@@ -253,23 +264,24 @@ function Signup() {
               />
               {confirmedPassText && (
                 <p className="signup-warning">
-                  {confirmedPass
-                    ? "Passwords match"
-                    : "Passwords don't match"}
+                  {confirmedPass ? "Passwords match" : "Passwords don't match"}
                 </p>
               )}
               <button
-                className={`submit-btn ${!submitable ? "blocked-submit-btn" : ""}`}
+                className={`submit-btn ${
+                  !submitable ? "blocked-submit-btn" : ""
+                }`}
                 type="submit"
                 disabled={!submitable}
-              >Sign up
+              >
+                Sign up
               </button>
             </form>
           </div>
         </div>
-      </div >
+      </div>
       <ToastContainer />
-    </div >
+    </div>
   );
 }
 
