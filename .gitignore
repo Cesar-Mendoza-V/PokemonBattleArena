@@ -24,11 +24,10 @@ dist-ssr
 *.sw?
 
 # Resources inside 'backend' folder
-# Environment Variables - Database Configuration
-backend/.env
-# Keeps the example file
-!backend/.env.example
-# Ignores build folder
+# Backend build directories
 backend/build/
-# Ignores cmake-build-debug
 backend/cmake-build-debug/
+
+# Environment files
+backend/.env
+!backend/.env.example
