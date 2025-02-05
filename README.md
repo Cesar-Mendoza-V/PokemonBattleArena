@@ -198,12 +198,20 @@ Or you can make use of Postman and follow these steps:
    - Verify Boost and ASIO are properly installed
    - Check include paths in CMakeLists.txt
 
-### Project Structure
+4. **Missing Crow Submodule**:
+   If after pulling changes you notice the 'external/Crow' folder is empty or missing, you'll need to initialize and update the submodule. Run these commands from the backend folder:
+   ```bash
+   git submodule init
+   git submodule update
+
+### Project Structure (Backend)
 ```
 backend/
 ├── .env                  (not in repository - create locally)
 ├── .env.example         (template for .env)
 ├── CMakeLists.txt       (build configuration)
+├── external/            (external dependencies)
+│   └── Crow/           (Crow framework submodule)
 ├── include/             (header files)
 │   ├── database/
 │   └── models/
