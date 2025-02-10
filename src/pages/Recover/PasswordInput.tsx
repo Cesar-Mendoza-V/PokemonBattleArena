@@ -1,174 +1,137 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "../../styles/global.css";
 import "./PasswordInput.css";
+import "../../styles/global.css";
+
+// Function to show the password requirements
+const getPasswordRequirements = () => {
+  const requirements = [
+    { id: 1, text: "At least 8 characters", regex: /.{8,}/ },
+    { id: 2, text: "One uppercase letter (A-Z)", regex: /[A-Z]/ },
+    { id: 3, text: "One lowercase letter (a-z)", regex: /[a-z]/ },
+    { id: 4, text: "One number (0-9)", regex: /[0-9]/ },
+    {
+      id: 5,
+      text: "One special character (!@#$%^&*)",
+      regex: /[!@#$%^&*]/,
+    },
+  ];
+
+  return requirements;
+};
 
 export default function PasswordInput() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState<string>(""); // useState for password erros
-  const [confirmPasswordError, setConfirmPasswordError] = useState<string>(""); // error on submitting the form of passwords
-  const [popOpen, setPopOpen] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
+  const [passwordMatchError, setPasswordMatchError] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
-  // Function to alert user that the operation was cancelled
-  const togglePopup = () => {
-    setPopOpen(!popOpen);
-  };
-
-  // Function to write the password requirements
-  const printPasswordRequirements = () => {
-    const requirements =
-      "Uppercase letter.\nLower case letter.\nDigits.\nSpecial characters.\n8 digit length.";
-    return <pre>{requirements}</pre>;
-  };
-
-  // Validate the password with this requirments
+  // Function to validate via regex the passwords
   const validatePassword = (password: string) => {
-    const upperCase = /[A-Z]/.test(password);
-    const lowerCase = /[a-z]/.test(password);
-    const hasDigit = /\d/.test(password);
-    const hasSpecialCharacter = /[!@#$%&().,:;?'{}|<>*+-_¿]/.test(password);
-    const validLength = password.length >= 8;
-
-    return {
-      // returns the values of the requirements for the password
-      isValid:
-        validLength &&
-        upperCase &&
-        lowerCase &&
-        hasDigit &&
-        hasSpecialCharacter,
-      errorMessages: [
-        // returns the error messages if one requirement was not met
-        !validLength && "Password must be at least 8 characters long",
-        !upperCase && "Password must contain at least one uppercase letter",
-        !lowerCase && "Password must contain at least one lowercase letter",
-        !hasDigit && "Password must contain at least one number",
-        !hasSpecialCharacter &&
-          "Password must contain at least one special character",
-      ].filter(Boolean),
-    };
+    const requirements = getPasswordRequirements();
+    const newErrors = requirements
+      .filter((req) => !req.regex.test(password))
+      .map((req) => req.text);
+    setErrors(newErrors);
   };
 
-  // Function to handle the password change
+  // Verificate the passwords
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
+    validatePassword(newPassword);
 
-    const { isValid, errorMessages } = validatePassword(newPassword);
-
-    if (!isValid) {
-      setPasswordError(errorMessages.join(" | "));
+    if (confirmPassword && newPassword !== confirmPassword) {
+      setPasswordMatchError("Passwords do not match");
     } else {
-      setPasswordError(""); // LClean error message if the password is valid
+      setPasswordMatchError("");
     }
   };
 
-  // Function to handle the confirm password change
+  // Function to validate the passwords are correct
   const handleConfirmPasswordChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const newConfirmPassword = e.target.value;
     setConfirmPassword(newConfirmPassword);
 
-    // Validate if the confirmPassword match with password
     if (password !== newConfirmPassword) {
-      setConfirmPasswordError("Passwords do not match");
+      setPasswordMatchError("Passwords do not match");
     } else {
-      setConfirmPasswordError(""); // Clean error if passwords match
+      setPasswordMatchError("");
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Check if the passwords meet all the requirements
+    const requirements = getPasswordRequirements();
+    const isValid =
+      requirements.every((req) => req.regex.test(password)) &&
+      password === confirmPassword;
 
-    // Validate that passwords match
-    if (password !== confirmPassword) {
-      console.log("Passwords did not match."); // Print in console to verify it works
-      setConfirmPasswordError("Passwords do not match");
-      setPasswordError(""); // Clean errors
-      return;
+    if (isValid) {
+      setShowPopup(true);
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 3000);
     }
-
-    // Validate the password before continue to change
-    const { isValid, errorMessages } = validatePassword(password);
-
-    // If password is not valid, print the errors
-    if (!isValid) {
-      setPasswordError(errorMessages.join(" | "));
-      setPasswordError(errorMessages.join(" | "));
-      return;
-    }
-
-    // If everything is correct we can proceed
-    console.log("Passwords match and are valid. Proceed with password reset.");
   };
 
   return (
-    <div className="body">
-      <div className="card">
-        <div className="card-body">
-          <img src="/pokemon.png" alt="Pokemon Logo"></img>
-          <h3>Reset your password</h3>
-          <h5>Enter your new password</h5>
-          <div className="passwordRequirements">
-            <p>Password requirements:</p>
-            <pre>{printPasswordRequirements()}</pre>
-          </div>
+    <div className="fullscreen-container">
+      <div className="form-container">
+        <div className="form-titles">
+          <img src="/pokemon.png" alt="Pokemon Logo" className="logo"></img>
+          <h3>Pokemon Battle Arena</h3>
+          <h5>Enter your password</h5>
+          <ul className="password-requirements">
+            {getPasswordRequirements().map((requirement) => (
+              <li
+                key={requirement.id}
+                className={
+                  errors.includes(requirement.text) ? "error" : "valid"
+                }
+              >
+                {requirement.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="form-inputs">
           <form onSubmit={handleSubmit}>
-            <div className="form-email">
-              <label htmlFor="passwordInput"></label>
-              <input
-                type="password"
-                className="form-control"
-                id="passwordInput"
-                placeholder="Enter your new password"
-                value={password}
-                onChange={handlePasswordChange}
-              />
-              {passwordError && (
-                <p className="error-message">{passwordError}</p>
-              )}
-
-              <label htmlFor="confirmPasswordInput"></label>
-              <input
-                type="password"
-                className="form-control"
-                id="confirmPasswordInput"
-                placeholder="Confirm your new password"
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-              />
-              {confirmPasswordError && (
-                <p className="error-message">{confirmPasswordError}</p>
-              )}
-
-              <div className="btn-container">
-                <button onClick={togglePopup} className="back-btn">
-                  Back
-                </button>
-                <button type="submit" className="submit-email-btn">
-                  Submit
-                </button>
-              </div>
+            <input
+              type="password"
+              className="passwordInput"
+              placeholder="Enter your new password"
+              value={password}
+              onChange={handlePasswordChange}
+            ></input>
+            <input
+              type="password"
+              className="confirmPasswordInput"
+              placeholder="Confirm your new password"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+            ></input>
+            {passwordMatchError && (
+              <p className="error-message">{passwordMatchError}</p>
+            )}
+            <div className="button-container">
+              <button type="button" className="btn-back">
+                Back
+              </button>
+              <button type="submit" className="btn-confirm">
+                CONFIRM
+              </button>
             </div>
           </form>
         </div>
       </div>
-      {popOpen && (
-        <div className="popup-overlay">
-          <div className="popup-body">
-            <div className="popup-content">
-              <h2>UPS! Operation cancelled</h2>
-              <Link to="/">
-                <button
-                  onClick={() => setPopOpen(false)}
-                  className="btn-popup-close"
-                >
-                  X
-                </button>
-              </Link>
-            </div>
+      {showPopup && (
+        <div className="popup-complete-overlay">
+          <div className="popup-complete">
+            <p>Password Changed</p>
           </div>
         </div>
       )}

@@ -11,7 +11,7 @@ img {
   max-height: 75px;
 }
 
-.links>ul {
+.links > ul {
   padding: 0;
   list-style: none;
   display: flex;

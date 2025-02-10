@@ -6,152 +6,121 @@ import "../../styles/global.css";
 export default function Recover() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [popOpen, setPopOpen] = useState(false); // Popup for cancellation
-  const [popConfirmedOpen, setPopConfirmedOpen] = useState(false); // Popup for success
+  const [showPopup, setShowPopup] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeError, setCodeError] = useState("");
   const navigate = useNavigate();
 
-  // Function to handle the email input change
+  // Code to simulate the verifiying code "DELETE AFTER BACKEND LOGIC WAS IMPLEMENTED"
+  const correctCode = "123456";
+
+  // Function to handle the email
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    setError(""); // Clear any existing error when the email is updated
-  };
+    const emailValue = e.target.value;
+    setEmail(emailValue);
 
-  // Function to open the cancellation popup
-  const togglePopupCancelled = () => {
-    setPopOpen(true); // Show the cancellation popup
-  };
-
-  // Function to close the cancellation popup
-  const closePopupCancelled = () => {
-    setTimeout(() => {
-      setPopOpen(false);
-      navigate("/");
-    }, 1500);
-  };
-
-  // Function to simulate sending the email successfully (You can replace this with the actual backend call)
-  const togglePopUpEmailSent = () => {
-    setPopConfirmedOpen(true); // Open the "Email Sent" confirmation popup
-    setEmail(""); // Clear the email input
-    console.log("EMAIL WAS SENT SUCCESSFULLY");
-
-    // After the user closes the popup, navigate to the reset password page
-    /*
-      USE TRY CATCH FOR EMAIL
-      try {
-        const connectionAPI = (API url)
-
-
-        if(connection.ok){
-          console.log("email was sent.")
-          show popup
-        } else {
-          error sending email, we can use console.log to see on terminal as well 
-        }
-      } catch (error) {
-          // IF THERE WAS AN ERROR CONNECTING TO API
-        }
-    */
-  };
-
-  // Function to handle the email submission (validation and sending)
-  const handleEmailSubmition = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault(); // Prevent the default form submission
-
-    // Validation of the email
-    if (!email || email.trim() === "") {
-      setError("Enter a valid email!"); // Show error message if email is empty or invalid
+    if (!emailValue.trim()) {
+      setError("Enter a valid email!");
     } else {
-      console.log("Email sent."); // Log email to the console
-      setError(""); // Clear any previous errors
-      togglePopUpEmailSent(); // Trigger the popup for email sent
+      setError("");
     }
   };
 
-  // Function to handle closing the "Email Sent" popup
-  const handleClosePopUp = () => {
-    setTimeout(() => {
-      setPopConfirmedOpen(false);
-      navigate("/passwordInput");
-    }, 1500);
+  // Function to handle the email type
+  const handleEmailSubmission = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!email.trim()) {
+      setError("Enter a valid email!");
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setError("Please enter a valid email address.");
+    } else {
+      console.log("Email sent.");
+      setError("");
+      setShowPopup(true);
+    }
   };
 
-  // Function to handle the Enter key press (submit email)
-  const handleEnterKey = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-      event.preventDefault(); // Prevent the default action of the Enter key
-      const syntheticEvent = new Event("submit", {
-        bubbles: true,
-        cancelable: true,
-      });
-      event.currentTarget.dispatchEvent(syntheticEvent); // Trigger the email submission when Enter is pressed
+  // Function to handle the typed code
+  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCode(e.target.value);
+    setCodeError("");
+  };
+
+  // Function to handle the code verification
+  const handleCodeVerification = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (code !== correctCode) {
+      setCodeError("Invalid code. Please try again.");
+    } else {
+      setCodeError("");
+      console.log("Code verified.");
+      navigate("/passwordInput");
     }
   };
 
   return (
-    <div className="body">
-      <div className="card">
-        <div className="card-body">
-          <img src="/pokemon.png" alt="Pokemon Logo"></img>
-          <h3>Pokemon Battle Arena</h3>
-          <h5>Recover your password</h5>
-          <form onSubmit={handleEmailSubmition}>
-            <div className="form-email">
-              <label htmlFor="emailInput"></label>
-              <input
-                type="email"
-                className="form-control"
-                id="emailInput"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={handleEmail}
-                onKeyDown={handleEnterKey}
-              />
-              {error && <p className="error-message">{error}</p>}
-              <div className="button-container">
-                <button
-                  onClick={() => {
-                    togglePopupCancelled();
-                    closePopupCancelled();
-                  }}
-                  className="back-btn"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={() => {
-                    togglePopUpEmailSent();
-                    handleClosePopUp();
-                  }}
-                  type="submit"
-                  className="submit-email-btn"
-                >
-                  Submit
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+    <div className="fullscreen-containers">
+      <div className="form-containers">
+        <img src="/pokemon.png" alt="Pokemon Logo" className="logo" />
+        <h3>Pokemon Battle Arena</h3>
+        <h5>Recover your password</h5>
+        <form
+          onSubmit={handleEmailSubmission}
+          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+        >
+          <input
+            type="email"
+            className="form-controls"
+            placeholder="Enter your email address"
+            value={email}
+            onChange={handleEmail}
+            required
+          />
+          {error && <p className="error-message">{error}</p>}
+          <div className="button-container">
+            <button onClick={() => navigate("/")} className="back-btn">
+              Back
+            </button>
+            <button type="submit" className="submit-email-btn">
+              Submit
+            </button>
+          </div>
+        </form>
       </div>
 
-      {popOpen && (
+      {showPopup && (
         <div className="popup-overlay">
-          <div className="popup-body">
-            <div className="popup-content">
-              <h2>UPS! Operation cancelled</h2>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {popConfirmedOpen && (
-        <div className="popup-overlay">
-          <div className="popup-body">
-            <div className="popup-content">
-              <h2>Email Sent!</h2>
-            </div>
+          <div className="popup-container">
+            <h3>Verify your email</h3>
+            <h6>Enter the verification code</h6>
+            <form
+              onSubmit={handleCodeVerification}
+              onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+            >
+              <input
+                type="text"
+                className="form-control-popup"
+                placeholder="Enter your code"
+                value={code}
+                onChange={handleCodeChange}
+                maxLength={6}
+                required
+              />
+              {codeError && <p className="error-message">{codeError}</p>}
+              <div className="button-containers">
+                <button
+                  onClick={() => setShowPopup(false)}
+                  className="back-btn"
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="submit-email-btn">
+                  Verify Code
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
