@@ -1,0 +1,148 @@
+.general-container {
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+}
+
+.general-container>div {
+  width: 100%;
+}
+
+.general-container>div:nth-child(1) {
+  background-color: var(--background-light-2);
+}
+
+.general-container>div:nth-child(2) {
+  background-color: var(--background-light);
+}
+
+.side-container {
+  margin: 0 auto;
+  height: 100%;
+  width: 70%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-h1 {
+  font-size: 3rem;
+  color: var(--text-dark-1);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.signup-form-container {
+  width: 100%;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.signup-input {
+  width: 100%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 15px;
+  background-color: var(--input-bg-1);
+  color: var(--input-text-1);
+  padding: 1rem 1.25rem;
+}
+
+.signup-input:focus {
+  border: none;
+  outline: none;
+}
+
+.submit-btn {
+  cursor: pointer;
+  border: none;
+  margin-top: 2rem;
+  border-radius: 50px;
+  padding: 0.75rem 5rem;
+  font-size: 1rem;
+  background-color: var(--background-dark-2);
+  color: var(--text-light-1);
+  transition: opacity 0.25s;
+}
+
+.submit-btn:hover {
+  opacity: 85%;
+}
+
+.blocked-submit-btn {
+  opacity: 75%;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.blocked-submit-btn:hover {
+  opacity: 75%;
+}
+
+.signup-info-p {
+  margin: 0 auto;
+  color: var(--text-light-1);
+  font-size: 1.125rem;
+  max-width: 26ch;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+.signup-info-btn {
+  cursor: pointer;
+  margin: 0 auto;
+  width: fit-content;
+  border: none;
+  margin-top: 2rem;
+  border-radius: 50px;
+  padding: 0.75rem 5rem;
+  font-size: 1rem;
+  background-color: var(--background-light);
+  color: var(--background-light-2);
+  transition: background-color 0.25s;
+}
+
+.signup-info-btn:hover {
+  background-color: var(--background-dark-2);
+}
+
+.signup-warning {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  padding-left: 1ch;
+  color: var(--text-dark-1);
+}
+
+.pass-validation {
+
+  color: var(--text-dark-1);
+  align-self: flex-start;
+  padding-left: 2ch;
+}
+
+.pass-validation>p {
+  position: relative;
+}
+
+.pass-validation>p::before {
+  content: '';
+  position: absolute;
+  height: 0.75ch;
+  width: 0.75ch;
+  left: 0;
+  top: 0;
+  border-radius: 100px;
+  transform: translateX(-50%) translateY(125%);
+  background-color: var(--text-dark-1);
+}
+
+.pass-validation:empty {
+  display: none;
+}
