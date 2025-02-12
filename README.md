@@ -53,13 +53,11 @@ Before setting up the backend, make sure you have the following installed:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-2. Install required dependencies:
+2. To install dependencies and run the project, execute the following commands:
 ```bash
-brew install cmake
-brew install boost
-brew install openssl
-brew install asio
-brew install mysql
+xattr -d com.apple.quarantine ./run.sh
+chmod +x ./run.sh
+./run.sh
 ```
 
 #### For Windows:
@@ -92,11 +90,7 @@ DB_NAME=pruebaBase
 
 #### For macOS:
 ```bash
-cd backend
-mkdir build
-cd build
-cmake ..
-make
+./run.sh
 ```
 
 #### For Windows:

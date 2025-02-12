@@ -107,7 +107,44 @@ int main() {
           500
       };
       return crow::response(500, response.ToJson());
-    });
+    }
+  );
+
+  
+  CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)(
+    [&db](const crow::request& req) {
+      auto body = crow::json::load(req.body);
+
+      // Verify all required fields are present in the request
+      if (!body.has("username") || !body.has("password")) {
+        ApiResponse response {
+            "Missing required fields in request",
+            400
+        };
+        return crow::response(400, response.ToJson());
+      }
+
+      User user {
+        body["username"].s(),
+        body["email"].s(),
+        body["password"].s()
+      };
+      
+      try {
+        if (db.login_user(user)) {
+          ApiResponse response{
+                "User successfully login",
+                201
+            };
+            return crow::response(201, response.ToJson());
+        }
+      } catch (const std::runtime_error& e) {
+        // Handle specific database errors (like duplicate users)
+        ApiResponse response{e.what(), 409};
+        return crow::response(409, response.ToJson());
+      }
+    }
+  );
 
   // Start the server on port 3000 with multi-threading enabled
   app.port(3000).multithreaded().run();
