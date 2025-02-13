@@ -109,8 +109,8 @@ function Signup() {
     toast.promise(
       postUserRequest({
         email: formData.email,
-        username: formData.username,
         password: formData.password,
+        username: formData.username,
       }),
       {
         pending: "Signing up user",

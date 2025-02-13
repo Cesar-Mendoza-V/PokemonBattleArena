@@ -1,5 +1,73 @@
-body {
+.game-outside-layout {
+  width: 100%;
+  max-width: 1280px;
+  height: 100vh;
+  margin: 0 auto;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+}
+
+.game-main-layout {
+  display: grid;
+  grid-template-columns: 10% auto 15%; /* Sidebars take equal space */
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+
+.game-content {
+  width: 100%;
+  height: 100%;
+  background-image: url(../../assets/images/image.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.game-menu-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: var(--background-light);
+  height: 100%;
+  border-radius: 1000px;
+}
+
+.game-menu-logo {
+  width: 50%;
+  margin: 0 auto;
+}
+
+ul {
+  width: 50%;
+  height: 60%;
+  padding: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  color: black;
+}
+
+.game-menu-option {
+  list-style: none;
+  width: 100%;
+  aspect-ratio: 1/1;
+  padding: 0.5rem;
+  border: 2px solid black;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.game-menu-bar > button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  height: 7.5%;
+}
+
+.game-buttons-bar {
+  background-color: blue;
+  height: 100%;
 }

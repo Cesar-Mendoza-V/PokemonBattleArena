@@ -1,5 +1,3 @@
-import axios from "axios";
-
 interface PostUserData {
   email: string;
   username: string;
@@ -11,20 +9,26 @@ interface ResponseData {
   message: string;
 }
 
-const url: string = process.env.SERVER_HOST as string;
+const url: string = import.meta.env.VITE_SERVER_HOST as string;
 
 export const postUserRequest = async (
   data: PostUserData
 ): Promise<ResponseData> => {
   try {
-    const response = await axios.post(url, data, {
+    const response = await fetch(url + "/signup", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(data),
     });
-    return response.data; // Return the response data (expected to be of type `ResponseData`)
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    return response.json(); // Parse and return response JSON
   } catch (error) {
-    // Handle errors (you could also customize this depending on your needs)
     throw new Error("Error sending POST request: " + error);
   }
 };
