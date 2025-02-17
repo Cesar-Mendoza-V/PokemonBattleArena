@@ -41,6 +41,8 @@ class DatabaseManager {
   //   sql::SQLException: If there's a database connection error
   bool create_user(const User& user);
 
+  bool login_user(const User& user);
+
  private:
   // Manages the lifetime of the database connection
   // Using unique_ptr ensures proper resource cleanup

@@ -95,3 +95,37 @@ bool DatabaseManager::create_user(const User& user) {
     throw std::runtime_error("Error connecting to database");
   }
 }
+
+bool DatabaseManager::login_user(const User& user) {
+    try {
+        std::cout << "Attempting to login user: " << user.username << std::endl;
+
+        const std::string query =
+            "SELECT EXISTS ("
+            "   SELECT 1"
+            "   FROM users"
+            "   WHERE username = ? AND password = ?"
+            ") AS is_valid";
+
+        std::unique_ptr<sql::PreparedStatement> prep_stmt(conn->prepareStatement(query));
+
+        // Corrected parameter indices (1-based index)
+        prep_stmt->setString(1, user.username);
+        prep_stmt->setString(2, user.password);
+
+        std::unique_ptr<sql::ResultSet> res(prep_stmt->executeQuery());
+
+        if (res->next()) {
+            bool is_valid = res->getBoolean("is_valid");
+            return is_valid;
+        }
+
+        return false;  // User not found or incorrect credentials
+
+    } catch (sql::SQLException& e) {
+        std::cerr << "Error code: " << e.getErrorCode() << std::endl;
+        std::cerr << "SQL state: " << e.getSQLState() << std::endl;
+        std::cerr << "Error message: " << e.what() << std::endl;
+        throw std::runtime_error("Database error, try again.");
+    }
+}

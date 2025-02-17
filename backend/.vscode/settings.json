@@ -74,7 +74,13 @@
         "unordered_set": "cpp",
         "variant": "cpp",
         "vector": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "memory": "cpp",
+        "numbers": "cpp",
+        "print": "cpp",
+        "semaphore": "cpp",
+        "stack": "cpp",
+        "*.ipp": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }
