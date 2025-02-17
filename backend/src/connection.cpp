@@ -9,6 +9,8 @@
 
 #include "models/user.hpp"
 
+#include <crow/middlewares/cors.h>
+
 // ApiResponse defines the standard structure for all API responses.
 // Used to maintain consistent communication format with the frontend.
 class ApiResponse {
@@ -32,8 +34,19 @@ class ApiResponse {
 
 int main() {
   // Initialize the Crow application with core components
-  crow::App<> app;
+  crow::App<crow::CORSHandler> app;
+
+  // Configure CORS
+  auto& cors = app.get_middleware<crow::CORSHandler>();
   
+  // Allows petitions from your FrontEnd
+  cors
+      .global()
+      .headers("Content-Type")
+      .methods("POST"_method, "GET"_method, "PUT"_method, "DELETE"_method)
+      .origin("http://localhost:5173")
+      .allow_credentials();
+
   // Set logging level to only show warnings and suppress info messages
   app.loglevel(crow::LogLevel::Warning);
   
