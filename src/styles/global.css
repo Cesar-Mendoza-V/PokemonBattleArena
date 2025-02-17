@@ -26,5 +26,9 @@
 }
 
 header {
-  background-color: var(--header-bg)
+  background-color: var(--header-bg);
+}
+
+img {
+  max-width: 100%;
 }

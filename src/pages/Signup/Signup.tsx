@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
+import { postUserRequest } from "../../api/postRequests";
 
 interface FormData {
   email: string;
@@ -18,7 +19,7 @@ interface ValidPass {
   special: boolean;
 }
 
-interface PostFormData {
+interface PostUserData {
   email: string;
   username: string;
   password: string;
@@ -104,24 +105,28 @@ function Signup() {
     });
   };
 
-  const resolveWithSomeData = new Promise((resolve) =>
-    setTimeout(() => resolve("success"), 3000)
-  );
   const notify = () =>
-    toast.promise(resolveWithSomeData, {
-      pending: "Signing up user",
-      success: {
-        render: "User created succesfully!",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "light",
-      },
-      error: "Error creating user",
-    });
+    toast.promise(
+      postUserRequest({
+        email: formData.email,
+        password: formData.password,
+        username: formData.username,
+      }),
+      {
+        pending: "Signing up user",
+        success: {
+          render: "User created succesfully!",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+        },
+        error: "Error creating user",
+      }
+    );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -133,7 +138,7 @@ function Signup() {
       !validPass.special &&
       confirmedPass
     ) {
-      const postData: PostFormData = {
+      const postData: PostUserData = {
         email: formData.email,
         username: formData.username,
         password: formData.password,
@@ -142,7 +147,7 @@ function Signup() {
       notify().then((data) => {
         setTimeout(() => {
           console.log(data);
-          if (data == "success") {
+          if (data.httpStatusCode == 201) {
             navigate("/");
           }
         }, 1500);
