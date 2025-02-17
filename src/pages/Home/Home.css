@@ -68,6 +68,73 @@ ul {
 }
 
 .game-buttons-bar {
-  background-color: blue;
+  background-color: var(--background-light);
   height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  border-radius: 1000px;
+}
+
+.game-controls-buttons-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 2rem;
+  margin-inline: 1rem;
+}
+
+.game-controls-button {
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: var(--text-dark-1) solid 2px;
+  background: transparent;
+  width: 100%;
+  padding: 1rem 2rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--input-bg-1);
+  }
+}
+
+.game-controls-gamepad {
+  aspect-ratio: 1/1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  place-items: center;
+}
+
+.game-controls-gamepad > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background-color: lightgray;
+  cursor: pointer;
+  border-radius: 5px;
+  height: 80%;
+  width: 80%;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+.up {
+  grid-column: 2;
+  grid-row: 1;
+}
+.left {
+  grid-column: 1;
+  grid-row: 2;
+}
+.right {
+  grid-column: 3;
+  grid-row: 2;
+}
+.down {
+  grid-column: 2;
+  grid-row: 3;
 }

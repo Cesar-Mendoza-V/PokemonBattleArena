@@ -1,6 +1,12 @@
 import "./Home.css";
 
-import poke from "/pokemon.png";
+import poke from "/pokemon.ico";
+import {
+  FaArrowDown,
+  FaArrowUp,
+  FaArrowRight,
+  FaArrowLeft,
+} from "react-icons/fa";
 
 import {
   IoPower,
@@ -35,7 +41,28 @@ function Home() {
           </button>
         </aside>
         <main className="game-content"></main>
-        <aside className="game-buttons-bar">sidebar</aside>
+        <aside className="game-buttons-bar">
+          <div className="game-controls-buttons-div">
+            <button className="game-controls-button">Combatir</button>
+            <button className="game-controls-button">Mochila</button>
+            <button className="game-controls-button">Pokemon</button>
+            <button className="game-controls-button">Huir</button>
+          </div>
+          <div className="game-controls-gamepad">
+            <button className="up">
+              <FaArrowUp size={"full"} />
+            </button>
+            <button className="left">
+              <FaArrowLeft size={"full"} />
+            </button>
+            <button className="right">
+              <FaArrowRight size={"full"} />
+            </button>
+            <button className="down">
+              <FaArrowDown size={"full"} />
+            </button>
+          </div>
+        </aside>
       </div>
     </div>
   );
