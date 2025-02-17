@@ -1,4 +1,4 @@
-import "./Home.css";
+import "./Game.css";
 
 import poke from "/pokemon.ico";
 import {

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import Home from "./pages/Home/Home";
+import Game from "./pages/Game/Game";
 import Signup from "./pages/Signup/Signup";
 import Signin from "./pages/Signin/Signin";
 import Recover from "./pages/Recover/Recover";
@@ -12,7 +12,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Signin />} />
-          <Route path="/game" element={<Home />} />
+          <Route path="/game" element={<Game />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/recover" element={<Recover />} />
