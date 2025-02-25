@@ -1,0 +1,160 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #abb4c3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.fullscreen-containers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.form-containers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+  width: 600px;
+  background-color: white;
+  border-radius: 20px;
+  padding: 35px;
+  margin: 10px;
+  text-align: center;
+}
+
+h3 {
+  text-align: center;
+  font-size: 34px;
+  color: #496187;
+  margin-top: 20px;
+}
+
+h5 {
+  text-align: center;
+  font-size: 18px;
+  color: #496187;
+  margin-bottom: 15px;
+}
+
+.form-inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.form-controls {
+  height: 50px;
+  width: 75%;
+  padding: 10px;
+  font-size: 14px;
+  border: none;
+  color: #496187;
+  background-color: #efefef;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.form-controls:focus {
+  padding: 10px;
+  outline: none;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  margin-left: 0px;
+  width: 100%;
+}
+
+.back-btn,
+.submit-email-btn {
+  width: 120px;
+  height: 40px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  background-color: #496187;
+  color: white;
+  cursor: pointer;
+}
+
+.back-btn:hover,
+.submit-email-btn:hover {
+  background-color: #2b4566;
+}
+
+.error-message {
+  text-align: center;
+  font-size: 12px;
+  color: red;
+  margin-top: 5px;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+}
+
+.form-control-popup {
+  width: 75%;
+  max-width: 300px;
+  padding: 10px;
+  margin: auto;
+  border: none;
+  background-color: #efefef;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.form-control-popup:focus {
+  padding: 15px;
+  outline: none;
+}
+
+.popup-container h3 {
+  margin-bottom: 20px;
+  font-size: 25px;
+  color: #496187;
+}
+
+.popup-container h6 {
+  margin-top: 10px;
+  font-size: 15px;
+  color: #496187;
+}
