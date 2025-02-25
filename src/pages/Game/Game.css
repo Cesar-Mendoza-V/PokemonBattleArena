@@ -138,3 +138,87 @@ ul {
   grid-column: 2;
   grid-row: 3;
 }
+
+/* contenido del pop-up */
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 300px; 
+  max-width: 100%; /* ancho máximo */
+  margin: auto; 
+}
+
+p {
+  font-family: 'DM Sans', sans-serif;
+  color: black;
+}
+
+.popup-button-cancel {
+  background-color: #F0EFF0;
+  color:black;
+  border: none;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  width: 100%; /* ancho de los botones es igual */
+}
+
+.popup-button-cancel:hover {
+  background-color: #E0E0E0;
+}
+
+.popup-button-confirm {
+  background-color: #F0EFF0;
+  color: black;
+  border: none;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  width: 100%; /* ancho de los botones es igual */
+}
+
+.popup-button-confirm:hover {
+  background-color: #E0E0E0;
+}
+
+.popup-buttons {
+  display: flex; /* los botones están en fila */
+  justify-content: space-between; 
+  gap: 10px; 
+}
+
+.popup-button-cancel,
+.popup-button-confirm {
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: var(--text-dark-1) solid 2px;
+  background: transparent;
+  width: 100%;
+  padding: 1rem 2rem;
+  cursor: pointer;
+}
+
+.popup-overlay {
+  position: fixed; /* Cubre toda la pantalla */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegura que esté sobre otros elementos */
+}

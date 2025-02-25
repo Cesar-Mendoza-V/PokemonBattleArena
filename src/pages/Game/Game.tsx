@@ -1,6 +1,6 @@
-import "./Game.css";
+import './Game.css';
+import { useState } from 'react';
 
-import poke from "/pokemon.ico";
 import {
   FaArrowDown,
   FaArrowUp,
@@ -17,11 +17,26 @@ import {
 } from "react-icons/io5";
 
 function Home() {
+  const [isPopupVisible, setPopupVisible] = useState(false); 
+
+  const handleLogoutClick = () => {
+    setPopupVisible(true); 
+  };
+
+  const handleCancelClick = () => {
+    setPopupVisible(false); 
+  };
+
+  const handleConfirmLogout = () => {
+    setPopupVisible(false); 
+    console.log('Cerrar sesión');
+  };
+
   return (
     <div className="game-outside-layout">
       <div className="game-main-layout">
         <aside className="game-menu-bar">
-          <img src={poke} alt="Logo" className="game-menu-logo" />
+          <img src="/pokemon.ico"  alt="Logo" className="game-menu-logo" />
           <ul>
             <li className="game-menu-option">
               <IoHomeOutline size={"full"} />
@@ -36,7 +51,7 @@ function Home() {
               <IoPersonCircleOutline size={"full"} />
             </li>
           </ul>
-          <button className="game-menu-signout">
+          <button className="game-menu-signout" onClick={handleLogoutClick}>
             <IoPower size={"full"} />
           </button>
         </aside>
@@ -64,6 +79,18 @@ function Home() {
           </div>
         </aside>
       </div>
+      
+      {isPopupVisible && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <p>¿Quieres cerrar sesión?</p>
+            <div className="popup-buttons">
+              <button className="popup-button-cancel" onClick={handleCancelClick}>No</button>
+              <button className="popup-button-confirm" onClick={handleConfirmLogout}>Sí</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
