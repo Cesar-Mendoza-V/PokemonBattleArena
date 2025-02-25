@@ -75,54 +75,56 @@ function LoginPage() {
   };
 
   return (
-    <div className="container">
-      {/* Login Section */}
-      <div className="login-section">
-        <h2 className="title">Login.</h2>
-        <input 
-          type="email" 
-          placeholder="Email" 
-          className="input" 
-          value={email} 
-          onChange={handleEmailChange} 
-        />
-        {emailError && <p className="error">{emailError}</p>}
-        <input 
-          type="password" 
-          placeholder="Password" 
-          className="input" 
-          value={password} 
-          onChange={handlePasswordChange} 
-        />
-        {loginError && <p className="error">{loginError}</p>}
-        <div className="options">
-          <label className="checkbox">
-            <input 
-              type="checkbox" 
-              checked={rememberMe} 
-              onChange={() => setRememberMe(!rememberMe)} 
-            />
-            Remember me
-          </label>
-          <Link to="/Recover" className="forgot-password">Forgot password?</Link>
+    <div className="login-page-container">
+      <div className="container">
+        {/* Login Section */}
+        <div className="login-section">
+          <h2 className="title">Login.</h2>
+          <input
+            type="email" 
+            placeholder="Email" 
+            className="input" 
+            value={email} 
+            onChange={handleEmailChange} 
+          />
+          {emailError && <p className="error">{emailError}</p>}
+          <input 
+            type="password" 
+            placeholder="Password" 
+            className="input" 
+            value={password} 
+            onChange={handlePasswordChange} 
+          />
+          {loginError && <p className="error">{loginError}</p>}
+          <div className="options">
+            <label className="checkbox">
+              <input 
+                type="checkbox" 
+                checked={rememberMe} 
+                onChange={() => setRememberMe(!rememberMe)} 
+              />
+              Remember me
+            </label>
+            <Link to="/Recover" className="forgot-password">Forgot password?</Link>
+          </div>
+          <button 
+            className="button login-button" 
+            onClick={handleLogin}
+            disabled={isButtonDisabled}
+          >
+            Login
+          </button>
         </div>
-        <button 
-          className="button login-button" 
-          onClick={handleLogin}
-          disabled={isButtonDisabled}
-        >
-          Login
-        </button>
-      </div>
-      
-      <div className="register-section">
-        <h2 className="title"> Embark on <br /> your Pokemon <br /> adventure! </h2>
-        <p className="description">
-          If you don’t have an account yet, <br /> join us and start your adventure.
-        </p>
-        <Link to="/Signup">
-          <button className="button register-button"> Register </button>
-        </Link>
+        
+        <div className="register-section">
+          <h2 className="title"> Embark on <br /> your Pokemon <br /> adventure! </h2>
+          <p className="description">
+            If you don’t have an account yet, <br /> join us and start your adventure.
+          </p>
+          <Link to="/Signup">
+            <button className="button register-button"> Register </button>
+          </Link>
+        </div>
       </div>
     </div>
   );

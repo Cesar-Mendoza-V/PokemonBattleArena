@@ -4,6 +4,7 @@ import Game from "./pages/Game/Game";
 import Signup from "./pages/Signup/Signup";
 import Signin from "./pages/Signin/Signin";
 import Recover from "./pages/Recover/Recover";
+import PasswordInput from "./pages/Recover/PasswordInput";
 import Signout from "./pages/Signout/Signout";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/recover" element={<Recover />} />
+          <Route path="/passwordInput" element={<PasswordInput />} />
           <Route path="/signout" element={<Signout />} />
         </Routes>
       </Router>
