@@ -1,9 +1,6 @@
-/* 
-   Importa fuentes si lo deseas; aquí se usa un ejemplo de fuente retro + sans-serif.
-   Ajusta según tus preferencias o usa variables globales del proyecto.
-*/
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Press+Start+2P&display=swap');
 
+/* Main container for the Pokémon card */
 .pokemon-card-container {
   width: 270px;
   background-color: #ffffff;
@@ -16,7 +13,7 @@
   position: relative;
 }
 
-/* Cabecera con semicírculo en la parte superior */
+/* Header with a semicircle background */
 .pokemon-card-header {
   position: relative;
   width: 100%;
@@ -25,7 +22,7 @@
   overflow: hidden;
 }
 
-/* Badget de HP en la esquina superior derecha */
+/* HP badge in the top-right corner */
 .pokemon-hp-badge {
   position: absolute;
   top: 10px;
@@ -40,7 +37,7 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* Imagen del Pokémon */
+/* Pokémon image */
 .pokemon-image {
   position: absolute;
   bottom: -10px;
@@ -51,9 +48,9 @@
   object-fit: contain;
 }
 
-/* Cuerpo de la tarjeta */
+/* Body containing name and type */
 .pokemon-card-body {
-  margin-top: 40px; /* Deja espacio para la imagen */
+  margin-top: 40px;
   padding: 0 16px 16px;
 }
 
@@ -76,7 +73,7 @@
   margin-bottom: 8px;
 }
 
-/* Pie de la tarjeta con estadísticas */
+/* Footer with stats */
 .pokemon-card-footer {
   display: flex;
   justify-content: space-around;

@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import './PokemonCard.css';
 
 /**
- * Interfaz para las props del componente.
- * - pokemonName: Nombre del Pokémon (por ejemplo: "pikachu").
+ * Interface for the props of the PokemonCard component.
+ * - `pokemonName`: The name of the Pokémon (e.g., "pikachu").
  */
 interface PokemonCardProps {
   pokemonName: string;
 }
 
 /**
- * Interfaz que define la estructura de los datos que obtenemos
- * de la PokeAPI para un Pokémon.
+ * Interface defining the structure of Pokémon data retrieved
+ * from the PokeAPI.
  */
 interface PokemonData {
   name: string;
@@ -38,8 +38,8 @@ interface PokemonData {
 }
 
 /**
- * Mapeo de colores según el tipo principal del Pokémon.
- * Ajusta los colores a tu preferencia.
+ * A color mapping based on Pokémon types to dynamically
+ * assign background colors.
  */
 const typeColorMap: Record<string, string> = {
   normal: '#A8A77A',
@@ -62,12 +62,22 @@ const typeColorMap: Record<string, string> = {
   fairy: '#D685AD',
 };
 
+/**
+ * Functional component representing a Pokémon card.
+ * Displays the Pokémon's image, type, HP, and key stats.
+ */
 const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonName }) => {
+  // State to hold the fetched Pokémon data
   const [pokemonData, setPokemonData] = useState<PokemonData | null>(null);
+  // State to manage loading state
   const [loading, setLoading] = useState<boolean>(true);
+  // State to handle errors
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
+    /**
+     * Fetches Pokémon data from PokeAPI based on the provided name.
+     */
     const fetchPokemon = async () => {
       try {
         setLoading(true);
@@ -75,7 +85,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonName }) => {
           `https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`
         );
         if (!response.ok) {
-          throw new Error('No se pudo obtener la información del Pokémon');
+          throw new Error('Failed to fetch Pokémon data');
         }
         const data: PokemonData = await response.json();
         setPokemonData(data);
@@ -90,7 +100,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonName }) => {
   }, [pokemonName]);
 
   if (loading) {
-    return <div className="pokemon-card-loading">Cargando...</div>;
+    return <div className="pokemon-card-loading">Loading...</div>;
   }
 
   if (error) {
@@ -101,50 +111,44 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonName }) => {
     return null;
   }
 
-  // Imagen (priorizando "official-artwork" si existe).
+  // Get Pokémon's official artwork (fallback to default sprite if unavailable)
   const imageUrl =
     pokemonData.sprites.other?.['official-artwork']?.front_default ||
     pokemonData.sprites.front_default ||
     '';
 
-  // Tomamos el primer tipo del Pokémon (si tiene más, puedes adaptarlo).
+  // Get the Pokémon's primary type (default to 'normal' if missing)
   const mainType = pokemonData.types[0]?.type.name || 'normal';
   const typeColor = typeColorMap[mainType] || '#A8A77A';
 
-  // Obtenemos las estadísticas que queremos mostrar
+  // Extract key stats
   const hpStat =
     pokemonData.stats.find(stat => stat.stat.name === 'hp')?.base_stat || 0;
   const attackStat =
     pokemonData.stats.find(stat => stat.stat.name === 'attack')?.base_stat || 0;
   const defenseStat =
-    pokemonData.stats.find(stat => stat.stat.name === 'defense')?.base_stat ||
-    0;
+    pokemonData.stats.find(stat => stat.stat.name === 'defense')?.base_stat || 0;
   const speedStat =
     pokemonData.stats.find(stat => stat.stat.name === 'speed')?.base_stat || 0;
 
   return (
     <div className="pokemon-card-container">
-      {/* Semicírculo de color (dependiendo del tipo) */}
-      <div
-        className="pokemon-card-header"
-        style={{ backgroundColor: typeColor }}
-      >
+      {/* Header section with a circular background for Pokémon image */}
+      <div className="pokemon-card-header" style={{ backgroundColor: typeColor }}>
+        {/* HP Badge in the top-right corner */}
         <div className="pokemon-hp-badge">HP {hpStat}</div>
         <img className="pokemon-image" src={imageUrl} alt={pokemonData.name} />
       </div>
 
-      {/* Cuerpo de la tarjeta con nombre y tipo */}
+      {/* Body section with Pokémon name and type */}
       <div className="pokemon-card-body">
         <h2 className="pokemon-name">{pokemonData.name}</h2>
-        <div
-          className="pokemon-type"
-          style={{ backgroundColor: typeColor }}
-        >
+        <div className="pokemon-type" style={{ backgroundColor: typeColor }}>
           {mainType}
         </div>
       </div>
 
-      {/* Pie de la tarjeta con las estadísticas */}
+      {/* Footer section displaying key stats */}
       <div className="pokemon-card-footer">
         <div className="pokemon-stat">
           <p className="stat-value">{attackStat}</p>
