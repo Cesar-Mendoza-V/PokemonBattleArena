@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Signin.css";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -43,20 +43,19 @@ function LoginPage() {
   };
 
   const handleLogin = async () => {
-    setLoginError(""); 
+    setLoginError("");
 
     try {
       const response = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: email, password }), 
+        body: JSON.stringify({ username: email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         if (data.token) {
-          
           if (rememberMe) {
             localStorage.setItem("token", data.token);
             localStorage.setItem("rememberedEmail", email);
@@ -65,7 +64,7 @@ function LoginPage() {
             localStorage.removeItem("rememberedEmail"); // Eliminar email guardado si no se recuerda
           }
         }
-        navigate('/Game'); 
+        navigate("/Game");
       } else {
         setLoginError(data.message || "Invalid email or password");
       }
@@ -79,53 +78,59 @@ function LoginPage() {
       {/* Login Section */}
       <div className="login-section">
         <h2 className="title">Login.</h2>
-        <input 
-          type="email" 
-          placeholder="Email" 
-          className="input" 
-          value={email} 
-          onChange={handleEmailChange} 
+        <input
+          type="email"
+          placeholder="Email"
+          className="input"
+          value={email}
+          onChange={handleEmailChange}
         />
         {emailError && <p className="error">{emailError}</p>}
-        <input 
-          type="password" 
-          placeholder="Password" 
-          className="input" 
-          value={password} 
-          onChange={handlePasswordChange} 
+        <input
+          type="password"
+          placeholder="Password"
+          className="input"
+          value={password}
+          onChange={handlePasswordChange}
         />
         {loginError && <p className="error">{loginError}</p>}
         <div className="options">
           <label className="checkbox">
-            <input 
-              type="checkbox" 
-              checked={rememberMe} 
-              onChange={() => setRememberMe(!rememberMe)} 
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={() => setRememberMe(!rememberMe)}
             />
             Remember me
           </label>
-          <Link to="/Recover" className="forgot-password">Forgot password?</Link>
+          <Link to="/recover" className="forgot-password">
+            Forgot password?
+          </Link>
         </div>
-        <button 
-          className="button login-button" 
+        <button
+          className="button login-button"
           onClick={handleLogin}
           disabled={isButtonDisabled}
         >
           Login
         </button>
       </div>
-      
+
       <div className="register-section">
-        <h2 className="title"> Embark on <br /> your Pokemon <br /> adventure! </h2>
+        <h2 className="title">
+          {" "}
+          Embark on <br /> your Pokemon <br /> adventure!{" "}
+        </h2>
         <p className="description">
-          If you don’t have an account yet, <br /> join us and start your adventure.
+          If you don’t have an account yet, <br /> join us and start your
+          adventure.
         </p>
-        <Link to="/Signup">
+        <Link to="/signup">
           <button className="button register-button"> Register </button>
         </Link>
       </div>
     </div>
   );
-};
+}
 
 export default LoginPage;
