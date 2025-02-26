@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import './PokemonCard.css';
 
 /**
- * Interface for the props of the PokemonCard component.
- * - `pokemonName`: The name of the Pokémon (e.g., "pikachu").
+ * Props for the PokemonCard component.
+ * - pokemonName: The name of the Pokémon (e.g., "charmander").
  */
 interface PokemonCardProps {
   pokemonName: string;
 }
 
 /**
- * Interface defining the structure of Pokémon data retrieved
- * from the PokeAPI.
+ * Interface for the Pokémon data fetched from PokeAPI.
  */
 interface PokemonData {
   name: string;
@@ -38,8 +37,7 @@ interface PokemonData {
 }
 
 /**
- * A color mapping based on Pokémon types to dynamically
- * assign background colors.
+ * Mapping of Pokémon types to colors.
  */
 const typeColorMap: Record<string, string> = {
   normal: '#A8A77A',
@@ -63,21 +61,22 @@ const typeColorMap: Record<string, string> = {
 };
 
 /**
- * Functional component representing a Pokémon card.
- * Displays the Pokémon's image, type, HP, and key stats.
+ * The PokemonCard component displays a Pokémon's image, types, HP, key stats, and now also its level.
+ * The level is determined by fetching encounter data from the PokeAPI, randomly selecting an encounter area,
+ * and then generating a random level between the min and max level defined for that area.
  */
 const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonName }) => {
-  // State to hold the fetched Pokémon data
+  // State to store Pokémon data from the main endpoint
   const [pokemonData, setPokemonData] = useState<PokemonData | null>(null);
-  // State to manage loading state
+  // State to store the generated Pokémon level
+  const [pokemonLevel, setPokemonLevel] = useState<number | null>(null);
+  // Loading state for the main data
   const [loading, setLoading] = useState<boolean>(true);
-  // State to handle errors
+  // Error state for the main data
   const [error, setError] = useState<string>('');
 
+  // Fetch Pokémon data (image, types, stats, etc.)
   useEffect(() => {
-    /**
-     * Fetches Pokémon data from PokeAPI based on the provided name.
-     */
     const fetchPokemon = async () => {
       try {
         setLoading(true);
@@ -99,6 +98,67 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonName }) => {
     fetchPokemon();
   }, [pokemonName]);
 
+  // Fetch encounter data to determine the Pokémon's level based on a random area.
+  // Fetch encounter data to determine the Pokémon's level based on a random area.
+useEffect(() => {
+    const fetchEncounters = async () => {
+      try {
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}/encounters`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch encounter data');
+        }
+        const encounterData = await response.json();
+        if (encounterData.length > 0) {
+          // Randomly select an encounter area from the returned array
+          const randomEncounter =
+            encounterData[Math.floor(Math.random() * encounterData.length)];
+          // Check if version_details exist
+          if (
+            randomEncounter.version_details &&
+            randomEncounter.version_details.length > 0
+          ) {
+            // Randomly select a version detail
+            const randomVersion =
+              randomEncounter.version_details[
+                Math.floor(Math.random() * randomEncounter.version_details.length)
+              ];
+            // Make sure encounter_details array exists and has at least one element
+            if (
+              randomVersion.encounter_details &&
+              randomVersion.encounter_details.length > 0
+            ) {
+              // Access the first element in encounter_details
+              const encounterDetail = randomVersion.encounter_details[0];
+              const minLevel = encounterDetail.min_level;
+              const maxLevel = encounterDetail.max_level;
+              // Generate a random level between min and max (inclusive)
+              const level =
+                Math.floor(Math.random() * (maxLevel - minLevel + 1)) + minLevel;
+              setPokemonLevel(level);
+            } else {
+              // Fallback if encounter_details is missing or empty
+              setPokemonLevel(5);
+            }
+          } else {
+            // Fallback default level if no version_details are available
+            setPokemonLevel(5);
+          }
+        } else {
+          // Fallback default level if no encounter data is available
+          setPokemonLevel(5);
+        }
+      } catch (error: any) {
+        console.error('Error fetching encounters:', error);
+        setPokemonLevel(5); // Fallback default level on error
+      }
+    };
+  
+    fetchEncounters();
+  }, [pokemonName]);
+  
+
   if (loading) {
     return <div className="pokemon-card-loading">Loading...</div>;
   }
@@ -111,17 +171,27 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonName }) => {
     return null;
   }
 
-  // Get Pokémon's official artwork (fallback to default sprite if unavailable)
+  // Get Pokémon image (preferring official artwork)
   const imageUrl =
     pokemonData.sprites.other?.['official-artwork']?.front_default ||
     pokemonData.sprites.front_default ||
     '';
 
-  // Get the Pokémon's primary type (default to 'normal' if missing)
-  const mainType = pokemonData.types[0]?.type.name || 'normal';
-  const typeColor = typeColorMap[mainType] || '#A8A77A';
+  // Extract Pokémon types as an array of strings
+  const typesArray = pokemonData.types.map(typeObj => typeObj.type.name);
 
-  // Extract key stats
+  // Set header background: use gradient if two types; otherwise, a solid color.
+  let headerStyle = {};
+  if (typesArray.length === 2) {
+    const color1 = typeColorMap[typesArray[0]] || '#A8A77A';
+    const color2 = typeColorMap[typesArray[1]] || '#A8A77A';
+    headerStyle = { background: `linear-gradient(90deg, ${color1}, ${color2})` };
+  } else {
+    const color = typeColorMap[typesArray[0]] || '#A8A77A';
+    headerStyle = { backgroundColor: color };
+  }
+
+  // Extract key stats from the Pokémon data
   const hpStat =
     pokemonData.stats.find(stat => stat.stat.name === 'hp')?.base_stat || 0;
   const attackStat =
@@ -133,22 +203,33 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonName }) => {
 
   return (
     <div className="pokemon-card-container">
-      {/* Header section with a circular background for Pokémon image */}
-      <div className="pokemon-card-header" style={{ backgroundColor: typeColor }}>
-        {/* HP Badge in the top-right corner */}
+      {/* Header: displays the Pokémon image and an HP badge; background is set based on type(s) */}
+      <div className="pokemon-card-header" style={headerStyle}>
         <div className="pokemon-hp-badge">HP {hpStat}</div>
         <img className="pokemon-image" src={imageUrl} alt={pokemonData.name} />
       </div>
 
-      {/* Body section with Pokémon name and type */}
+      {/* Body: shows the generated level, Pokémon name, and type badges */}
       <div className="pokemon-card-body">
+        {/* Display the generated level */}
+        <div className="pokemon-level-display">
+          Level: {pokemonLevel !== null ? pokemonLevel : 'N/A'}
+        </div>
         <h2 className="pokemon-name">{pokemonData.name}</h2>
-        <div className="pokemon-type" style={{ backgroundColor: typeColor }}>
-          {mainType}
+        <div className="pokemon-types">
+          {typesArray.map((type, index) => (
+            <div
+              key={index}
+              className="pokemon-type-badge"
+              style={{ backgroundColor: typeColorMap[type] || '#A8A77A' }}
+            >
+              {type}
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Footer section displaying key stats */}
+      {/* Footer: displays key stats (Attack, Defense, Speed) */}
       <div className="pokemon-card-footer">
         <div className="pokemon-stat">
           <p className="stat-value">{attackStat}</p>

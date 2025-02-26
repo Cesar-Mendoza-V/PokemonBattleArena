@@ -13,7 +13,7 @@
   position: relative;
 }
 
-/* Header with a semicircle background */
+/* Header with a semicircular background */
 .pokemon-card-header {
   position: relative;
   width: 100%;
@@ -22,7 +22,7 @@
   overflow: hidden;
 }
 
-/* HP badge in the top-right corner */
+/* HP badge positioned at the top-right corner */
 .pokemon-hp-badge {
   position: absolute;
   top: 10px;
@@ -34,10 +34,10 @@
   border-radius: 12px;
   font-size: 0.8rem;
   font-family: 'Press Start 2P', cursive;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Pokémon image */
+/* Pokémon image styling */
 .pokemon-image {
   position: absolute;
   bottom: -10px;
@@ -48,10 +48,17 @@
   object-fit: contain;
 }
 
-/* Body containing name and type */
+/* Body of the card containing the level, name, and type badges */
 .pokemon-card-body {
   margin-top: 40px;
   padding: 0 16px 16px;
+}
+
+.pokemon-level-display {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 700;
 }
 
 .pokemon-name {
@@ -62,18 +69,25 @@
   color: #333;
 }
 
-.pokemon-type {
-  display: inline-block;
-  color: #fff;
+/* Container for multiple type badges */
+.pokemon-types {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* Individual type badge styling */
+.pokemon-type-badge {
   padding: 4px 12px;
   border-radius: 8px;
   font-size: 0.8rem;
   text-transform: uppercase;
   font-weight: bold;
-  margin-bottom: 8px;
+  color: #fff;
 }
 
-/* Footer with stats */
+/* Footer for key stats */
 .pokemon-card-footer {
   display: flex;
   justify-content: space-around;
@@ -99,5 +113,4 @@
 .stat-label {
   font-size: 0.8rem;
   color: #666;
-  margin: 4px 0 0;
 }

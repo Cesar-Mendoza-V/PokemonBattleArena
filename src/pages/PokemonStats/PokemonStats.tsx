@@ -1,7 +1,7 @@
 import React from 'react';
 import PokemonCard from '../../components/PokemonCard/PokemonCard';
 
-const PokemonTestPage: React.FC = () => {
+const PokemonStats: React.FC = () => {
   return (
     <div
       style={{
@@ -12,9 +12,9 @@ const PokemonTestPage: React.FC = () => {
         backgroundColor: '#f2f2f2'
       }}
     >
-      <PokemonCard pokemonName="charizard" />
+      <PokemonCard pokemonName="pikachu" />
     </div>
   );
 };
 
-export default PokemonTestPage;
+export default PokemonStats;
