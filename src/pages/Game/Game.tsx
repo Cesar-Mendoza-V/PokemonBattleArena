@@ -40,7 +40,9 @@ function Home() {
             <IoPower size={"full"} />
           </button>
         </aside>
-        <main className="game-content"></main>
+        <main className="game-content">
+          <div className="game-grid"></div>
+        </main>
         <aside className="game-buttons-bar">
           <div className="game-controls-buttons-div">
             <button className="game-controls-button">Combatir</button>

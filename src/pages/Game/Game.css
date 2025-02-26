@@ -13,16 +13,7 @@
   grid-template-columns: 10% auto 15%; /* Sidebars take equal space */
   width: 100%;
   height: 100%;
-  align-items: center;
-}
-
-.game-content {
-  width: 100%;
-  height: 100%;
-  background-image: url(../../assets/images/image.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  align-items: stretch;
 }
 
 .game-menu-bar {
@@ -137,4 +128,24 @@ ul {
 .down {
   grid-column: 2;
   grid-row: 3;
+}
+
+.game-grid {
+  max-height: 100vh;
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+.game-content {
+  max-height: 100vh;
+  aspect-ratio: 1;
+  background-image: url(../../assets/images/image.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
