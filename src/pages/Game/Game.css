@@ -9,14 +9,14 @@
 }
 
 .game-main-layout {
-  display: grid;
-  grid-template-columns: 10% auto 15%; /* Sidebars take equal space */
+  display: flex;
+  justify-content: space-evenly;
   width: 100%;
   height: 100%;
-  align-items: stretch;
 }
 
 .game-menu-bar {
+  width: 10%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -59,6 +59,7 @@ ul {
 }
 
 .game-buttons-bar {
+  width: 15%;
   background-color: var(--background-light);
   height: 100%;
   display: flex;
@@ -71,8 +72,10 @@ ul {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  gap: 2rem;
-  margin-inline: 1rem;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 10%;
+  margin-inline: 10%;
 }
 
 .game-controls-button {
@@ -81,16 +84,23 @@ ul {
   font-weight: bold;
   border: var(--text-dark-1) solid 2px;
   background: transparent;
-  width: 100%;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1rem;
+  width: 80%;
   cursor: pointer;
 
   &:hover {
     background-color: var(--input-bg-1);
   }
+
+  &:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 }
 
 .game-controls-gamepad {
+  padding: 1.25rem;
   aspect-ratio: 1/1;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -102,7 +112,6 @@ ul {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
   background-color: lightgray;
   cursor: pointer;
   border-radius: 5px;
@@ -136,6 +145,9 @@ ul {
   width: 100%;
   height: 100%;
   aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  grid-template-rows: repeat(26, 1fr);
 }
 
 .game-content {
@@ -148,4 +160,25 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.grid-pokemon {
+  cursor: pointer;
+  background-position: center;
+  background-size: cover;
+}
+
+.game-content-message {
+  grid-row-start: 2;
+  grid-row-end: 6;
+  grid-column-start: 4;
+  grid-column-end: 24;
+  background-color: rgb(49, 49, 49);
+  border: 3px dashed red;
+  padding-block: 3rem;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: xx-large;
+  text-align: center;
+  margin: auto 0;
 }
