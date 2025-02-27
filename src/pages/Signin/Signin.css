@@ -1,0 +1,147 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.login-section,
+.register-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.login-section {
+  background-color: white;
+}
+
+.register-section {
+  background-color: #a9b5c3;
+  text-align: center;
+  margin-top: -20px;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 700;
+  color: #4a6085;
+  margin-bottom: 20px;
+}
+
+.description {
+  margin-top: 30px;
+  font-size: 18px;
+  color: #4b5563;
+  max-width: 70%;
+  line-height: 1.5;
+}
+
+.input {
+  width: 70%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+  font-size: 18px;
+}
+
+.input[type="email"],
+.input[type="password"] {
+  padding: 20px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 50px;
+  width: 400px;
+  height: 65px;
+}
+
+.input[type="email"] {
+  margin-bottom: 20px;
+}
+
+.options {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 70%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  color: #6b7280;
+  margin-bottom: 0;
+}
+
+.forgot-password {
+  text-align: right;
+  width: auto;
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.button {
+  width: 70%;
+  padding: 15px;
+  border: none;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 18px;
+  width: 200px;
+}
+
+.login-button {
+  background-color: #496183;
+  color: white;
+}
+
+.register-button {
+  background-color: white;
+  color: #374151;
+  border: 1px solid #ccc;
+}
+
+.register-section .title {
+  font-size: 50px;
+  font-weight: 700;
+  color: #374151;
+  max-width: 80%;
+  line-height: 1.3;
+}
+
+.register-section .description {
+  font-size: 22px;
+  max-width: 80%;
+  color: #f5fafe;
+  margin-bottom: 20px;
+}
+
+.register-button {
+  font-size: 18px;
+  padding: 12px 24px;
+  border-radius: 25px;
+}
+
+.error {
+  color: red;
+  font-size: 0.875em;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
