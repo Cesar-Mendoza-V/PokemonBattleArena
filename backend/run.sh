@@ -1,5 +1,7 @@
 #!/bin/bash
 
+brew install openssl
+
 echo "Modificando las rutas de las librerías en libmysqlcppconn..."
 
 install_name_tool -change libssl.3.dylib @rpath/libssl.3.dylib ./lib/libmysqlcppconn.10.9.2.0.dylib
