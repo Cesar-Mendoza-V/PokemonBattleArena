@@ -15,7 +15,7 @@ export const postUserRequest = async (
   data: PostUserData
 ): Promise<ResponseData> => {
   try {
-    const response = await fetch(url + "/signup", {
+    const response = await fetch("http://localhost:3000/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
