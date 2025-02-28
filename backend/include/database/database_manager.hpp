@@ -43,6 +43,32 @@ class DatabaseManager {
 
   bool login_user(const User& user);
 
+  // Resets the user's password by sending a reset email.
+  //
+  // Args:
+  //   email: The email address of the user requesting a password reset.
+  //
+  // Returns:
+  //   bool: true if the email was sent successfully.
+  //
+  // Throws:
+  //   std::runtime_error: If email sending fails.
+  bool send_password_reset_email(const std::string& email);
+
+    // Validates a verification code for a given email.
+  //
+  // Args:
+  //   email: The email address associated with the verification code.
+  //   code: The verification code to validate.
+  //
+  // Returns:
+  //   bool: true if the code is correct; false otherwise.
+  //
+  // Throws:
+  //   sql::SQLException: If there's a database connection error.
+  bool validate_verification_code(const std::string& email, const std::string& code);
+
+
  private:
   // Manages the lifetime of the database connection
   // Using unique_ptr ensures proper resource cleanup

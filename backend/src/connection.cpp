@@ -146,6 +146,91 @@ int main() {
     }
   );
 
+  CROW_ROUTE(app, "/verify_code").methods(crow::HTTPMethod::POST)(
+    [&db](const crow::request& req) {
+        auto body = crow::json::load(req.body);
+  
+        // Verificar si los campos requeridos están presentes en la solicitud
+        if (!body.has("email") || !body.has("verification_code")) {
+            ApiResponse response{
+                "Missing required fields in request, error raro",
+                400
+            };
+            return crow::response(400, response.ToJson());
+        }
+  
+        std::string email = body["email"].s();
+        std::string verification_code = body["verification_code"].s();
+  
+        try {
+            // Validar el código en la base de datos
+            if (db.validate_verification_code(email, verification_code)) {
+                ApiResponse response{
+                    "Verification successful",
+                    200
+                };
+                return crow::response(200, response.ToJson());
+            } else {
+                ApiResponse response{
+                    "Invalid verification code",
+                    401
+                };
+                return crow::response(401, response.ToJson());
+            }
+        } catch (const std::runtime_error& e) {
+            ApiResponse response{
+                e.what(),
+                500
+            };
+            return crow::response(500, response.ToJson());
+        }
+    }
+  );
+  
+
+
+CROW_ROUTE(app, "/send_verification_code").methods(crow::HTTPMethod::POST)(
+  [&db](const crow::request& req) {
+      auto body = crow::json::load(req.body);
+
+      // Verify all required fields are present in the request
+      if (!body.has("email")) {
+          ApiResponse response{
+              "Missing required field: email",
+              400
+          };
+          return crow::response(400, response.ToJson());
+      }
+
+      std::string email = body["email"].s();
+
+      try {
+          // Try to send the email with the code
+          if (db.send_password_reset_email(email)) {
+              ApiResponse response{
+                  "Verification code sent successfully",
+                  200
+              };
+              return crow::response(200, response.ToJson());
+          } else {
+              ApiResponse response{
+                  "Failed to send verification code",
+                  500
+              };
+              return crow::response(500, response.ToJson());
+          }
+      } catch (const std::runtime_error& e) {
+          ApiResponse response{
+              e.what(),
+              500
+          };
+          return crow::response(500, response.ToJson());
+      }
+  }
+);
+
+
+
   // Start the server on port 3000 with multi-threading enabled
   app.port(3000).multithreaded().run();
   return 0;

@@ -36,7 +36,8 @@ DatabaseManager::DatabaseManager() {
           "IdUser INT AUTO_INCREMENT PRIMARY KEY,"
           "email VARCHAR(255) UNIQUE NOT NULL,"
           "username VARCHAR(255) UNIQUE NOT NULL,"
-          "password VARCHAR(255) NOT NULL"
+          "password VARCHAR(255) NOT NULL,"
+          "verification_code VARCHAR(6)"
           ")"
       );
       std::cout << "Successfully created 'users' table" << std::endl;
@@ -129,3 +130,76 @@ bool DatabaseManager::login_user(const User& user) {
         throw std::runtime_error("Database error, try again.");
     }
 }
+
+// Method to send the email with the verification code
+bool DatabaseManager::send_password_reset_email(const std::string& email) {
+  try {
+    // Generar código de verificación de 6 dígitos
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(100000, 999999);
+    std::string verification_code = std::to_string(dist(gen));
+
+    // Definir la consulta una sola vez
+    const std::string query = "UPDATE users SET verification_code = ? WHERE email = ?";
+
+    // Crear y ejecutar la consulta
+    std::unique_ptr<sql::PreparedStatement> prep_stmt(conn->prepareStatement(query));
+    prep_stmt->setString(1, verification_code);
+    prep_stmt->setString(2, email);
+    prep_stmt->execute();  // ✅ Ahora usa la misma variable sin redefinir
+
+    // Ejecutar el script de Python con los argumentos
+    std::string command = "python3 ../modules/send_email.py " + email + " " + verification_code;
+    int exit_code = system(command.c_str());
+
+    if (exit_code != 0) {
+        std::cerr << "Error: El script de Python falló." << std::endl;
+        return false;
+    }
+
+    std::cout << "Código de verificación enviado correctamente." << std::endl;
+    return true;
+
+  } catch (const sql::SQLException& e) {
+      std::cerr << "Error al registrar código de verificación: " << e.what() << std::endl;
+      return false;
+  }
+}
+
+// Method to validate if the verification code is correct
+bool DatabaseManager::validate_verification_code(const std::string& email, const std::string& code) {
+  try {
+      std::cout << "Validating verification code for: " << email << std::endl;
+
+      // Check if the database connection is valid
+      if (!conn) {
+          throw std::runtime_error("Database connection is null.");
+      }
+
+      const std::string query = 
+          "SELECT COUNT(*) FROM users WHERE email = ? AND verification_code = ?";
+
+      std::unique_ptr<sql::PreparedStatement> prep_stmt(conn->prepareStatement(query));
+      prep_stmt->setString(1, email);
+      prep_stmt->setString(2, code);
+
+      std::unique_ptr<sql::ResultSet> res(prep_stmt->executeQuery());
+
+      if (res->next()) {
+          int count = res->getInt(1);
+          return count > 0;  // Returns true if at least one match is found
+      }
+
+      return false;  // No matching record
+
+  } catch (const sql::SQLException& e) {
+      std::cerr << "SQL Error validating verification code: " << e.what() 
+                << " (SQL State: " << e.getSQLState() << ")" << std::endl;
+      return false;
+  } catch (const std::exception& e) {
+      std::cerr << "General error: " << e.what() << std::endl;
+      return false;
+  }
+}
+
