@@ -26,6 +26,34 @@
  #include "database/database_manager.hpp"
  #include "models/user.hpp"
  #include <crow/middlewares/cors.h>
+ #include <cstdlib>
+ #include <fstream>
+ #include <iostream>
+
+  // [ENV_LOADER] - Simple function to load environment variables from .env file in parent directory
+  void loadEnvFromFile() {
+    std::ifstream envFile("../.env");
+    if (!envFile.is_open()) {
+        std::cerr << "Warning: Could not open ../.env file" << std::endl;
+        return;
+    }
+
+    std::string line;
+    while (std::getline(envFile, line)) {
+        // Skip comments and empty lines
+        if (line.empty() || line[0] == '#') continue;
+        
+        // Find the equals sign
+        size_t pos = line.find('=');
+        if (pos != std::string::npos) {
+            std::string key = line.substr(0, pos);
+            std::string value = line.substr(pos + 1);
+            
+            // Set environment variable
+            setenv(key.c_str(), value.c_str(), 1);
+        }
+    }
+  }
  
  // [API_RESPONSE] - Defines the standard structure for all API responses.
  // Used to maintain consistent communication format with the frontend.
@@ -48,21 +76,31 @@
  
  // [MAIN] - Main program entry point and application setup
  int main() {
+
+   loadEnvFromFile();
    // [CROW_INIT] - Initialize the Crow application with core components
    crow::App<crow::CORSHandler> app;
  
    // [CORS_CONFIG] - Configure Cross-Origin Resource Sharing
    auto& cors = app.get_middleware<crow::CORSHandler>();
+
+   // [ENV_CHECK] - Retrieve ALLOWED_ORIGIN from environment variables
+   char* allowed_origin = std::getenv("ALLOWED_ORIGIN");
+   if (!allowed_origin) {
+    throw std::runtime_error("ALLOWED_ORIGIN environment variable is not set.");
+   }
+   std::string origin = std::string(allowed_origin);
+
    
    // [CORS_CONFIG_DETAILS] - Properly configure CORS to allow requests from frontend
    cors
-       .global()
-       .headers("Content-Type", "Authorization")
-       .methods("POST"_method, "GET"_method, "PUT"_method, "DELETE"_method, "OPTIONS"_method)
-       .origin("http://localhost:5173")
-       .allow_credentials()
-       .prefix("/")
-       .max_age(86400); // Cache preflight for 24 hours
+      .global()
+      .headers("Content-Type", "Authorization")
+      .methods("POST"_method, "GET"_method, "PUT"_method, "DELETE"_method, "OPTIONS"_method)
+      .origin(origin)  
+      .allow_credentials()
+      .prefix("/")
+      .max_age(86400);
  
    // [LOGGING] - Set logging level to only show warnings and suppress info messages
    app.loglevel(crow::LogLevel::Warning);

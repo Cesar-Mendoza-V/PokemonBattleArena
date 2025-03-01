@@ -84,6 +84,7 @@ DB_HOST=tcp://127.0.0.1:3306
 DB_USER=your_username
 DB_PASSWORD=your_password
 DB_NAME=pruebaBase
+ALLOWED_ORIGIN=frontend_domain
 ```
 
 ### Building the Project
