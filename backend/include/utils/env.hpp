@@ -1,10 +1,12 @@
 // Copyright 2024 Pokemon Battle Arena Project
 // Utility class for loading environment variables from a .env file
-
 #pragma once
 #include <string>
 #include <fstream>
 #include <stdexcept>
+#include <vector>
+#include <iostream>
+#include <filesystem>
 
 /**
  * [ENV_LOADER] - Utility class for reading environment variables
@@ -22,27 +24,44 @@ public:
      * @return The value of the environment variable or the default value.
      */
     static std::string getEnvVariable(const std::string& key, const std::string& defaultValue = "") {
-        // [ENV_FILE_OPEN] - Open the .env file for reading
-        std::ifstream file("../../../../.env");
-        std::string line;
+        // Define possible paths where the .env file might be located
+        std::vector<std::string> possiblePaths = {
+            "../../../.env",
+            "../../../../.env",
+            "../../../PokemonBattleArena/.env"
+        };
         
-        // [ENV_FILE_READ] - Read file line by line
-        while (std::getline(file, line)) {
-            // [ENV_IGNORE] - Ignore empty lines and comments
-            if (line.empty() || line[0] == '#') continue;
+        // Try to open the .env file in each of the possible paths
+        for (const auto& path : possiblePaths) {
+            std::ifstream file(path);
             
-            // [ENV_PARSE] - Locate the equal sign separating key and value
-            auto pos = line.find('=');
-            if (pos == std::string::npos) continue;
-            
-            // [ENV_EXTRACT] - Extract the key and compare it with the requested key
-            std::string currentKey = line.substr(0, pos);
-            if (currentKey == key) {
-                return line.substr(pos + 1);
+            if (file.is_open()) {
+                std::string line;
+                
+                // [ENV_FILE_READ] - Read file line by line
+                while (std::getline(file, line)) {
+
+                    // [ENV_IGNORE] - Ignore empty lines and comments
+                    if (line.empty() || line[0] == '#') continue;
+                    
+                    // [ENV_PARSE] - Locate the equal sign separating key and value
+                    auto pos = line.find('=');
+                    if (pos == std::string::npos) continue;
+                    
+                    // [ENV_EXTRACT] - Extract the key and compare it with the requested key
+                    std::string currentKey = line.substr(0, pos);
+                    if (currentKey == key) {
+                        return line.substr(pos + 1);
+                    }
+                }
+                
+                // If the file was opened but the key was not found, return the default value
+                return defaultValue;
             }
         }
         
-        // [ENV_DEFAULT_RETURN] - Return the default value if key is not found
+        // Returns the default value and display a message (more fault-tolerant)
+        std::cerr << "Warning: Could not open .env file in any of the possible locations. Using default value." << std::endl;
         return defaultValue;
     }
 };
