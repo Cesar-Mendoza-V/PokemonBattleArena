@@ -32,7 +32,7 @@
 
   // [ENV_LOADER] - Simple function to load environment variables from .env file in parent directory
   void loadEnvFromFile() {
-    std::ifstream envFile("../.env");
+    std::ifstream envFile("../../.env");
     if (!envFile.is_open()) {
         std::cerr << "Warning: Could not open ../.env file" << std::endl;
         return;
