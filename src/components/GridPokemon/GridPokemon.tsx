@@ -6,6 +6,7 @@ interface SpawnedPokemon {
   id: number;
   x: number;
   y: number;
+  shiny: boolean;
 }
 
 interface GridPokemonProps {
@@ -17,6 +18,7 @@ interface GridPokemonProps {
 interface PokemonData {
   sprites: {
     front_default: string;
+    front_shiny: string;
   };
 }
 
@@ -52,9 +54,9 @@ const GridPokemon = ({
         gridRowStart: pokemon.y,
         gridColumnEnd: pokemon.x + 2,
         gridRowEnd: pokemon.y + 2,
-        backgroundImage: pokemonData?.sprites?.front_default
-          ? `url(${pokemonData.sprites.front_default})`
-          : "none",
+        backgroundImage: pokemon.shiny
+          ? `url(${pokemonData?.sprites.front_shiny})`
+          : `url(${pokemonData?.sprites.front_default})`,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

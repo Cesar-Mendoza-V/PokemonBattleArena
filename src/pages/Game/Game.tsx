@@ -36,6 +36,7 @@ interface SpawnedPokemon {
   id: number;
   x: number;
   y: number;
+  shiny: boolean;
 }
 
 function Game() {
@@ -66,9 +67,16 @@ function Game() {
 
         currentPokemon.current.add(pokemonID);
 
+        const is_shiny = Math.floor(Math.random() * (100 - 1) + 1) == 2;
+
         setSpawnedPokemon((prev) => [
           ...prev,
-          { id: pokemonID, x: startX, y: startY },
+          {
+            id: pokemonID,
+            x: startX,
+            y: startY,
+            shiny: is_shiny,
+          },
         ]);
       }
     });

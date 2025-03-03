@@ -148,7 +148,7 @@ function Signup() {
         setTimeout(() => {
           console.log(data);
           if (data.httpStatusCode == 201) {
-            navigate("/");
+            navigate("/game");
           }
         }, 1500);
       });
