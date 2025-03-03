@@ -6,13 +6,13 @@ import "../../styles/global.css";
 // Function to show the password requirements
 const getPasswordRequirements = () => {
   const requirements = [
-    { id: 1, text: "At least 8 characters", regex: /.{8,}/ },
-    { id: 2, text: "One uppercase letter (A-Z)", regex: /[A-Z]/ },
-    { id: 3, text: "One lowercase letter (a-z)", regex: /[a-z]/ },
-    { id: 4, text: "One number (0-9)", regex: /[0-9]/ },
+    { id: 1, text: "* At least 8 characters", regex: /.{8,}/ },
+    { id: 2, text: "* One uppercase letter (A-Z)", regex: /[A-Z]/ },
+    { id: 3, text: "* One lowercase letter (a-z)", regex: /[a-z]/ },
+    { id: 4, text: "* One number (0-9)", regex: /[0-9]/ },
     {
       id: 5,
-      text: "One special character(!@#$%^&*)",
+      text: "* One special character(!@#$%^&*)",
       regex: /[!@#$%^&*]/,
     },
   ];
@@ -63,6 +63,14 @@ export default function PasswordInput() {
     }
   };
 
+  // Function to handle "Enter" key press for submit
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSubmit(event as unknown as React.FormEvent); // Trigger the form submit on Enter key press
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Check if the passwords meet all the requirements
@@ -99,13 +107,14 @@ export default function PasswordInput() {
           </ul>
         </div>
         <div className="forms-inputs">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} onKeyDown={handleKeyPress}>
             <input
               type="password"
               className="passwordInput"
               placeholder="Enter your new password"
               value={password}
               onChange={handlePasswordChange}
+              autoComplete="new-password" // Added this line
             ></input>
             <input
               type="password"
@@ -113,6 +122,7 @@ export default function PasswordInput() {
               placeholder="Confirm your new password"
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
+              autoComplete="new-password" // Added this line
             ></input>
             {passwordMatchError && (
               <p className="error-message">{passwordMatchError}</p>

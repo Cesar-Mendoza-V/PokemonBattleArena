@@ -11,10 +11,8 @@ export default function Recover() {
   const [codeError, setCodeError] = useState("");
   const navigate = useNavigate();
 
-  // Code to simulate the verifiying code "DELETE AFTER BACKEND LOGIC WAS IMPLEMENTED"
   const correctCode = "123456";
 
-  // Function to handle the email
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailValue = e.target.value;
     setEmail(emailValue);
@@ -26,7 +24,6 @@ export default function Recover() {
     }
   };
 
-  // Function to handle the email type
   const handleEmailSubmission = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -41,13 +38,11 @@ export default function Recover() {
     }
   };
 
-  // Function to handle the typed code
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
     setCodeError("");
   };
 
-  // Function to handle the code verification
   const handleCodeVerification = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -60,6 +55,19 @@ export default function Recover() {
     }
   };
 
+  // Function to handle "Enter" key press for submit
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      // Trigger form submission based on current view
+      if (showPopup) {
+        handleCodeVerification(event as unknown as React.FormEvent);
+      } else {
+        handleEmailSubmission(event as unknown as React.FormEvent);
+      }
+    }
+  };
+
   return (
     <div className="fullscreen-containers">
       <div className="form-containers">
@@ -68,7 +76,7 @@ export default function Recover() {
         <form
           className="form-inputs"
           onSubmit={handleEmailSubmission}
-          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+          onKeyDown={handleKeyPress}
         >
           <input
             type="email"
@@ -97,7 +105,7 @@ export default function Recover() {
             <h6>Enter the verification code</h6>
             <form
               onSubmit={handleCodeVerification}
-              onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+              onKeyDown={handleKeyPress}
             >
               <input
                 type="text"
