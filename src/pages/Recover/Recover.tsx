@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PasswordInput from "./PasswordInput"; 
 import "./Recover.css";
 import "../../styles/global.css";
 
@@ -9,6 +10,7 @@ export default function Recover() {
   const [showPopup, setShowPopup] = useState(false);
   const [code, setCode] = useState("");
   const [codeError, setCodeError] = useState("");
+  const [isCodeVerified, setIsCodeVerified] = useState(false); 
   const navigate = useNavigate();
 
   const correctCode = "123456";
@@ -51,7 +53,8 @@ export default function Recover() {
     } else {
       setCodeError("");
       console.log("Code verified.");
-      navigate("/passwordInput");
+      setIsCodeVerified(true); 
+      setShowPopup(false); 
     }
   };
 
@@ -59,7 +62,6 @@ export default function Recover() {
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      // Trigger form submission based on current view
       if (showPopup) {
         handleCodeVerification(event as unknown as React.FormEvent);
       } else {
@@ -70,43 +72,44 @@ export default function Recover() {
 
   return (
     <div className="fullscreen-containers">
-      <div className="form-containers">
-        <h3>Pokemon Battle Arena</h3>
-        <h5>Recover your password</h5>
-        <form
-          className="form-inputs"
-          onSubmit={handleEmailSubmission}
-          onKeyDown={handleKeyPress}
-        >
-          <input
-            type="email"
-            className="form-controls"
-            placeholder="Enter your email address"
-            value={email}
-            onChange={handleEmail}
-            required
-          />
-          {error && <p className="error-message">{error}</p>}
-          <div className="button-container">
-            <button onClick={() => navigate("/")} className="back-btn">
-              Back
-            </button>
-            <button type="submit" className="submit-email-btn">
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
+      {isCodeVerified ? (
+        <PasswordInput />
+      ) : (
+        <div className="form-containers">
+          <h3>Pokemon Battle Arena</h3>
+          <h5>Recover your password</h5>
+          <form
+            className="form-inputs"
+            onSubmit={handleEmailSubmission}
+            onKeyDown={handleKeyPress}
+          >
+            <input
+              type="email"
+              className="form-controls"
+              placeholder="Enter your email address"
+              value={email}
+              onChange={handleEmail}
+              required
+            />
+            {error && <p className="error-message">{error}</p>}
+            <div className="button-container">
+              <button onClick={() => navigate("/")} className="back-btn">
+                Back
+              </button>
+              <button type="submit" className="submit-email-btn">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
-      {showPopup && (
+      {showPopup && !isCodeVerified && (
         <div className="popup-overlay">
           <div className="popup-container">
             <h3>Verify your email</h3>
             <h6>Enter the verification code</h6>
-            <form
-              onSubmit={handleCodeVerification}
-              onKeyDown={handleKeyPress}
-            >
+            <form onSubmit={handleCodeVerification} onKeyDown={handleKeyPress}>
               <input
                 type="text"
                 className="form-control-popup"

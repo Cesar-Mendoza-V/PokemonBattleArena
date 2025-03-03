@@ -67,7 +67,7 @@ export default function PasswordInput() {
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      handleSubmit(event as unknown as React.FormEvent); // Trigger the form submit on Enter key press
+      handleSubmit(event as unknown as React.FormEvent); 
     }
   };
 
