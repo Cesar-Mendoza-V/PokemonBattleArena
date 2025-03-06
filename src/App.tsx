@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Game from "./pages/Game/Game";
 import Signup from "./pages/Signup/Signup";
@@ -7,9 +8,11 @@ import Recover from "./pages/Recover/Recover";
 import Signout from "./pages/Signout/Signout";
 import PokemonStats from "./pages/PokemonStats/PokemonStats";
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
           <Route path="/" element={<Signin />} />
@@ -21,7 +24,7 @@ function App() {
           <Route path="/pokemonstats" element={<PokemonStats />} />
         </Routes>
       </Router>
-    </>
+    </QueryClientProvider>
   );
 }
 

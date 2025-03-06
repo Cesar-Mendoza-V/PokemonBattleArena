@@ -9,7 +9,8 @@ body {
   height: 100vh;
 }
 
-.login-section, .register-section {
+.login-section,
+.register-section {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -23,7 +24,7 @@ body {
 }
 
 .register-section {
-  background-color: #A9B5C3;
+  background-color: #a9b5c3;
   text-align: center;
   margin-top: -20px;
 }
@@ -31,7 +32,7 @@ body {
 .title {
   font-size: 40px;
   font-weight: 700;
-  color: #4A6085;
+  color: #4a6085;
   margin-bottom: 20px;
 }
 
@@ -53,7 +54,8 @@ body {
   font-size: 18px;
 }
 
-input[type="email"], input[type="password"] {
+.input[type="email"],
+.input[type="password"] {
   padding: 20px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -62,16 +64,16 @@ input[type="email"], input[type="password"] {
   height: 65px;
 }
 
-input[type="email"] {
-  margin-bottom: 20px; 
+.input[type="email"] {
+  margin-bottom: 20px;
 }
 
 .options {
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   align-items: center;
-  justify-content: space-between; 
-  width: 70%; 
+  justify-content: space-between;
+  width: 70%;
   margin-top: 15px;
   margin-bottom: 15px;
   font-size: 16px;
@@ -80,15 +82,15 @@ input[type="email"] {
 .checkbox {
   display: flex;
   align-items: center;
-  justify-content: flex-start; 
-  width: auto; 
-  color: #6b7280; 
-  margin-bottom: 0; 
+  justify-content: flex-start;
+  width: auto;
+  color: #6b7280;
+  margin-bottom: 0;
 }
 
 .forgot-password {
-  text-align: right; 
-  width: auto; 
+  text-align: right;
+  width: auto;
   color: #6b7280;
   text-decoration: none;
   font-size: 16px;
@@ -127,7 +129,7 @@ input[type="email"] {
 .register-section .description {
   font-size: 22px;
   max-width: 80%;
-  color: #F5FAFE;
+  color: #f5fafe;
   margin-bottom: 20px;
 }
 
