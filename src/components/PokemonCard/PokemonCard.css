@@ -1,14 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Press+Start+2P&display=swap");
 
 /* Main container for the Pokémon card */
 .pokemon-card-container {
+  transform: scale(1.5);
+  transform-origin: center;
   width: 270px;
   background-color: #ffffff;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   text-align: center;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   margin: 16px;
   position: relative;
 }
@@ -33,7 +35,7 @@
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 0.8rem;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -65,7 +67,7 @@
   font-size: 1.3rem;
   margin: 8px 0 4px;
   text-transform: capitalize;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   color: #333;
 }
 
@@ -105,12 +107,12 @@
 .stat-value {
   font-size: 1.1rem;
   font-weight: 700;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   margin: 0;
   color: #333;
 }
 
 .stat-label {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #666;
 }

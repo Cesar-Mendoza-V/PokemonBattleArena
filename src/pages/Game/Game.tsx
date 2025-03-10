@@ -18,6 +18,9 @@ import {
 } from "react-icons/io5";
 import GridPokemon from "../../components/GridPokemon/GridPokemon";
 
+import Modal from "../../components/Modal/Modal";
+import PokemonCard from "../../components/PokemonCard/PokemonCard";
+
 interface SpawnArea {
   startX: number; // inclusive --> | [...]
   startY: number; // inclusive --> | [...]
@@ -44,9 +47,12 @@ function Game() {
 
   const currentPokemon = useRef<Set<number>>(new Set());
 
+  // Pokémon that the user selects by clicking on the Grid
   const [selectedPokemon, setSelectedPokemon] = useState<SpawnedPokemon | null>(
     null
   );
+  // Controls whether to show or hide the modal with the information
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     spawnAreas.forEach((area) => {
@@ -105,10 +111,13 @@ function Game() {
             <IoPower size={"full"} />
           </button>
         </aside>
+
         <main className="game-content">
           <div
             onClick={() => {
+              // Clicking on the background deselects the Pokémon
               setSelectedPokemon(null);
+              setShowInfoModal(false);
             }}
             className="game-grid"
           >
@@ -117,16 +126,21 @@ function Game() {
                 No hay Pokémon en esta zona
               </div>
             )}
+
             {spawnedPokemon.map((pokemon) => (
               <GridPokemon
                 key={"pokemon_" + pokemon.id}
                 pokemon={pokemon}
-                setSelectedPokemon={setSelectedPokemon}
-                selected={selectedPokemon == pokemon}
+                setSelectedPokemon={(p) => {
+                  setSelectedPokemon(p);
+                  setShowInfoModal(false); // If the Pokémon changes, close the modal
+                }}
+                selected={selectedPokemon === pokemon}
               />
             ))}
           </div>
         </main>
+
         <aside className="game-buttons-bar">
           <div className="game-controls-buttons-div">
             <button
@@ -144,9 +158,8 @@ function Game() {
               className="game-controls-button"
               disabled={selectedPokemon == null}
               onClick={() => {
-                // TODO
-                // Extraer componente y agregar funcionalidad
-                console.log(`Informacion del Pokemon ${selectedPokemon?.id}.`);
+                console.log(`Información del Pokémon ${selectedPokemon?.id}.`);
+                setShowInfoModal(true);
               }}
             >
               Información
@@ -164,6 +177,7 @@ function Game() {
             </button>
             <button className="game-controls-button">Mochila</button>
           </div>
+
           <div className="game-controls-gamepad">
             <button className="up">
               <FaArrowUp size={"full"} />
@@ -180,6 +194,14 @@ function Game() {
           </div>
         </aside>
       </div>
+
+      {/* Only show the modal if a Pokémon is selected and showInfoModal=true */}
+      {showInfoModal && selectedPokemon && (
+        <Modal onClose={() => setShowInfoModal(false)}>
+          {/* Inside the modal, render the Pokémon information */}
+          <PokemonCard pokemonId={selectedPokemon.id} />
+        </Modal>
+      )}
     </div>
   );
 }
