@@ -134,35 +134,35 @@ bool DatabaseManager::login_user(const User& user) {
 // Method to send the email with the verification code
 bool DatabaseManager::send_password_reset_email(const std::string& email) {
   try {
-    // Generar código de verificación de 6 dígitos
+    // Generate 6 digit code 
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dist(100000, 999999);
     std::string verification_code = std::to_string(dist(gen));
 
-    // Definir la consulta una sola vez
+    // Query to validate the user 
     const std::string query = "UPDATE users SET verification_code = ? WHERE email = ?";
 
-    // Crear y ejecutar la consulta
+    // Execute the query 
     std::unique_ptr<sql::PreparedStatement> prep_stmt(conn->prepareStatement(query));
     prep_stmt->setString(1, verification_code);
     prep_stmt->setString(2, email);
-    prep_stmt->execute();  // ✅ Ahora usa la misma variable sin redefinir
+    prep_stmt->execute(); 
 
-    // Ejecutar el script de Python con los argumentos
+    // Execute python's script to send email
     std::string command = "python3 ../modules/send_email.py " + email + " " + verification_code;
     int exit_code = system(command.c_str());
 
     if (exit_code != 0) {
-        std::cerr << "Error: El script de Python falló." << std::endl;
+        std::cerr << "Error: Python script failed." << std::endl;
         return false;
     }
 
-    std::cout << "Código de verificación enviado correctamente." << std::endl;
+    std::cout << "Verification code sent correctly." << std::endl;
     return true;
 
   } catch (const sql::SQLException& e) {
-      std::cerr << "Error al registrar código de verificación: " << e.what() << std::endl;
+      std::cerr << "Error trying to send the email " << e.what() << std::endl;
       return false;
   }
 }
@@ -202,4 +202,35 @@ bool DatabaseManager::validate_verification_code(const std::string& email, const
       return false;
   }
 }
+
+bool DatabaseManager::update_password(const std::string& email, const std::string& new_password) {
+  try {
+      std::cout << "Updating password for: " << email << std::endl;
+
+      // Verificar que la conexión a la base de datos sea válida
+      if (!conn) {
+          throw std::runtime_error("Database connection is null.");
+      }
+
+      // Consulta para actualizar la contraseña del usuario
+      const std::string query = "UPDATE users SET password = ? WHERE email = ?";
+
+      std::unique_ptr<sql::PreparedStatement> prep_stmt(conn->prepareStatement(query));
+      prep_stmt->setString(1, new_password); // Se recomienda aplicar hashing antes de almacenar
+      prep_stmt->setString(2, email);
+
+      int affected_rows = prep_stmt->executeUpdate();
+
+      return affected_rows > 0;  // Devuelve true si se actualizó al menos una fila
+
+  } catch (const sql::SQLException& e) {
+      std::cerr << "SQL Error updating password: " << e.what() 
+                << " (SQL State: " << e.getSQLState() << ")" << std::endl;
+      return false;
+  } catch (const std::exception& e) {
+      std::cerr << "General error: " << e.what() << std::endl;
+      return false;
+  }
+}
+
 

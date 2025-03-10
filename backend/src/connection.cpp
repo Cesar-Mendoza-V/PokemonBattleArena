@@ -229,6 +229,47 @@ CROW_ROUTE(app, "/send_verification_code").methods(crow::HTTPMethod::POST)(
   }
 );
 
+CROW_ROUTE(app, "/reset_password").methods(crow::HTTPMethod::POST)(
+  [&db](const crow::request& req) {
+      auto body = crow::json::load(req.body);
+
+      // Verify all required fields are present in the request
+      if (!body.has("email") || !body.has("new_password")) {
+          ApiResponse response{
+              "Missing required fields: email, or new_password",
+              400
+          };
+          return crow::response(400, response.ToJson());
+      }
+
+      std::string email = body["email"].s();
+      std::string new_password = body["new_password"].s();
+
+      try {
+          // Directly update the password without validating the verification code
+          if (db.update_password(email, new_password)) {
+              ApiResponse response{
+                  "Password updated successfully",
+                  200
+              };
+              return crow::response(200, response.ToJson());
+          } else {
+              ApiResponse response{
+                  "Failed to update password",
+                  500
+              };
+              return crow::response(500, response.ToJson());
+          }
+      } catch (const std::runtime_error& e) {
+          ApiResponse response{
+              e.what(),
+              500
+          };
+          return crow::response(500, response.ToJson());
+      }
+  }
+);
+
 
 
   // Start the server on port 3000 with multi-threading enabled

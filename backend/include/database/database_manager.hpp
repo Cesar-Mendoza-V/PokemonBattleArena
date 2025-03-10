@@ -68,6 +68,19 @@ class DatabaseManager {
   //   sql::SQLException: If there's a database connection error.
   bool validate_verification_code(const std::string& email, const std::string& code);
 
+      // Validates a verification code for a given email.
+  //
+  // Args:
+  //   email: The email address associated with the verification code.
+  //   new_password: The new password the user wants.
+  //
+  // Returns:
+  //   bool: true if the code was correctly and it was saved succesfully; false otherwise.
+  //
+  // Throws:
+  //   sql::SQLException: If there's a database connection error.
+  bool update_password(const std::string& email, const std::string& new_password);
+
 
  private:
   // Manages the lifetime of the database connection
