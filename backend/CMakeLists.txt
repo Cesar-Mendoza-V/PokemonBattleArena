@@ -30,6 +30,8 @@ include_directories(
     ${CMAKE_CURRENT_LIST_DIR}/include/asio
     ${CMAKE_CURRENT_LIST_DIR}/include/crow
     ${CMAKE_CURRENT_LIST_DIR}/include/jdbc
+    ${CMAKE_CURRENT_LIST_DIR}/include/nlohmann
+    ${CMAKE_CURRENT_LIST_DIR}/include/cpr
     ${OPENSSL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
