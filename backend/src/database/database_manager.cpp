@@ -207,21 +207,21 @@ bool DatabaseManager::update_password(const std::string& email, const std::strin
   try {
       std::cout << "Updating password for: " << email << std::endl;
 
-      // Verificar que la conexión a la base de datos sea válida
+      // Verify that connection is valid
       if (!conn) {
           throw std::runtime_error("Database connection is null.");
       }
 
-      // Consulta para actualizar la contraseña del usuario
+      // Query to update the users
       const std::string query = "UPDATE users SET password = ? WHERE email = ?";
 
       std::unique_ptr<sql::PreparedStatement> prep_stmt(conn->prepareStatement(query));
-      prep_stmt->setString(1, new_password); // Se recomienda aplicar hashing antes de almacenar
+      prep_stmt->setString(1, new_password);
       prep_stmt->setString(2, email);
 
       int affected_rows = prep_stmt->executeUpdate();
 
-      return affected_rows > 0;  // Devuelve true si se actualizó al menos una fila
+      return affected_rows > 0;  // returns true if at least one row is affected
 
   } catch (const sql::SQLException& e) {
       std::cerr << "SQL Error updating password: " << e.what() 
