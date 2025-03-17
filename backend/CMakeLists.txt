@@ -1,25 +1,29 @@
-# Especifica la versión mínima de CMake requerida
+# Copyright 2024 Pokemon Battle Arena Project
+# CMake configuration file for building the backend server
+
+# [CMAKE_VERSION] - Specify the minimum required CMake version
 cmake_minimum_required(VERSION 3.10)
 
-# Define el nombre del proyecto
+# [PROJECT_CONFIG] - Define the project name and version
 project(backend_main)
 
-# Usa C++23
+# Use C++23 standard
 set(CMAKE_CXX_STANDARD 23)
 
-# Agrega el directorio de módulos personalizados de CMake
+# [DEPENDENCIES] - Configure and find required external libraries
+# Add custom CMake modules directory
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-# Encuentra las dependencias externas
+# Find external dependencies
 cmake_policy(SET CMP0167 NEW)
 find_package(Boost 1.71 REQUIRED)
 find_package(CURL REQUIRED)
 
-# Especifica la ruta de OpenSSL (ajústala si es necesario)
+# Specify OpenSSL path (adjust if needed)
 set(OPENSSL_ROOT_DIR "/opt/homebrew/opt/openssl@3")
 find_package(OpenSSL REQUIRED)
 
-# Define los archivos fuente del proyecto
+# [SOURCE_FILES] - Define project source files
 set(
     SOURCES
     src/connection.cpp
@@ -27,7 +31,7 @@ set(
     src/services/pokemon_generator.cpp
 )
 
-# Configura los directorios de inclusión
+# [INCLUDE_DIRS] - Configure include directories
 include_directories(
     ${CMAKE_CURRENT_LIST_DIR}/include
     ${CMAKE_CURRENT_LIST_DIR}/include/asio
@@ -40,28 +44,28 @@ include_directories(
     ${CURL_INCLUDE_DIRS}
 )
 
-# Especifica directorios adicionales de librerías
+# [LIBRARY_DIRS] - Specify additional library directories
 link_directories(
     ${CMAKE_CURRENT_LIST_DIR}/lib
 )
 
-# Agrega el ejecutable
+# [EXECUTABLE] - Add the executable target
 add_executable(backend ${SOURCES})
 
-# Copia automáticamente las librerías de OpenSSL a ./lib
+# [SSL_CONFIG] - Automatically copy OpenSSL libraries to ./lib
 add_custom_target(copy_ssl_libs ALL
     COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_LIBRARY} ${CMAKE_CURRENT_LIST_DIR}/lib/
     COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_CRYPTO_LIBRARY} ${CMAKE_CURRENT_LIST_DIR}/lib/
 )
 
-# Asegurar que las librerías de OpenSSL sean copiadas antes de compilar el ejecutable
+# Ensure OpenSSL libraries are copied before building the executable
 add_dependencies(backend copy_ssl_libs)
 
-# Configurar RPATH para que el ejecutable busque en ./lib
+# [RPATH_CONFIG] - Configure RPATH to look for libraries in ./lib
 set(CMAKE_INSTALL_RPATH "@executable_path/../lib")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
-# Enlazar librerías necesarias
+# [LINKING] - Link required libraries
 target_link_libraries(
     backend PRIVATE
     mysqlcppconn
