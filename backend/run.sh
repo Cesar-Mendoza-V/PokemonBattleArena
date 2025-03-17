@@ -7,6 +7,13 @@ else
     brew install openssl
 fi
 
+if brew list curl &>/dev/null; then
+    echo "CURL is already installed."
+else
+    echo "Installing CURL..."
+    brew install curl
+fi
+
 echo "Modifying library paths in libmysqlcppconn..."
 
 install_name_tool -change libssl.3.dylib @rpath/libssl.3.dylib ./lib/libmysqlcppconn.10.9.2.0.dylib

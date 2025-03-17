@@ -65,6 +65,7 @@ chmod +x ./run.sh
 2. Install [CMake](https://cmake.org/download/)
 3. Install [MySQL](https://dev.mysql.com/downloads/installer/)
 4. Install [Boost](https://www.boost.org/users/download/)
+5. Install [CURL](https://curl.se/windows/)
 
 ### Database Setup
 1. Start MySQL Server:
@@ -113,6 +114,46 @@ The server will start running on `http://localhost:3000`.
 
 ### API Endpoints
 
+#### User Registration and Authentication
+- `POST /signup`: Register a new user
+- `POST /login`: Authenticate a user
+
+#### Pokemon Generator
+- `POST /api/pokemon/encounter`: Generate a random Pokemon based on zone
+  - Request body: `{"zone": "forest"}`
+  - Available zones:
+    - `forest` - grass, bug, poison types (Levels: 5-15)
+    - `mountain` - rock, ground, fighting types (Levels: 15-30)
+    - `cave` - rock, ground, dark types (Levels: 10-25)
+    - `ocean` - water types (Levels: 20-35)
+    - `beach` - water, ground types (Levels: 10-20)
+    - `volcano` - fire, rock types (Levels: 30-45)
+    - `meadow` - grass, fairy, normal types (Levels: 5-15)
+    - `city` - normal, electric, poison types (Levels: 10-25)
+    - `ruins` - ghost, psychic, rock types (Levels: 25-40)
+    - `jungle` - grass, bug, poison, flying types (Levels: 15-30)
+
+  - Response example:
+  ```json
+  {
+    "id": 25,
+    "isShiny": false,
+    "level": 8,
+    "name": "pikachu",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+    "stats": {
+      "attack": 13,
+      "defense": 10,
+      "hp": 23,
+      "special-attack": 13,
+      "special-defense": 12,
+      "speed": 18
+    },
+    "types": ["electric"],
+    "zone": "city"
+  }
+  ```
+
 ### Adding New Functionality
 
 #### Adding a New Database Function
@@ -151,14 +192,17 @@ All endpoints should return responses in this format:
 ```
 
 ### Testing the API
-You can test the signup endpoint using curl on your terminal:
+You can test the endpoints using curl on your terminal:
+
+#### Test Pokemon Generator
 ```bash
-curl -X POST http://localhost:3000/your_endpoint_method \
+curl -X POST http://localhost:3000/api/pokemon/encounter \
   -H "Content-Type: application/json" \
   -d '{
-    "field": "information"
+    "zone": "forest"
   }'
 ```
+
 Or you can make use of Postman and follow these steps:
 
 1. Open Postman
@@ -194,11 +238,17 @@ Or you can make use of Postman and follow these steps:
    - Verify Boost and ASIO are properly installed
    - Check include paths in CMakeLists.txt
 
-4. **Missing Crow Submodule**:
+4. **PokeAPI Connection Issues**:
+   - Check internet connectivity
+   - Verify CURL is properly installed
+   - If PokeAPI is down, the generator will use fallback options
+
+5. **Missing Crow Submodule**:
    If after pulling changes you notice the 'external/Crow' folder is empty or missing, you'll need to initialize and update the submodule. Run these commands from the backend folder:
    ```bash
    git submodule init
    git submodule update
+   ```
 
 ### Project Structure (Backend)
 ```
@@ -210,7 +260,12 @@ backend/
 │   └── Crow/           (Crow framework submodule)
 ├── include/             (header files)
 │   ├── database/
-│   └── models/
+│   ├── models/
+│   └── services/
+│       └── pokemon_generator.hpp  (Pokemon generator service)
 └── src/                 (source files)
-    └── database/
+    ├── connection.cpp   (API endpoints)
+    ├── database/
+    └── services/
+        └── pokemon_generator.cpp  (Pokemon generator implementation)
 ```
