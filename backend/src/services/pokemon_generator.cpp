@@ -161,6 +161,10 @@ json PokemonGenerator::generateRandomPokemon(const std::string& zone) {
     int selectedIndex = dist(rng);
     int selectedPokemonId = possiblePokemon[selectedIndex];
     
+    // Determine if Pokemon is shiny (2% chance)
+    std::uniform_int_distribution<> shinyDist(1, 100);
+    bool isShiny = (shinyDist(rng) <= 1);  // 2% probability
+    
     // Get details for the selected Pokemon
     json pokemonDetails = getPokemonDetails(selectedPokemonId);
     
@@ -168,12 +172,19 @@ json PokemonGenerator::generateRandomPokemon(const std::string& zone) {
     json response = {
         {"id", selectedPokemonId},
         {"name", pokemonDetails.value("name", "unknown")},
-        {"zone", zone}
+        {"zone", zone},
+        {"isShiny", isShiny}  // Add the shiny status to the response
     };
     
     // Add sprites if available
     if (pokemonDetails.contains("sprites")) {
-        response["sprite"] = pokemonDetails["sprites"].value("front_default", "");
+        if (isShiny && pokemonDetails["sprites"].contains("front_shiny")) {
+            // Use shiny sprite if Pokemon is shiny and sprite is available
+            response["sprite"] = pokemonDetails["sprites"].value("front_shiny", "");
+        } else {
+            // Use default sprite otherwise
+            response["sprite"] = pokemonDetails["sprites"].value("front_default", "");
+        }
     }
     
     // Add types
