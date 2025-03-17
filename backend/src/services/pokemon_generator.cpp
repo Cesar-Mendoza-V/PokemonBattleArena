@@ -1,6 +1,22 @@
 // Copyright 2024 Pokemon Battle Arena Project
 // Implementation of the Pokemon generator service
 
+/**
+ * AVAILABLE ZONES AND THEIR POKEMON TYPES
+ * =======================================
+ * forest    - grass, bug, poison       - Levels: 5-15
+ * mountain  - rock, ground, fighting   - Levels: 15-30
+ * cave      - rock, ground, dark       - Levels: 10-25
+ * ocean     - water                    - Levels: 20-35
+ * beach     - water, ground            - Levels: 10-20
+ * volcano   - fire, rock               - Levels: 30-45
+ * meadow    - grass, fairy, normal     - Levels: 5-15
+ * city      - normal, electric, poison - Levels: 10-25
+ * ruins     - ghost, psychic, rock     - Levels: 25-40
+ * jungle    - grass, bug, poison, flying - Levels: 15-30
+ * default   - normal (fallback)        - Levels: 5-10
+ */
+
 #include "services/pokemon_generator.hpp"
 #include <iostream>
 #include <algorithm>
@@ -25,6 +41,21 @@ PokemonGenerator::PokemonGenerator() {
     
     // Default zone for invalid requests
     zoneTypes["default"] = {"normal"};
+    
+    // Initialize zone level ranges
+    zoneLevels["forest"] = {1, 5};
+    zoneLevels["mountain"] = {15, 30};
+    zoneLevels["cave"] = {10, 25};
+    zoneLevels["ocean"] = {20, 35};
+    zoneLevels["beach"] = {10, 20};
+    zoneLevels["volcano"] = {30, 45};
+    zoneLevels["meadow"] = {5, 15};
+    zoneLevels["city"] = {10, 25};
+    zoneLevels["ruins"] = {25, 40};
+    zoneLevels["jungle"] = {15, 30};
+    
+    // Default level range
+    zoneLevels["default"] = {5, 10};
     
     // Initialize CURL globally
     curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -163,7 +194,18 @@ json PokemonGenerator::generateRandomPokemon(const std::string& zone) {
     
     // Determine if Pokemon is shiny (2% chance)
     std::uniform_int_distribution<> shinyDist(1, 100);
-    bool isShiny = (shinyDist(rng) <= 1);  // 2% probability
+    bool isShiny = (shinyDist(rng) <= 2);  // 2% probability
+    
+    // Determine Pokemon level based on zone
+    int minLevel = 5;
+    int maxLevel = 15;
+    auto levelIt = zoneLevels.find(zone);
+    if (levelIt != zoneLevels.end()) {
+        minLevel = levelIt->second.min;
+        maxLevel = levelIt->second.max;
+    }
+    std::uniform_int_distribution<> levelDist(minLevel, maxLevel);
+    int level = levelDist(rng);
     
     // Get details for the selected Pokemon
     json pokemonDetails = getPokemonDetails(selectedPokemonId);
@@ -173,7 +215,8 @@ json PokemonGenerator::generateRandomPokemon(const std::string& zone) {
         {"id", selectedPokemonId},
         {"name", pokemonDetails.value("name", "unknown")},
         {"zone", zone},
-        {"isShiny", isShiny}  // Add the shiny status to the response
+        {"isShiny", isShiny},
+        {"level", level}  // Add the level to the response
     };
     
     // Add sprites if available
@@ -196,13 +239,21 @@ json PokemonGenerator::generateRandomPokemon(const std::string& zone) {
         response["types"] = pokemonTypes;
     }
     
-    // Add basic stats
+    // Add basic stats (adjusted for level)
     if (pokemonDetails.contains("stats")) {
         json stats = json::object();
         for (const auto& stat : pokemonDetails["stats"]) {
             std::string statName = stat["stat"]["name"];
             int baseValue = stat["base_stat"];
-            stats[statName] = baseValue;
+            
+            // Simple formula to scale stat based on level (similar to Pokemon games)
+            // This is simplified; actual Pokemon games use more complex formulas
+            int adjustedValue = (2 * baseValue * level) / 100 + 5;
+            if (statName == "hp") {
+                adjustedValue = (2 * baseValue * level) / 100 + level + 10;
+            }
+            
+            stats[statName] = adjustedValue;
         }
         response["stats"] = stats;
     }

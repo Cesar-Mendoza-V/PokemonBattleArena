@@ -58,4 +58,13 @@ private:
     
     // Cache for Pokemon by type to avoid repeated API calls
     std::map<std::string, std::vector<int>> typeCache;
+    
+    // Structure to hold level ranges for each zone
+    struct LevelRange {
+        int min;
+        int max;
+    };
+
+    // Map of zones and their level ranges
+    std::map<std::string, LevelRange> zoneLevels;
 };
