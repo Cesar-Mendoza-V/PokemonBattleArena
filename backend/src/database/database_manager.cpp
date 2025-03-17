@@ -12,7 +12,6 @@
 DatabaseManager::DatabaseManager() {
   try {
     // Establish initial database connection
-    std::cout << "Attempting to connect to database..." << std::endl;
     sql::Driver* driver = get_driver_instance();
     conn.reset(driver->connect(config.host, config.user, config.password));
     conn->setSchema(config.database);
@@ -41,8 +40,7 @@ DatabaseManager::DatabaseManager() {
       );
       std::cout << "Successfully created 'users' table" << std::endl;
     } else {
-      std::cout << "Successfully connected to existing 'users' table" 
-                << std::endl;
+      std::cout << "Succesful Connection" << std::endl;
     }
   } catch (sql::SQLException& e) {
     // Log detailed SQL error information before re-throwing

@@ -11,7 +11,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # Encuentra las dependencias externas
-find_package(Boost REQUIRED)
+cmake_policy(SET CMP0167 NEW)
+find_package(Boost 1.71 REQUIRED)
+find_package(CURL REQUIRED)
 
 # Especifica la ruta de OpenSSL (ajústala si es necesario)
 set(OPENSSL_ROOT_DIR "/opt/homebrew/opt/openssl@3")
@@ -22,6 +24,7 @@ set(
     SOURCES
     src/connection.cpp
     src/database/database_manager.cpp
+    src/services/pokemon_generator.cpp
 )
 
 # Configura los directorios de inclusión
@@ -34,6 +37,7 @@ include_directories(
     ${CMAKE_CURRENT_LIST_DIR}/include/cpr
     ${OPENSSL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
+    ${CURL_INCLUDE_DIRS}
 )
 
 # Especifica directorios adicionales de librerías
@@ -64,4 +68,5 @@ target_link_libraries(
     OpenSSL::SSL
     OpenSSL::Crypto
     ${Boost_LIBRARIES}
+    ${CURL_LIBRARIES}
 )

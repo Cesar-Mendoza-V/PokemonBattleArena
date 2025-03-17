@@ -18,6 +18,8 @@
  * [LOGIN_ENDPOINT] - User login endpoint implementation
  * [LOGIN_VALIDATION] - User input validation for login
  * [LOGIN_DB] - Database interaction for user authentication
+ * [POKEMON_ENCOUNTER] - Random Pokemon generation by zone
+ * [POKEMON_ENCOUNTER_ENDPOINT] - Endpoint for Pokemon encounters
  * [SERVER_START] - Server configuration and startup
  */
 
@@ -25,6 +27,7 @@
  #include <string>
  #include "database/database_manager.hpp"
  #include "models/user.hpp"
+ #include "services/pokemon_generator.hpp"
  #include <crow/middlewares/cors.h>
  #include <cstdlib>
  #include <fstream>
@@ -73,6 +76,44 @@
      return response;
    }
  };
+
+/**
+ * [POKEMON_ENCOUNTER] - Handles generating random Pokemon based on zone
+ * Returns a random Pokemon adapted to the specified zone's type restrictions
+ */
+crow::response handlePokemonEncounter(const crow::request& req) {
+  try {
+    // Parse JSON request
+    auto bodyArgs = crow::json::load(req.body);
+    
+    // Validate request has zone field
+    if (!bodyArgs.has("zone")) {
+      ApiResponse response{
+          "Missing zone parameter",
+          400
+      };
+      return crow::response(400, response.ToJson());
+    }
+    
+    std::string zone = bodyArgs["zone"].s();
+    
+    // Create Pokemon generator (or use a singleton instance)
+    static PokemonGenerator pokemonGenerator;
+    
+    // Generate random Pokemon for this zone
+    json pokemonData = pokemonGenerator.generateRandomPokemon(zone);
+    
+    // Return the Pokemon data
+    return crow::response(200, pokemonData.dump());
+    
+  } catch (const std::exception& e) {
+    ApiResponse response{
+        "Internal server error: " + std::string(e.what()),
+        500
+    };
+    return crow::response(500, response.ToJson());
+  }
+}
  
  // [MAIN] - Main program entry point and application setup
  int main() {
@@ -248,6 +289,25 @@
        }
      }
    );
+
+   // [POKEMON_ENCOUNTER_ENDPOINT] - Endpoint for generating random Pokemon encounters
+   CROW_ROUTE(app, "/api/pokemon/encounter")
+     .methods("POST"_method)
+     ([](const crow::request& req) {
+       return handlePokemonEncounter(req);
+     });
+
+   // [POKEMON_ENCOUNTER_OPTIONS] - Options handler for Pokemon encounter preflight requests
+   CROW_ROUTE(app, "/api/pokemon/encounter")
+     .methods("OPTIONS"_method)
+     ([](const crow::request&) {
+       crow::response res;
+       res.add_header("Access-Control-Allow-Origin", "*");
+       res.add_header("Access-Control-Allow-Methods", "POST, OPTIONS");
+       res.add_header("Access-Control-Allow-Headers", "Content-Type");
+       res.code = 204;
+       return res;
+     });
  
    // [SERVER_START] - Start the server on port 3000 with multi-threading enabled
    app.port(3000).multithreaded().run();
