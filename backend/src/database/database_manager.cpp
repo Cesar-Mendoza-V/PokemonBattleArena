@@ -151,14 +151,15 @@ bool DatabaseManager::login_user(const User& user) {
     }
 }
 
-bool DatabaseManager::user_exists(int userId) {
+bool DatabaseManager::user_exists(int IdUser) {
   try {
+      // Use "IdUser" column name to match database schema
       std::unique_ptr<sql::PreparedStatement> prep_stmt(
           conn->prepareStatement("SELECT COUNT(*) FROM users WHERE IdUser = ?")
       );
       
       // Bind parameters
-      prep_stmt->setInt(1, userId);
+      prep_stmt->setInt(1, IdUser);
       
       // Execute query
       std::unique_ptr<sql::ResultSet> res(prep_stmt->executeQuery());

@@ -326,13 +326,13 @@ json PokemonGenerator::generateRandomPokemon(const std::string &zone)
 }
 
 // [MULTIPLE_GENERATION] - Generate multiple random Pokemon based on the specified zone
-json PokemonGenerator::generateMultiplePokemon(const std::string &zone, int userId, int maxCount)
+json PokemonGenerator::generateMultiplePokemon(const std::string &zone, int IdUser, int maxCount)
 {
     // [COOLDOWN_CHECK] - Check if we're still in cooldown period for this zone/user combination
     auto now = std::chrono::system_clock::now();
     
     // [USER_SPECIFIC_CACHE] - Create a unique cache key for each user/zone combination
-    std::string cache_key = zone + "_user" + std::to_string(userId);
+    std::string cache_key = zone + "_user" + std::to_string(IdUser);
 
     // If we have a cached encounter for this zone/user
     if (encounter_cache.find(cache_key) != encounter_cache.end())

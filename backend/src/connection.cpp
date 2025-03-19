@@ -98,12 +98,12 @@ crow::response handlePokemonEncounter(const crow::request& req, DatabaseManager&
     std::string zone = bodyArgs["zone"].s();
     
     // [USER_ID_EXTRACTION] - Get user ID from request if available
-    int userId = 0; // Default value if no user ID provided
-    if (bodyArgs.has("userId")) {
-      userId = bodyArgs["userId"].i();
+    int IdUser = 0; // Default value if no user ID provided
+    if (bodyArgs.has("IdUser")) {
+      IdUser = bodyArgs["IdUser"].i();
       
-      // [USER_ID_VALIDATION] - Verify that userId exists in database
-      if (!db.user_exists(userId)) {
+      // [USER_ID_VALIDATION] - Verify that IdUser exists in database
+      if (!db.user_exists(IdUser)) {
         ApiResponse response{
             "Invalid user ID",
             403
@@ -116,7 +116,7 @@ crow::response handlePokemonEncounter(const crow::request& req, DatabaseManager&
     static PokemonGenerator pokemonGenerator;
     
     // Generate multiple random Pokemon for this zone (0-5) specific to this user
-    json pokemonData = pokemonGenerator.generateMultiplePokemon(zone, userId);
+    json pokemonData = pokemonGenerator.generateMultiplePokemon(zone, IdUser);
     
     // Return the Pokemon data
     return crow::response(200, pokemonData.dump());

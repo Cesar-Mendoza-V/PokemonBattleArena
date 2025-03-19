@@ -59,15 +59,14 @@ public:
 
     /**
      * [PUBLIC_API] - Generates multiple random Pokemon based on the specified zone
-     * Returns between 0 and maxCount Pokemon appropriate for the zone
-     * Implements a cooldown period to prevent spamming
-     *
+     * The IdUser parameter ensures each user gets their own set of Pokemon
+     * 
      * @param zone The zone identifier where the player is located
+     * @param IdUser ID of the user requesting Pokemon (default: 0)
      * @param maxCount Maximum number of Pokemon that can be generated (default: 5)
-     * @param userId Unique identifier for the user requesting the encounter
      * @return JSON object containing an array of generated Pokemon data
      */
-    json generateMultiplePokemon(const std::string& zone, int userId = 0, int maxCount = 5);
+    json generateMultiplePokemon(const std::string& zone, int IdUser = 0, int maxCount = 5);
 
 private:
     // [API_HELPERS] - Callback function for CURL to write response data
