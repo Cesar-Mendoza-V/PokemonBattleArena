@@ -18,10 +18,12 @@
 }
 
 .backpack-pokemons-layout {
+  padding: 5px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 150px));
   grid-template-rows: auto;
-  gap: 1rem;
+  overflow-y: auto;
+  gap: 2.5rem;
   width: 100%;
 }
 

@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import image from "./pokemon.png";
 import { RotatingLines } from "react-loader-spinner";
 import { IoWarning } from "react-icons/io5";
 
