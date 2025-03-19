@@ -63,7 +63,7 @@ PokemonGenerator::PokemonGenerator()
     zoneTypes["default"] = {"normal"};
 
     // [ZONE_LEVELS] - Initialize zone level ranges
-    zoneLevels["forest"] = {5, 15};
+    zoneLevels["forest"] = {1, 10};
     zoneLevels["mountain"] = {15, 30};
     zoneLevels["cave"] = {10, 25};
     zoneLevels["ocean"] = {20, 35};
@@ -326,13 +326,15 @@ json PokemonGenerator::generateRandomPokemon(const std::string &zone)
 }
 
 // [MULTIPLE_GENERATION] - Generate multiple random Pokemon based on the specified zone
-json PokemonGenerator::generateMultiplePokemon(const std::string &zone, int maxCount)
+json PokemonGenerator::generateMultiplePokemon(const std::string &zone, int userId, int maxCount)
 {
-    // [COOLDOWN_CHECK] - Check if we're still in cooldown period for this zone
+    // [COOLDOWN_CHECK] - Check if we're still in cooldown period for this zone/user combination
     auto now = std::chrono::system_clock::now();
-    std::string cache_key = zone; // Could be combined with user ID if authentication is added
+    
+    // [USER_SPECIFIC_CACHE] - Create a unique cache key for each user/zone combination
+    std::string cache_key = zone + "_user" + std::to_string(userId);
 
-    // If we have a cached encounter for this zone
+    // If we have a cached encounter for this zone/user
     if (encounter_cache.find(cache_key) != encounter_cache.end())
     {
         auto &cached_data = encounter_cache[cache_key];
@@ -343,10 +345,8 @@ json PokemonGenerator::generateMultiplePokemon(const std::string &zone, int maxC
         // If not enough time has passed, return the cached result
         if (elapsed < ENCOUNTER_COOLDOWN_SECONDS)
         {
-            // Update the remaining cooldown time
-            int remaining_seconds = ENCOUNTER_COOLDOWN_SECONDS - static_cast<int>(elapsed);
-            json response = cached_data.pokemon_data;
-            return response;
+            // Return the cached response without adding cooldown information
+            return cached_data.pokemon_data;
         }
     }
 
@@ -364,10 +364,10 @@ json PokemonGenerator::generateMultiplePokemon(const std::string &zone, int maxC
         pokemonArray.push_back(pokemon);
     }
 
-    // [RESPONSE_BUILDING] - Create the final response with metadata
+    // [RESPONSE_BUILDING] - Create the final response with metadata (without cooldown info)
     json response = {
         {"zone", zone},
-        {"pokemon", pokemonArray},
+        {"pokemon", pokemonArray}
     };
 
     // [COOLDOWN_UPDATE] - Store the result and timestamp for future cooldown checks

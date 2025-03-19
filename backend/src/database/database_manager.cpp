@@ -150,3 +150,27 @@ bool DatabaseManager::login_user(const User& user) {
         throw std::runtime_error("Database error, try again.");
     }
 }
+
+bool DatabaseManager::user_exists(int userId) {
+  try {
+      std::unique_ptr<sql::PreparedStatement> prep_stmt(
+          conn->prepareStatement("SELECT COUNT(*) FROM users WHERE IdUser = ?")
+      );
+      
+      // Bind parameters
+      prep_stmt->setInt(1, userId);
+      
+      // Execute query
+      std::unique_ptr<sql::ResultSet> res(prep_stmt->executeQuery());
+      
+      // Check if user exists
+      if (res->next()) {
+          return res->getInt(1) > 0;
+      }
+      
+      return false;
+  } catch (sql::SQLException &e) {
+      std::cerr << "SQL Error: " << e.what() << std::endl;
+      return false;
+  }
+}

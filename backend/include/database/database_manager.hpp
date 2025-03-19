@@ -43,6 +43,14 @@ class DatabaseManager {
 
   bool login_user(const User& user);
 
+  /**
+   * [USER_VALIDATION] - Check if a user with the given ID exists
+   * 
+   * @param userId The ID of the user to check
+   * @return true if the user exists, false otherwise
+   */
+  bool user_exists(int userId);
+
  private:
   // Manages the lifetime of the database connection
   // Using unique_ptr ensures proper resource cleanup

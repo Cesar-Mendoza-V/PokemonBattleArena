@@ -78,10 +78,10 @@
  };
 
 /**
- * [POKEMON_ENCOUNTER] - Handles generating random Pokemon based on zone
- * Returns between 0 and 5 random Pokemon adapted to the specified zone's type restrictions
+ * [POKEMON_ENCOUNTER] - Handles generating random Pokemon based on zone and user ID
+ * Returns 0-5 random Pokemon adapted to the specified zone's type restrictions
  */
-crow::response handlePokemonEncounter(const crow::request& req) {
+crow::response handlePokemonEncounter(const crow::request& req, DatabaseManager& db) {
   try {
     // Parse JSON request
     auto bodyArgs = crow::json::load(req.body);
@@ -97,13 +97,28 @@ crow::response handlePokemonEncounter(const crow::request& req) {
     
     std::string zone = bodyArgs["zone"].s();
     
+    // [USER_ID_EXTRACTION] - Get user ID from request if available
+    int userId = 0; // Default value if no user ID provided
+    if (bodyArgs.has("userId")) {
+      userId = bodyArgs["userId"].i();
+      
+      // [USER_ID_VALIDATION] - Verify that userId exists in database
+      if (!db.user_exists(userId)) {
+        ApiResponse response{
+            "Invalid user ID",
+            403
+        };
+        return crow::response(403, response.ToJson());
+      }
+    }
+    
     // Create Pokemon generator (or use a singleton instance)
     static PokemonGenerator pokemonGenerator;
     
-    // Generate multiple random Pokemon for this zone (0-5)
-    json pokemonData = pokemonGenerator.generateMultiplePokemon(zone);
+    // Generate multiple random Pokemon for this zone (0-5) specific to this user
+    json pokemonData = pokemonGenerator.generateMultiplePokemon(zone, userId);
     
-    // Return the Pokemon data with cooldown information
+    // Return the Pokemon data
     return crow::response(200, pokemonData.dump());
     
   } catch (const std::exception& e) {
@@ -291,11 +306,11 @@ crow::response handlePokemonEncounter(const crow::request& req) {
    );
 
    // [POKEMON_ENCOUNTER_ENDPOINT] - Endpoint for generating random Pokemon encounters
-   CROW_ROUTE(app, "/api/pokemon/encounter")
-     .methods("POST"_method)
-     ([](const crow::request& req) {
-       return handlePokemonEncounter(req);
-     });
+  CROW_ROUTE(app, "/api/pokemon/encounter")
+  .methods("POST"_method)
+  ([&db](const crow::request& req) {
+    return handlePokemonEncounter(req, db);
+  });
 
    // [POKEMON_ENCOUNTER_OPTIONS] - Options handler for Pokemon encounter preflight requests
    CROW_ROUTE(app, "/api/pokemon/encounter")
