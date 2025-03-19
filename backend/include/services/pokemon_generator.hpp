@@ -32,7 +32,8 @@ using json = nlohmann::json;
  * [CLASS_DEFINITION] - Service class for generating random Pokemon encounters
  * based on zone-specific restrictions such as Pokemon types.
  */
-class PokemonGenerator {
+class PokemonGenerator
+{
 public:
     /**
      * [CONSTRUCTOR] - Initializes the generator with predefined zone configurations
@@ -47,37 +48,48 @@ public:
     ~PokemonGenerator();
 
     /**
-     * [PUBLIC_API] - Generates a random Pokemon based on the specified zone
-     * 
+     * [PUBLIC_API] - Generates a single random Pokemon based on the specified zone
+     *
      * @param zone The zone identifier where the player is located
      * @return JSON object containing the generated Pokemon data
      */
-    json generateRandomPokemon(const std::string& zone);
+    json generateRandomPokemon(const std::string &zone);
+
+    /**
+     * [PUBLIC_API] - Generates multiple random Pokemon based on the specified zone
+     * Returns between 0 and maxCount Pokemon appropriate for the zone
+     *
+     * @param zone The zone identifier where the player is located
+     * @param maxCount Maximum number of Pokemon that can be generated (default: 5)
+     * @return JSON object containing an array of generated Pokemon data
+     */
+    json generateMultiplePokemon(const std::string &zone, int maxCount = 5);
 
 private:
     // [API_HELPERS] - Callback function for CURL to write response data
-    static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* s);
-    
+    static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *s);
+
     // [API_HELPERS] - Fetches Pokemon data from PokeAPI
-    json fetchFromPokeAPI(const std::string& endpoint);
-    
+    json fetchFromPokeAPI(const std::string &endpoint);
+
     // [POKEMON_FILTER] - Gets a list of Pokemon of specific types
-    std::vector<int> getPokemonByTypes(const std::vector<std::string>& types);
-    
+    std::vector<int> getPokemonByTypes(const std::vector<std::string> &types);
+
     // [POKEMON_DETAILS] - Gets detailed information about a specific Pokemon
     json getPokemonDetails(int pokemonId);
-    
+
     // [DATA_STRUCTURES] - Map of zones and their type restrictions
     std::map<std::string, std::vector<std::string>> zoneTypes;
-    
+
     // [RANDOMIZATION] - Random number generator
     std::mt19937 rng;
-    
+
     // [CACHING] - Cache for Pokemon by type to avoid repeated API calls
     std::map<std::string, std::vector<int>> typeCache;
-    
+
     // [DATA_STRUCTURES] - Structure to hold level ranges for each zone
-    struct LevelRange {
+    struct LevelRange
+    {
         int min;
         int max;
     };

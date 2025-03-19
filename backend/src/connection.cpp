@@ -79,7 +79,7 @@
 
 /**
  * [POKEMON_ENCOUNTER] - Handles generating random Pokemon based on zone
- * Returns a random Pokemon adapted to the specified zone's type restrictions
+ * Returns between 0 and 5 random Pokemon adapted to the specified zone's type restrictions
  */
 crow::response handlePokemonEncounter(const crow::request& req) {
   try {
@@ -100,8 +100,8 @@ crow::response handlePokemonEncounter(const crow::request& req) {
     // Create Pokemon generator (or use a singleton instance)
     static PokemonGenerator pokemonGenerator;
     
-    // Generate random Pokemon for this zone
-    json pokemonData = pokemonGenerator.generateRandomPokemon(zone);
+    // Generate multiple random Pokemon for this zone (0-5)
+    json pokemonData = pokemonGenerator.generateMultiplePokemon(zone);
     
     // Return the Pokemon data
     return crow::response(200, pokemonData.dump());
