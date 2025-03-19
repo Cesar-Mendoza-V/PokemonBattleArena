@@ -63,10 +63,10 @@ public:
      * 
      * @param zone The zone identifier where the player is located
      * @param IdUser ID of the user requesting Pokemon (default: 0)
-     * @param maxCount Maximum number of Pokemon that can be generated (default: 5)
+     * @param maxCount Maximum number of Pokemon that can be generated (default: 4)
      * @return JSON object containing an array of generated Pokemon data
      */
-    json generateMultiplePokemon(const std::string& zone, int IdUser = 0, int maxCount = 5);
+    json generateMultiplePokemon(const std::string& zone, int IdUser = 0, int maxCount = 4);
 
 private:
     // [API_HELPERS] - Callback function for CURL to write response data
