@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import GridPokemon from "../GridPokemon/GridPokemon";
+import "./GameZone.css";
 
 import {
   FaArrowDown,

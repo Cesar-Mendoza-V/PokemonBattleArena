@@ -1,0 +1,78 @@
+.backpack-layout {
+  width: 80%;
+  margin-block: 2.5%;
+  border-radius: 50px;
+  background-image: url("../../../assets/images/grass_tile.jpg");
+  background-position: center;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+
+.backpack-title {
+  font-size: 3rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.backpack-pokemons-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-rows: auto;
+  gap: 1rem;
+  width: 100%;
+}
+
+.backpack-pokemon-card {
+  width: 100%;
+  aspect-ratio: 6/7;
+  padding: 7px 5px;
+  border-radius: 10px;
+  border: 3px dotted black;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+  }
+
+  & > p {
+    width: fit-content;
+    border-radius: 5px;
+    padding-inline: 4px;
+    color: black;
+    background-color: white;
+  }
+
+  & > p:nth-child(2) {
+    align-self: center;
+    text-transform: capitalize;
+  }
+}
+
+@media (max-width: 1024px) {
+  .backpack-pokemons-layout {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .backpack-pokemons-layout {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .backpack-pokemon-card {
+    aspect-ratio: 5/6;
+  }
+}

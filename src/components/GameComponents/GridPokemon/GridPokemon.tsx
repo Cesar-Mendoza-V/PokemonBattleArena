@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { IoWarning } from "react-icons/io5";
 import { RotatingLines } from "react-loader-spinner";
+import "./GridPokemon.css";
 
 interface SpawnedPokemon {
   id: number;
@@ -67,7 +68,7 @@ const GridPokemon = ({
       {isLoading && (
         <RotatingLines strokeColor="black" animationDuration="10" />
       )}
-      {isError && <IoWarning color="black" size={"full"} />}
+      {isError && <IoWarning color="black" size={"100%"} />}
     </div>
   );
 };
