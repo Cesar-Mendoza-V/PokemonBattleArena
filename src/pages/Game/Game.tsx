@@ -64,7 +64,7 @@ function Game() {
           Math.random() * (area.endY - 1 - area.startY) + area.startY
         );
 
-        var pokemonID = 0;
+        let pokemonID = 0;
 
         while (pokemonID == 0 || currentPokemon.current.has(pokemonID)) {
           // Math.random() * (max-exclusive - min-inclusive) + min-inclusive;
@@ -158,7 +158,6 @@ function Game() {
               className="game-controls-button"
               disabled={selectedPokemon == null}
               onClick={() => {
-                console.log(`Información del Pokémon ${selectedPokemon?.id}.`);
                 setShowInfoModal(true);
               }}
             >
