@@ -14,6 +14,7 @@
  * [DATA_STRUCTURES] - Internal data structures and organization
  * [CACHING] - Mechanisms to improve performance through caching
  * [RANDOMIZATION] - Random number generation for Pokemon selection
+ * [COOLDOWN] - Cooldown mechanism to prevent endpoint spamming
  */
 
 #pragma once
@@ -22,6 +23,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <chrono>
 #include <crow.h>
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
@@ -58,6 +60,7 @@ public:
     /**
      * [PUBLIC_API] - Generates multiple random Pokemon based on the specified zone
      * Returns between 0 and maxCount Pokemon appropriate for the zone
+     * Implements a cooldown period to prevent spamming
      *
      * @param zone The zone identifier where the player is located
      * @param maxCount Maximum number of Pokemon that can be generated (default: 5)
@@ -96,4 +99,16 @@ private:
 
     // [DATA_STRUCTURES] - Map of zones and their level ranges
     std::map<std::string, LevelRange> zoneLevels;
+    
+    // [COOLDOWN] - Structure to store encounter data and last encounter time
+    struct EncounterData {
+        json pokemon_data;                           // Cached encounter result
+        std::chrono::system_clock::time_point last_encounter;  // When the encounter happened
+    };
+
+    // [COOLDOWN] - Map to track cooldowns by zone
+    std::map<std::string, EncounterData> encounter_cache;
+
+    // [COOLDOWN] - Cooldown time in seconds (5 minutes)
+    const int ENCOUNTER_COOLDOWN_SECONDS = 300;
 };

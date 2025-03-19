@@ -16,6 +16,7 @@
  * [LEVEL_ASSIGNMENT] - Assignment of level based on zone
  * [STAT_CALCULATION] - Calculation of Pokemon stats based on level
  * [RESPONSE_BUILDING] - Building the response JSON with Pokemon data
+ * [COOLDOWN_SYSTEM] - Management of encounter cooldowns to prevent spamming
  */
 
 /**
@@ -327,6 +328,28 @@ json PokemonGenerator::generateRandomPokemon(const std::string &zone)
 // [MULTIPLE_GENERATION] - Generate multiple random Pokemon based on the specified zone
 json PokemonGenerator::generateMultiplePokemon(const std::string &zone, int maxCount)
 {
+    // [COOLDOWN_CHECK] - Check if we're still in cooldown period for this zone
+    auto now = std::chrono::system_clock::now();
+    std::string cache_key = zone; // Could be combined with user ID if authentication is added
+
+    // If we have a cached encounter for this zone
+    if (encounter_cache.find(cache_key) != encounter_cache.end())
+    {
+        auto &cached_data = encounter_cache[cache_key];
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(
+                           now - cached_data.last_encounter)
+                           .count();
+
+        // If not enough time has passed, return the cached result
+        if (elapsed < ENCOUNTER_COOLDOWN_SECONDS)
+        {
+            // Update the remaining cooldown time
+            int remaining_seconds = ENCOUNTER_COOLDOWN_SECONDS - static_cast<int>(elapsed);
+            json response = cached_data.pokemon_data;
+            return response;
+        }
+    }
+
     // [ENCOUNTER_COUNT] - Determine how many Pokemon to generate (0-maxCount)
     std::uniform_int_distribution<> countDist(0, maxCount);
     int pokemonCount = countDist(rng);
@@ -344,7 +367,11 @@ json PokemonGenerator::generateMultiplePokemon(const std::string &zone, int maxC
     // [RESPONSE_BUILDING] - Create the final response with metadata
     json response = {
         {"zone", zone},
-        {"pokemon", pokemonArray}};
+        {"pokemon", pokemonArray},
+    };
+
+    // [COOLDOWN_UPDATE] - Store the result and timestamp for future cooldown checks
+    encounter_cache[cache_key] = {response, now};
 
     return response;
 }

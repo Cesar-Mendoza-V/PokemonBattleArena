@@ -103,7 +103,7 @@ crow::response handlePokemonEncounter(const crow::request& req) {
     // Generate multiple random Pokemon for this zone (0-5)
     json pokemonData = pokemonGenerator.generateMultiplePokemon(zone);
     
-    // Return the Pokemon data
+    // Return the Pokemon data with cooldown information
     return crow::response(200, pokemonData.dump());
     
   } catch (const std::exception& e) {
