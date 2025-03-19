@@ -18,6 +18,8 @@
  * [LOGIN_ENDPOINT] - User login endpoint implementation
  * [LOGIN_VALIDATION] - User input validation for login
  * [LOGIN_DB] - Database interaction for user authentication
+ * [POKEMON_ENCOUNTER] - Random Pokemon generation by zone
+ * [POKEMON_ENCOUNTER_ENDPOINT] - Endpoint for Pokemon encounters
  * [SERVER_START] - Server configuration and startup
  */
 
@@ -25,6 +27,7 @@
  #include <string>
  #include "database/database_manager.hpp"
  #include "models/user.hpp"
+ #include "services/pokemon_generator.hpp"
  #include <crow/middlewares/cors.h>
  #include <cstdlib>
  #include <fstream>
@@ -73,6 +76,59 @@
      return response;
    }
  };
+
+/**
+ * [POKEMON_ENCOUNTER] - Handles generating random Pokemon based on zone and user ID
+ * Returns 0-5 random Pokemon adapted to the specified zone's type restrictions
+ */
+crow::response handlePokemonEncounter(const crow::request& req, DatabaseManager& db) {
+  try {
+    // Parse JSON request
+    auto bodyArgs = crow::json::load(req.body);
+    
+    // Validate request has zone field
+    if (!bodyArgs.has("zone")) {
+      ApiResponse response{
+          "Missing zone parameter",
+          400
+      };
+      return crow::response(400, response.ToJson());
+    }
+    
+    std::string zone = bodyArgs["zone"].s();
+    
+    // [USER_ID_EXTRACTION] - Get user ID from request if available
+    int IdUser = 0; // Default value if no user ID provided
+    if (bodyArgs.has("IdUser")) {
+      IdUser = bodyArgs["IdUser"].i();
+      
+      // [USER_ID_VALIDATION] - Verify that IdUser exists in database
+      if (!db.user_exists(IdUser)) {
+        ApiResponse response{
+            "Invalid user ID",
+            403
+        };
+        return crow::response(403, response.ToJson());
+      }
+    }
+    
+    // Create Pokemon generator (or use a singleton instance)
+    static PokemonGenerator pokemonGenerator;
+    
+    // Generate multiple random Pokemon for this zone (0-5) specific to this user
+    json pokemonData = pokemonGenerator.generateMultiplePokemon(zone, IdUser);
+    
+    // Return the Pokemon data
+    return crow::response(200, pokemonData.dump());
+    
+  } catch (const std::exception& e) {
+    ApiResponse response{
+        "Internal server error: " + std::string(e.what()),
+        500
+    };
+    return crow::response(500, response.ToJson());
+  }
+}
  
  // [MAIN] - Main program entry point and application setup
  int main() {
@@ -248,6 +304,25 @@
        }
      }
    );
+
+   // [POKEMON_ENCOUNTER_ENDPOINT] - Endpoint for generating random Pokemon encounters
+  CROW_ROUTE(app, "/api/pokemon/encounter")
+  .methods("POST"_method)
+  ([&db](const crow::request& req) {
+    return handlePokemonEncounter(req, db);
+  });
+
+   // [POKEMON_ENCOUNTER_OPTIONS] - Options handler for Pokemon encounter preflight requests
+   CROW_ROUTE(app, "/api/pokemon/encounter")
+     .methods("OPTIONS"_method)
+     ([](const crow::request&) {
+       crow::response res;
+       res.add_header("Access-Control-Allow-Origin", "*");
+       res.add_header("Access-Control-Allow-Methods", "POST, OPTIONS");
+       res.add_header("Access-Control-Allow-Headers", "Content-Type");
+       res.code = 204;
+       return res;
+     });
  
    // [SERVER_START] - Start the server on port 3000 with multi-threading enabled
    app.port(3000).multithreaded().run();
