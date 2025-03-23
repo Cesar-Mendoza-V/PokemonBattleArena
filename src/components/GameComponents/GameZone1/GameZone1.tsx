@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import GridPokemon from "../GridPokemon/GridPokemon";
 import "./GameZone.css";
 
+import Modal from "../../Modal/Modal";
+import PokemonCard from "../../PokemonCard/PokemonCard";
+
 import {
   FaArrowDown,
   FaArrowUp,
@@ -38,6 +41,10 @@ const GameZone1 = () => {
   const [selectedPokemon, setSelectedPokemon] = useState<SpawnedPokemon | null>(
     null
   );
+
+  // Controls whether to show or hide the modal with the information
+  const [showInfoModal, setShowInfoModal] = useState(false);
+
   useEffect(() => {
     spawnAreas.forEach((area) => {
       if (Math.random() > 0.5) {
@@ -48,7 +55,7 @@ const GameZone1 = () => {
           Math.random() * (area.endY - 1 - area.startY) + area.startY
         );
 
-        var pokemonID = 0;
+        let pokemonID = 0;
 
         while (pokemonID == 0 || currentPokemon.current.has(pokemonID)) {
           // Math.random() * (max-exclusive - min-inclusive) + min-inclusive;
@@ -77,6 +84,7 @@ const GameZone1 = () => {
         <div
           onClick={() => {
             setSelectedPokemon(null);
+            setShowInfoModal(false);
           }}
           className="game-grid"
         >
@@ -112,9 +120,7 @@ const GameZone1 = () => {
             className="game-controls-button"
             disabled={selectedPokemon == null}
             onClick={() => {
-              // TODO
-              // Extraer componente y agregar funcionalidad
-              console.log(`Informacion del Pokemon ${selectedPokemon?.id}.`);
+              setShowInfoModal(true);
             }}
           >
             Información
@@ -147,6 +153,12 @@ const GameZone1 = () => {
           </button>
         </div>
       </aside>
+      {/* Only show the modal if a Pokémon is selected and showInfoModal=true */}
+      {showInfoModal && selectedPokemon && (
+        <Modal onClose={() => setShowInfoModal(false)}>
+          {<PokemonCard pokemonId={selectedPokemon.id} />}
+        </Modal>
+      )}
     </>
   );
 };
