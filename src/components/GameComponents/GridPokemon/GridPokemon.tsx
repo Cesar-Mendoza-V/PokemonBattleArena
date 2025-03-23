@@ -1,0 +1,76 @@
+import { useQuery } from "@tanstack/react-query";
+import { IoWarning } from "react-icons/io5";
+import { RotatingLines } from "react-loader-spinner";
+import "./GridPokemon.css";
+
+interface SpawnedPokemon {
+  id: number;
+  x: number;
+  y: number;
+  shiny: boolean;
+}
+
+interface GridPokemonProps {
+  pokemon: SpawnedPokemon;
+  selected: boolean;
+  setSelectedPokemon: (pokemon: SpawnedPokemon) => void;
+}
+
+interface PokemonData {
+  sprites: {
+    front_default: string;
+    front_shiny: string;
+  };
+}
+
+const fetchPokemon = async (id: number): Promise<PokemonData> => {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  if (!response.ok) throw new Error("Network response was not ok");
+  return response.json();
+};
+
+const GridPokemon = ({
+  pokemon,
+  selected,
+  setSelectedPokemon,
+}: GridPokemonProps) => {
+  const {
+    data: pokemonData,
+    isLoading,
+    isError,
+  } = useQuery<PokemonData>({
+    queryKey: ["pokemon_" + pokemon.id],
+    queryFn: () => fetchPokemon(pokemon.id),
+  });
+
+  return (
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+        setSelectedPokemon(pokemon);
+      }}
+      className="grid-pokemon"
+      style={{
+        gridColumnStart: pokemon.x,
+        gridRowStart: pokemon.y,
+        gridColumnEnd: pokemon.x + 2,
+        gridRowEnd: pokemon.y + 2,
+        backgroundImage: pokemon.shiny
+          ? `url(${pokemonData?.sprites.front_shiny})`
+          : `url(${pokemonData?.sprites.front_default})`,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        border: selected ? "2px solid black" : "none",
+        borderRadius: 20,
+      }}
+    >
+      {isLoading && (
+        <RotatingLines strokeColor="black" animationDuration="10" />
+      )}
+      {isError && <IoWarning color="black" size={"100%"} />}
+    </div>
+  );
+};
+
+export default GridPokemon;
