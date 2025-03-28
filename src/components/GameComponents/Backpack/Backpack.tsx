@@ -5,6 +5,7 @@ import BackPackPokemon from "./BackpackPokemon";
 const Backpack = () => {
   const [pokemonIds, setPokemonIds] = useState<number[]>([]);
   const [selectedPokemon, setSelectedPokemon] = useState<number | null>(null);
+  const [popupPokemonId, setPopupPokemonId] = useState<number | null>(null);
 
   useEffect(() => {
     const ammount = Math.ceil(Math.random() * 20);
@@ -22,6 +23,14 @@ const Backpack = () => {
     setSelectedPokemon(selectedPokemon === id ? null : id);
   };
 
+  const handlePopUpClick = (id: number) => {
+    setPopupPokemonId(id);
+  };
+
+  const handleClosePopup = () => {
+    setPopupPokemonId(null);
+  };
+
   return (
     <section className="backpack-layout">
       <h1 className="backpack-title">Mochila</h1>
@@ -37,11 +46,38 @@ const Backpack = () => {
             <BackPackPokemon id={id} />
             {selectedPokemon === id && (
               <div className="pokemon-selection-buttons">
-                <button className="pokemon-selection-release">
-                  <img src="../../../assets/icons/release-grass.png" />
+                <button
+                  className="pokemon-selection-release"
+                  onClick={() => handlePopUpClick(id)}
+                >
+                  <img
+                    src="src/assets/images/release-grass.png"
+                    alt="release"
+                  />
                 </button>
                 <button className="stats-button"></button>
-                <button className="pokemon-selection-exit"></button>
+              </div>
+            )}
+            {popupPokemonId === id && (
+              <div className="popup">
+                <div className="popup-content">
+                  <img src="/src/assets/gifs/pikachu-running.gif" />
+                  <h2>You want to release this Pokemon?</h2>
+                  <button
+                    className="popup-button-release"
+                    onClick={() => {
+                      setPokemonIds((prev) =>
+                        prev.filter((pokemonId) => pokemonId !== id)
+                      );
+                      handleClosePopup();
+                    }}
+                  >
+                    RELEASE
+                  </button>
+                  <button className="popup-button" onClick={handleClosePopup}>
+                    CANCEL
+                  </button>
+                </div>
               </div>
             )}
           </div>

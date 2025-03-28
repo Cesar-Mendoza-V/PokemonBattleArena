@@ -28,11 +28,11 @@
 }
 
 .backpack-pokemon-container {
-  position: relative; 
+  position: relative;
   border: 3px solid transparent;
   border-radius: 12px;
   transition: all 0.2s ease;
-  padding-bottom: 45px; 
+  padding-bottom: 45px;
 }
 
 .backpack-pokemon-card {
@@ -40,16 +40,16 @@
   aspect-ratio: 6/7;
   padding: 7px 5px;
   border-radius: 10px;
-  border: 3px dotted black;
+  border: 2px dashed black;
   cursor: pointer;
   transition: all 0.15s ease;
+  background-image: url("../../../assets/images/grass_tile.jpg");
   background-position: center;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: rgba(255, 255, 255, 0.8);
 }
 
 .backpack-pokemon-card:hover {
@@ -71,12 +71,13 @@
 }
 
 .backpack-pokemon-container.selected {
-  border: 3px solid #ff0000;
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  border: none;
 }
 
 .backpack-pokemon-container.selected .backpack-pokemon-card {
-  transform: scale(0.95);
+  border: 3px solid #ff0000;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  transform: scale(1.05);
 }
 
 .backpack-pokemon-container.selected .backpack-pokemon-card:hover {
@@ -84,40 +85,39 @@
 }
 
 .pokemon-selection-buttons {
-  position: absolute;
-  bottom: 10px;
+  position: relative;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
   z-index: 2;
-  animation: fadeIn 0.25s ease-out;
+  margin-top: 8px;
 }
 
 .pokemon-selection-buttons button {
   border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 46px;
+  height: 46px;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   transition: all 0.2s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  font-family: inherit;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 0;
 }
-
-.pokemon-selection-release {
-  background-color: #ff4444;
-  color: white;
-  width: auto;
-  padding: 0 12px;
-  border-radius: 20px !important;
-  font-size: 0.75rem;
-  text-transform: uppercase;
+.pokemon-selection-release img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgb(247, 255, 255);
 }
 
 .stats-button {
@@ -126,24 +126,12 @@
   font-size: 0.9rem;
 }
 
-.pokemon-selection-exit {
-  background-color: #666;
-  color: white;
-  font-size: 0.9rem;
-}
-
 .pokemon-selection-release:hover {
-  background-color: #ff0000;
   transform: scale(1.1);
 }
 
 .stats-button:hover {
   background-color: #2a8be0;
-  transform: scale(1.1);
-}
-
-.pokemon-selection-exit:hover {
-  background-color: #444;
   transform: scale(1.1);
 }
 
@@ -180,9 +168,89 @@
     height: 30px;
     font-size: 0.8rem;
   }
+}
 
-  .pokemon-selection-release {
-    padding: 0 8px;
-    font-size: 0.65rem;
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-content {
+  background: rgb(107, 107, 107);
+  color: rgb(255, 255, 255);
+  width: 400px;
+  min-height: 200px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 3px 5px rgb(93, 20, 20);
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup-content img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.popup-content h2 {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.popup-button {
+  background-color: #ff4d4f;
+  color: white;
+  min-width: 100px;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.popup-button-release {
+  background-color: rgb(107, 107, 107);
+  box-shadow: 0px 0px 0px 2px #d9363e;
+  border: none;
+  color: white;
+  min-width: 100px;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.popup-button-release:hover {
+  background-color: #d9363e;
+}
+
+.popup-button:hover {
+  background-color: #d9363e;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.popup-button:not(:last-child) {
+  margin-right: 10px;
 }
