@@ -104,7 +104,7 @@ bool DatabaseManager::login_user(const User& user) {
             "SELECT EXISTS ("
             "   SELECT 1"
             "   FROM users"
-            "   WHERE username = ? AND password = ?"
+            "   WHERE email = ? AND password = ?"
             ") AS is_valid";
 
         std::unique_ptr<sql::PreparedStatement> prep_stmt(conn->prepareStatement(query));
@@ -117,6 +117,7 @@ bool DatabaseManager::login_user(const User& user) {
 
         if (res->next()) {
             bool is_valid = res->getBoolean("is_valid");
+            std::cout << "User login status: " << is_valid << std::endl;
             return is_valid;
         }
 
