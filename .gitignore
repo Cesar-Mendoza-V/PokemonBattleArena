@@ -27,6 +27,7 @@ dist-ssr
 # Backend build directories
 backend/build/
 backend/cmake-build-debug/
+/build
 
 # Environment files
 *.env

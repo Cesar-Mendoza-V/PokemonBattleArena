@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Game from "./pages/Game/Game";
@@ -14,7 +19,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
-          <Route path="/" element={<Signin />} />
+          <Route path="/" element={<Navigate to="/signin" replace />} />
           <Route path="/game" element={<Game />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
