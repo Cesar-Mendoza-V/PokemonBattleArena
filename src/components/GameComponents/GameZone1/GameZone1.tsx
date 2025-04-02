@@ -10,10 +10,10 @@ import {
 } from "react-icons/fa";
 
 interface SpawnArea {
-  startX: number; // inclusive --> | [...]
-  startY: number; // inclusive --> | [...]
-  endX: number; // exclusive [...] --> |
-  endY: number; // exclusive [...] --> |
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
 }
 
 const spawnAreas: SpawnArea[] = [
@@ -32,106 +32,80 @@ interface SpawnedPokemon {
 
 const GameZone1 = () => {
   const [spawnedPokemon, setSpawnedPokemon] = useState<SpawnedPokemon[]>([]);
-
   const currentPokemon = useRef<Set<number>>(new Set());
+  const [selectedPokemon, setSelectedPokemon] = useState<SpawnedPokemon | null>(null);
+  const [showInventory, setShowInventory] = useState(false); // Estado para mostrar el inventario
 
-  const [selectedPokemon, setSelectedPokemon] = useState<SpawnedPokemon | null>(
-    null
-  );
   useEffect(() => {
     spawnAreas.forEach((area) => {
       if (Math.random() > 0.5) {
-        const startX = Math.floor(
-          Math.random() * (area.endX - 1 - area.startX) + area.startX
-        );
-        const startY = Math.floor(
-          Math.random() * (area.endY - 1 - area.startY) + area.startY
-        );
+        const startX = Math.floor(Math.random() * (area.endX - 1 - area.startX) + area.startX);
+        const startY = Math.floor(Math.random() * (area.endY - 1 - area.startY) + area.startY);
 
-        var pokemonID = 0;
-
-        while (pokemonID == 0 || currentPokemon.current.has(pokemonID)) {
-          // Math.random() * (max-exclusive - min-inclusive) + min-inclusive;
+        let pokemonID = 0;
+        while (pokemonID === 0 || currentPokemon.current.has(pokemonID)) {
           pokemonID = Math.floor(Math.random() * (152 - 1) + 1);
         }
 
         currentPokemon.current.add(pokemonID);
-
-        const is_shiny = Math.floor(Math.random() * (100 - 1) + 1) == 2;
+        const is_shiny = Math.floor(Math.random() * (100 - 1) + 1) === 2;
 
         setSpawnedPokemon((prev) => [
           ...prev,
-          {
-            id: pokemonID,
-            x: startX,
-            y: startY,
-            shiny: is_shiny,
-          },
+          { id: pokemonID, x: startX, y: startY, shiny: is_shiny },
         ]);
       }
     });
   }, []);
+
   return (
     <>
       <main className="game-content">
-        <div
-          onClick={() => {
-            setSelectedPokemon(null);
-          }}
-          className="game-grid"
-        >
-          {spawnedPokemon.length == 0 && (
-            <div className="game-content-message">
-              No hay Pokémon en esta zona
-            </div>
-          )}
+        <div onClick={() => setSelectedPokemon(null)} className="game-grid">
+          {spawnedPokemon.length === 0 && <div className="game-content-message">No hay Pokémon en esta zona</div>}
+
           {spawnedPokemon.map((pokemon) => (
             <GridPokemon
               key={"pokemon_" + pokemon.id}
               pokemon={pokemon}
               setSelectedPokemon={setSelectedPokemon}
-              selected={selectedPokemon == pokemon}
+              selected={selectedPokemon === pokemon}
             />
           ))}
         </div>
       </main>
+
       <aside className="game-buttons-bar">
         <div className="game-controls-buttons-div">
           <button
             className="game-controls-button"
             disabled={selectedPokemon == null}
-            onClick={() => {
-              // TODO
-              // Extraer componente y agregar funcionalidad
-              console.log(`Pokemon ${selectedPokemon?.id} capturado.`);
-            }}
+            onClick={() => console.log(`Pokemon ${selectedPokemon?.id} capturado.`)}
           >
             Capturar
           </button>
           <button
             className="game-controls-button"
             disabled={selectedPokemon == null}
-            onClick={() => {
-              // TODO
-              // Extraer componente y agregar funcionalidad
-              console.log(`Informacion del Pokemon ${selectedPokemon?.id}.`);
-            }}
+            onClick={() => console.log(`Información del Pokemon ${selectedPokemon?.id}.`)}
           >
             Información
           </button>
           <button
             className="game-controls-button"
             disabled={selectedPokemon == null}
-            onClick={() => {
-              // TODO
-              // Extraer componente y agregar funcionalidad
-              console.log(`Huiste del Pokemon ${selectedPokemon?.id}.`);
-            }}
+            onClick={() => console.log(`Huiste del Pokemon ${selectedPokemon?.id}.`)}
           >
             Huir
           </button>
-          <button className="game-controls-button">Mochila</button>
+          <button
+            className="game-controls-button"
+            onClick={() => setShowInventory(!showInventory)}
+          >
+            Inventario
+          </button>
         </div>
+
         <div className="game-controls-gamepad">
           <button className="up">
             <FaArrowUp size={"100%"} />
