@@ -54,7 +54,6 @@
 }
 
 .backpack-pokemon-card:hover {
-  background-color: rgba(255, 255, 255, 0.9);
   transform: scale(1.05);
 }
 
@@ -77,7 +76,6 @@
 
 .backpack-pokemon-container.selected .backpack-pokemon-card {
   border: 3px solid #ff0000;
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
   transform: scale(1.05);
 }
 
@@ -184,13 +182,13 @@
 }
 
 .popup-content {
-  background: rgb(107, 107, 107);
-  color: rgb(255, 255, 255);
+  background-image: url("../../../assets/images/grass_tile.jpg");
+  color: rgb(10, 68, 36);
   width: 400px;
   min-height: 200px;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0px 0px 3px 5px rgb(93, 20, 20);
+  box-shadow: 0px 0px 3px 5px rgb(21, 74, 0);
   text-align: center;
   position: relative;
   animation: fadeIn 0.3s ease-in-out;
@@ -208,7 +206,7 @@
 }
 
 .popup-button {
-  background-color: #ff4d4f;
+  background-color: rgb(21, 74, 0);
   color: white;
   min-width: 100px;
   border: none;
@@ -220,8 +218,7 @@
 }
 
 .popup-button-release {
-  background-color: rgb(107, 107, 107);
-  box-shadow: 0px 0px 0px 2px #d9363e;
+  background-color: rgb(21, 74, 0);
   border: none;
   color: white;
   min-width: 100px;
@@ -233,11 +230,11 @@
 }
 
 .popup-button-release:hover {
-  background-color: #d9363e;
+  background-color: rgb(0, 0, 0);
 }
 
 .popup-button:hover {
-  background-color: #d9363e;
+  background-color: rgb(9, 32, 0);
 }
 
 @keyframes fadeIn {
