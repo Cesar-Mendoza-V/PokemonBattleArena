@@ -3,12 +3,15 @@ import "./Backpack.css";
 import BackPackPokemon from "./BackpackPokemon";
 import Stats from "./Stats/stats";
 import "./Stats/stats.css";
+import BattleSimulator from "../Backpack/Battle-Simulator/battle-simulator"; // Asegúrate de que la ruta sea correcta
+import "./Battle-Simulator/battle-simulator.css";
 
 const Backpack = () => {
   const [pokemonIds, setPokemonIds] = useState<number[]>([]);
   const [selectedPokemon, setSelectedPokemon] = useState<number | null>(null);
   const [popupPokemonId, setPopupPokemonId] = useState<number | null>(null);
   const [statsPopupId, setStatsPopupId] = useState<number | null>(null);
+  const [battleSimulatorId, setBattleSimulatorId] = useState<number | null>(null);
 
   useEffect(() => {
     const ammount = Math.ceil(Math.random() * 20);
@@ -30,6 +33,9 @@ const Backpack = () => {
         if (statsPopupId !== null) {
           handleCloseStatsPopup();
         }
+        if (battleSimulatorId !== null) {
+          handleCloseBattleSimulator();
+        }
       }
     };
 
@@ -38,7 +44,7 @@ const Backpack = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [popupPokemonId, statsPopupId]);
+  }, [popupPokemonId, statsPopupId, battleSimulatorId]);
 
   const handlePokemonClick = (id: number) => {
     setSelectedPokemon(selectedPokemon === id ? null : id);
@@ -58,6 +64,10 @@ const Backpack = () => {
 
   const handleCloseStatsPopup = () => {
     setStatsPopupId(null);
+  };
+
+  const handleCloseBattleSimulator = () => {
+    setBattleSimulatorId(null);
   };
 
   return (
@@ -84,6 +94,7 @@ const Backpack = () => {
                     alt="release"
                   />
                 </button>
+                
                 <button
                   className="stats-button"
                   onClick={() => handleStatsClick(id)}
@@ -91,6 +102,16 @@ const Backpack = () => {
                    <img
                     src="src/assets/images/stats.png"
                     alt="stats"
+                  />
+                </button>
+
+                <button
+                  className="battle-simulator-button"
+                  onClick={() => setBattleSimulatorId(id)}
+                >
+                   <img
+                    src="src/assets/images/pokeball button.png"
+                    alt="battle simulator"
                   />
                 </button>
               </div>
@@ -130,6 +151,19 @@ const Backpack = () => {
           </div>
         ))}
       </div>
+
+      {/* Nuevo popup para el Battle Simulator */}
+      {battleSimulatorId && (
+        <div className="popup">
+          <div className="popup-battle-simulator">
+            <BattleSimulator 
+              pokemonId={battleSimulatorId} 
+              onClose={handleCloseBattleSimulator}
+              pokemonList={pokemonIds}
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };
