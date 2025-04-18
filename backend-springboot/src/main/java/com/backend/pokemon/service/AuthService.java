@@ -58,7 +58,7 @@ public class AuthService {
                 .username(signUpRequest.getUsername())
                 .email(signUpRequest.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .role("USER")  // Default role
+                .role("USER") 
                 .createdAt(LocalDateTime.now())
                 .build();
 
