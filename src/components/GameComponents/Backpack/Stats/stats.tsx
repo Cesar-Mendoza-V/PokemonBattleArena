@@ -1,5 +1,6 @@
 import "./stats.css";
 import { useQuery } from "@tanstack/react-query";
+import { source } from "framer-motion/client";
 import { useState } from "react";
 
 const fetchPokemon = async (id: number) => {
@@ -8,8 +9,18 @@ const fetchPokemon = async (id: number) => {
   return response.json();
 };
 
-function Stats({ onClose, pokemonId }: { onClose: () => void; pokemonId: number }) {
-  const { data: pokemonData, isLoading, isError } = useQuery({
+function Stats({
+  onClose,
+  pokemonId,
+}: {
+  onClose: () => void;
+  pokemonId: number;
+}) {
+  const {
+    data: pokemonData,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["pokemon", pokemonId],
     queryFn: () => fetchPokemon(pokemonId),
   });
@@ -27,9 +38,25 @@ function Stats({ onClose, pokemonId }: { onClose: () => void; pokemonId: number 
           {isError && <p>Error al cargar</p>}
           {pokemonData && (
             <p className="stats-modal-info">
-              LVL {pokemonLevel} / {pokemonData.name.toUpperCase()} / #{pokemonId}
+              LVL {pokemonLevel} / {pokemonData.name.toUpperCase()} / #
+              {pokemonId}
             </p>
           )}
+          <button
+            id="battle-records"
+            style={{
+              backgroundColor: "transparent",
+              border: "none",
+              marginLeft: "10px",
+            }}
+          >
+            <img
+              src="src/assets/images/arrow-down.jpg"
+              alt="open-record"
+              width="20px"
+              height="20px"
+            ></img>
+          </button>
         </div>
 
         <div className="stats-modal-grid">
@@ -85,7 +112,10 @@ function Stats({ onClose, pokemonId }: { onClose: () => void; pokemonId: number 
             <div>
               <p className="stats-modal-xp-label">PROGRESS</p>
             </div>
-            <div className="stats-modal-progress-bar" style={{ "--wth": "40%" } as React.CSSProperties}></div>
+            <div
+              className="stats-modal-progress-bar"
+              style={{ "--wth": "40%" } as React.CSSProperties}
+            ></div>
           </div>
 
           <div className="stats-modal-moves">
