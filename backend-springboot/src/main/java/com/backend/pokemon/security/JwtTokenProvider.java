@@ -35,7 +35,12 @@ public class JwtTokenProvider {
     
     @PostConstruct
     public void init() {
-        this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        if (jwtSecret.length() < 64) {
+            log.warn("JWT secret too short, generating secure key");
+            this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        } else {
+            this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        }
     }
 
     /**
