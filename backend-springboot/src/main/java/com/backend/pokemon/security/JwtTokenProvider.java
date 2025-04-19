@@ -3,14 +3,16 @@ package com.backend.pokemon.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+
+import com.backend.pokemon.config.JwtConfig;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -23,23 +25,20 @@ import java.util.stream.Collectors;
  */
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
-    @Value("${jwt.expiration}")
-    private long jwtExpirationInMs;
+    private final JwtConfig jwtConfig;
     
     private Key key;
     
     @PostConstruct
     public void init() {
-        if (jwtSecret.length() < 64) {
+        if (jwtConfig.getSecret().length() < 64) {
             log.warn("JWT secret too short, generating secure key");
             this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
         } else {
-            this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+            this.key = Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes());
         }
     }
 
@@ -57,7 +56,7 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(",")));
 
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        Date expiryDate = new Date(now.getTime() + jwtConfig.getExpiration());
 
         return Jwts.builder()
                 .setClaims(claims)
