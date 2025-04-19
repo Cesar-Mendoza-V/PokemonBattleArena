@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,19 +42,16 @@ public class AuthService {
     public User registerUser(SignupRequest signUpRequest) {
         log.info("Attempting to register user: {}", signUpRequest.getUsername());
         
-        // Check if username is already taken
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             log.warn("Username is already taken: {}", signUpRequest.getUsername());
             throw new ResourceAlreadyExistsException("Username is already taken!");
         }
 
-        // Check if email is already in use
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             log.warn("Email is already in use: {}", signUpRequest.getEmail());
             throw new ResourceAlreadyExistsException("Email is already in use!");
         }
 
-        // Create new user
         User user = User.builder()
                 .username(signUpRequest.getUsername())
                 .email(signUpRequest.getEmail())
@@ -71,12 +69,15 @@ public class AuthService {
      * Authenticate a user and generate JWT token.
      */
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
-        log.info("Attempting to authenticate user: {}", loginRequest.getUsername());
+        log.info("Attempting to authenticate user with email: {}", loginRequest.getEmail());
         
         try {
+            User user = userRepository.findByEmail(loginRequest.getEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + loginRequest.getEmail()));
+            
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(),
+                            user.getUsername(),
                             loginRequest.getPassword()
                     )
             );
@@ -89,9 +90,6 @@ public class AuthService {
             Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
             
             String jwt = tokenProvider.generateToken(userDetails.getUsername(), authorities);
-            
-            User user = userRepository.findByUsername(userDetails.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             return JwtResponse.builder()
                     .accessToken(jwt)
@@ -102,7 +100,7 @@ public class AuthService {
                     .role(user.getRole())
                     .build();
         } catch (Exception e) {
-            log.error("Authentication failed for user: {}", loginRequest.getUsername());
+            log.error("Authentication failed for email: {}", loginRequest.getEmail());
             throw e;
         }
     }

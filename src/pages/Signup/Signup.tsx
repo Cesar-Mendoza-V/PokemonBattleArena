@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { postUserRequest } from "../../api/postRequests";
 
 interface FormData {
@@ -105,29 +106,6 @@ function Signup() {
     });
   };
 
-  const notify = () =>
-    toast.promise(
-      postUserRequest({
-        email: formData.email,
-        password: formData.password,
-        username: formData.username,
-      }),
-      {
-        pending: "Signing up user",
-        success: {
-          render: "User created succesfully!",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "light",
-        },
-        error: "Error creating user",
-      }
-    );
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
@@ -143,14 +121,23 @@ function Signup() {
         username: formData.username,
         password: formData.password,
       };
-      console.log("Submitted Data:", postData);
-      notify().then((data) => {
-        setTimeout(() => {
-          console.log(data);
-          if (data.httpStatusCode == 201) {
-            navigate("/game");
-          }
-        }, 1500);
+
+      toast.promise(postUserRequest(postData), {
+        pending: "Signing up user",
+        success: {
+          render: () => {
+            setTimeout(() => {
+              navigate("/signin");
+            }, 1500);
+            return "User created successfully!";
+          },
+          autoClose: 1500,
+        },
+        error: {
+          render: ({ data }: any) => {
+            return data?.message || "Error creating user";
+          },
+        },
       });
     } else {
       console.log("not valid data");

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Signin.css";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUserRequest, isAuthenticated } from "../../api/postRequests";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -10,6 +11,12 @@ function LoginPage() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [loginError, setLoginError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/game");
+    }
+  }, [navigate]);
 
   // Cargar email almacenado si "Remember Me" estuvo activado
   useEffect(() => {
@@ -46,30 +53,23 @@ function LoginPage() {
     setLoginError("");
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: email, password }),
+      const response = await loginUserRequest({
+        email: email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        if (data.token) {
-          if (rememberMe) {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("rememberedEmail", email);
-          } else {
-            sessionStorage.setItem("token", data.token);
-            localStorage.removeItem("rememberedEmail"); // Eliminar email guardado si no se recuerda
-          }
+      if (response.success) {
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
         }
-        navigate("/Game");
+        navigate("/game");
       } else {
-        setLoginError(data.message || "Invalid email or password");
+        setLoginError(response.message || "Email o contraseña inválidos");
       }
-    } catch (error) {
-      setLoginError("Server error. Please try again later.");
+    } catch (error: any) {
+      setLoginError("Error del servidor. Por favor intente más tarde.");
     }
   };
 
@@ -122,7 +122,7 @@ function LoginPage() {
           Embark on <br /> your Pokemon <br /> adventure!{" "}
         </h2>
         <p className="description">
-          If you don’t have an account yet, <br /> join us and start your
+          If you don't have an account yet, <br /> join us and start your
           adventure.
         </p>
         <Link to="/signup">

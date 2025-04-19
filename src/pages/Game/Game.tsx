@@ -8,18 +8,27 @@ import {
 } from "react-icons/io5";
 import { BsBackpack2 } from "react-icons/bs";
 import GameZone1 from "../../components/GameComponents/GameZone1/GameZone1";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../../api/postRequests";
 import Backpack from "../../components/GameComponents/Backpack/Backpack";
+
+type MainTab = "game" | "backpack";
 
 const tabComponents: Record<MainTab, React.ReactNode> = {
   game: <GameZone1 />,
   backpack: <Backpack />,
 };
 
-type MainTab = "game" | "backpack";
-
 function Game() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<MainTab>("game");
+  
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/signin");
+    }
+  }, [navigate]);
 
   return (
     <div className="game-outside-layout">
@@ -49,7 +58,10 @@ function Game() {
             <IoPersonCircleOutline size={"100%"} />
           </li>
         </ul>
-        <button className="game-menu-signout">
+        <button 
+          className="game-menu-signout"
+          onClick={() => navigate("/signout")}
+        >
           <IoPower size={"100%"} />
         </button>
       </aside>
