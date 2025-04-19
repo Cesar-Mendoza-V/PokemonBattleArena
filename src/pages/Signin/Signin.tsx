@@ -77,7 +77,7 @@ function LoginPage() {
     <div className="container">
       {/* Login Section */}
       <div className="login-section">
-        <h2 className="title">Login.</h2>
+        <h2 className="title">Login</h2>
         <input
           type="email"
           placeholder="Email"
