@@ -9,6 +9,16 @@
   border-radius: 1000px;
 }
 
+.body {
+  font-family: 'Press Start 2P', cursive;
+  margin: 0;
+  padding: 0;
+  background-color: #1c1c1c;
+  background-image: url('https://preview.redd.it/d9spuwer2c491.png?width=1050&format=png&auto=webp&s=9ca8c75c63da9f8bb134e955d73e2770d073375e'); /* Aquí estamos usando un fondo pixelado */
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 .game-controls-buttons-div {
   display: flex;
   flex-direction: column;
