@@ -21,34 +21,34 @@ import java.time.LocalDateTime;
 public class Pokemon {
 
     @Id
-    private Integer id;  // No es autogenerado, corresponde al ID nacional del Pokémon
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
 
     @Column(name = "api_data", nullable = false, columnDefinition = "jsonb")
-    private String apiData;  // JSONB data as String
+    private String apiData;
 
     @Column(columnDefinition = "jsonb")
-    private String sprites;  // JSONB data as String
+    private String sprites;
 
     @Column(nullable = false, columnDefinition = "jsonb")
-    private String types;  // JSONB data as String
+    private String types;
 
     @Column(nullable = false, columnDefinition = "jsonb")
-    private String stats;  // JSONB data as String
+    private String stats;  
 
     @Column(columnDefinition = "jsonb")
-    private String abilities;  // JSONB data as String
+    private String abilities;  
 
     @Column(columnDefinition = "jsonb")
-    private String moves;  // JSONB data as String
+    private String moves;  
 
     @Column(name = "species_data", columnDefinition = "jsonb")
-    private String speciesData;  // JSONB data as String
+    private String speciesData; 
 
     @Column(name = "evolution_chain", columnDefinition = "jsonb")
-    private String evolutionChain;  // JSONB data as String
+    private String evolutionChain;  
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

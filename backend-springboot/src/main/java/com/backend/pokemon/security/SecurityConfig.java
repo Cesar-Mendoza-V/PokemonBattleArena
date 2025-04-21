@@ -46,12 +46,11 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
-                // Al usar context-path, necesitamos rutas relativas aquí
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/public/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .authenticationProvider(authenticationProvider())  // Importante: registrar el provider
+            .authenticationProvider(authenticationProvider())
             .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), 
                             UsernamePasswordAuthenticationFilter.class);
         

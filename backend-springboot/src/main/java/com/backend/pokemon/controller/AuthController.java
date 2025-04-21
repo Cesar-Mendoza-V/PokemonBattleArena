@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller for authentication endpoints.
  */
 @RestController
-@RequestMapping("/auth") // CAMBIO AQUÍ: quitamos el prefijo /api porque ya está en context-path
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 

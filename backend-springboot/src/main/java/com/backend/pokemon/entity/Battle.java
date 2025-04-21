@@ -39,7 +39,7 @@ public class Battle {
     private String result;
 
     @Column(name = "battle_data", columnDefinition = "jsonb")
-    private String battleData;  // JSONB data as String
+    private String battleData; 
 
     @Column(name = "started_at")
     private LocalDateTime startedAt;
