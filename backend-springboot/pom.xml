@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    This is the project's "recipe book" for Maven. 
+    
+    What is this file? Think of it like a shopping list and instruction manual combined.
+    
+    Just as a recipe tells you what ingredients you need and how to prepare a dish,
+    this file tells Maven what libraries (dependencies) your application needs and
+    how to build the final application.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <!-- Parent POM - we're inheriting settings from Spring Boot's starter parent -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.4</version>
-        <relativePath/> 
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.backend</groupId>
-    <artifactId>pokemon</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>pokemon</name>
-    <description>pokemon-battle-arena-backend</description>
+    
+    <!-- Basic project information -->
+    <groupId>com.backend</groupId>         <!-- Organization identifier -->
+    <artifactId>pokemon</artifactId>       <!-- Project name -->
+    <version>0.0.1-SNAPSHOT</version>      <!-- Version (SNAPSHOT means it's in development) -->
+    <name>pokemon</name>                   <!-- Human-readable name -->
+    <description>pokemon-battle-arena-backend</description>  <!-- What this project does -->
     <url/>
     <licenses>
         <license/>
@@ -26,27 +38,38 @@
         <tag/>
         <url/>
     </scm>
+    
+    <!-- Project settings -->
     <properties>
-        <java.version>21</java.version>
-        <jjwt.version>0.11.5</jjwt.version>
+        <java.version>21</java.version>              <!-- We're using Java 21 -->
+        <jjwt.version>0.11.5</jjwt.version>          <!-- JWT library version -->
     </properties>
+    
+    <!-- 
+        Dependencies - these are the "ingredients" our application needs.
+        Think of these like the building blocks that we'll assemble to create our app.
+    -->
     <dependencies>
-        <!-- Spring Boot Starters -->
+        <!-- Spring Boot Starters - convenient bundles of related libraries -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <!-- Tools for database access and management -->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+            <!-- Security framework for authentication and authorization -->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+            <!-- Tools for validating user input -->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <!-- Everything needed to build a web application -->
         </dependency>
 
         <!-- Database -->
@@ -54,59 +77,73 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+            <!-- Driver for connecting to PostgreSQL databases -->
         </dependency>
 
-        <!-- JWT Dependencies -->
+        <!-- JWT Dependencies - for secure user authentication -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
             <version>${jjwt.version}</version>
+            <!-- API for creating and validating JWT tokens -->
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
             <version>${jjwt.version}</version>
             <scope>runtime</scope>
+            <!-- Implementation of JWT token processing -->
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>${jjwt.version}</version>
             <scope>runtime</scope>
+            <!-- JSON processing for JWT tokens -->
         </dependency>
 
-        <!-- Lombok -->
+        <!-- Lombok - reduces boilerplate code like getters/setters -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+            <!-- Code generation tool to reduce repetitive code -->
         </dependency>
 
-        <!-- JSON Processing -->
+        <!-- JSON Processing - for working with JSON data -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <!-- Tools for converting between Java objects and JSON -->
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+            <!-- Support for modern Java date/time types in JSON -->
         </dependency>
 
-        <!-- Testing -->
+        <!-- Testing - libraries for automated testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <!-- Framework for writing and running tests -->
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+            <!-- Tools for testing security features -->
         </dependency>
     </dependencies>
 
+    <!-- 
+        Build configuration - instructions for how to assemble the final application.
+        Think of this like the cooking instructions in a recipe.
+    -->
     <build>
         <plugins>
+            <!-- Compiler plugin - handles Java compilation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -120,6 +157,8 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            
+            <!-- Spring Boot plugin - packages the application as an executable JAR -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

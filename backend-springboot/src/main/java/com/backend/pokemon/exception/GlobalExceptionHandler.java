@@ -14,25 +14,37 @@ import java.util.Map;
 
 /**
  * Global exception handler for the application.
- * Centralizes exception handling across all controllers.
+ * 
+ * What is this class? Think of it like a central error management system.
+ * 
+ * Just as a customer service department handles all complaints in a store,
+ * this class catches all errors that happen anywhere in the application and
+ * transforms them into user-friendly responses.
+ * 
+ * Instead of showing users scary error messages, it creates standardized
+ * error responses that are easier to understand.
  */
-@RestControllerAdvice
-@Slf4j
+@RestControllerAdvice // Tells Spring this class handles exceptions from all controllers
+@Slf4j // Adds automatic logging capabilities to this class
 public class GlobalExceptionHandler {
 
     /**
      * Handle validation errors.
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class) // Specifies which exception type this method handles
     public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
+        // Create a map to store all validation errors
         Map<String, String> errors = new HashMap<>();
+        
+        // Extract each validation error and put it in our map
         ex.getBindingResult().getAllErrors().forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
+            String fieldName = ((FieldError) error).getField(); // Which field had the error (e.g., "email")
+            String errorMessage = error.getDefaultMessage(); // What was wrong (e.g., "must be a valid email format")
             errors.put(fieldName, errorMessage);
         });
         
+        // Return HTTP 400 (Bad Request) with the validation errors
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error("Validation failed"));
     }
@@ -40,10 +52,13 @@ public class GlobalExceptionHandler {
     /**
      * Handle ResourceAlreadyExistsException.
      */
-    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    @ExceptionHandler(ResourceAlreadyExistsException.class) // Specifies which exception type this method handles
     public ResponseEntity<ApiResponse<Object>> handleResourceAlreadyExists(
             ResourceAlreadyExistsException ex) {
+        // Log the error for administrators to see
         log.error("Resource already exists: {}", ex.getMessage());
+        
+        // Return HTTP 409 (Conflict) with an error message
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(ex.getMessage()));
     }
@@ -51,9 +66,12 @@ public class GlobalExceptionHandler {
     /**
      * Handle all other exceptions.
      */
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Exception.class) // This catches all other types of exceptions
     public ResponseEntity<ApiResponse<Object>> handleAllExceptions(Exception ex) {
+        // Log the error with full details for developers to troubleshoot
         log.error("Unhandled exception", ex);
+        
+        // Return HTTP 500 (Internal Server Error) with a generic error message
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("An unexpected error occurred"));
     }

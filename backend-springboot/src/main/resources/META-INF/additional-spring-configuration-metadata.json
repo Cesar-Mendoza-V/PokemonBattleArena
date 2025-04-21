@@ -3,12 +3,12 @@
     {
       "name": "jwt.secret",
       "type": "java.lang.String",
-      "description": "Secret key used for signing JWT tokens."
+      "description": "Secret key used for signing JWT tokens. This is like a special password that the server uses to create and verify user ID cards (JWT tokens). It should be long, random, and kept secret."
     },
     {
       "name": "jwt.expiration",
       "type": "java.lang.Long",
-      "description": "JWT token expiration time in milliseconds."
+      "description": "JWT token expiration time in milliseconds. This controls how long a user's login session remains valid before they need to log in again. For example, 86400000 equals 24 hours."
     }
   ]
 }
