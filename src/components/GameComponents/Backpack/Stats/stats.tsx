@@ -1,6 +1,6 @@
 import "./stats.css";
+import BattleHistory from "./BattleHistory/battlehistory";
 import { useQuery } from "@tanstack/react-query";
-import { source } from "framer-motion/client";
 import { useState } from "react";
 
 const fetchPokemon = async (id: number) => {
@@ -16,6 +16,9 @@ function Stats({
   onClose: () => void;
   pokemonId: number;
 }) {
+  // Use state for show battle history
+  const [showBattleHistory, setShowBattleHistory] = useState(false);
+
   const {
     data: pokemonData,
     isLoading,
@@ -43,11 +46,12 @@ function Stats({
             </p>
           )}
           <button
+            onClick={() => setShowBattleHistory(!showBattleHistory)}
             id="battle-records"
             style={{
               backgroundColor: "transparent",
               border: "none",
-              marginLeft: "10px",
+              marginLeft: "5px",
             }}
           >
             <img
@@ -56,6 +60,7 @@ function Stats({
               width="20px"
               height="20px"
             ></img>
+            {showBattleHistory && <BattleHistory pokemonId={pokemonId} />}
           </button>
         </div>
 
