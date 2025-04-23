@@ -34,7 +34,7 @@ const Backpack = () => {
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -79,19 +79,13 @@ const Backpack = () => {
                   className="pokemon-selection-release"
                   onClick={() => handlePopUpClick(id)}
                 >
-                  <img
-                    src="src/assets/images/release-grass.png"
-                    alt="release"
-                  />
+                  <img src="src/assets/gifs/animatedGrass.gif" alt="release" />
                 </button>
                 <button
                   className="stats-button"
                   onClick={() => handleStatsClick(id)}
                 >
-                   <img
-                    src="src/assets/images/stats.png"
-                    alt="stats"
-                  />
+                  <img src="src/assets/images/stats.png" alt="stats" />
                 </button>
               </div>
             )}
