@@ -67,7 +67,7 @@
   
   .pokemon-slot {
     width: 130px;
-    height: 130px;
+    height: 150px;
     background-color: #666;
     border-radius: 20px;
     border: 4px solid black;
@@ -143,6 +143,12 @@
   
   .pokemon-option:hover {
     transform: scale(1.05);
+  }
+
+  .pokemon-option.selected {
+    outline: 3px solid gold;
+    border-radius: 10px;
+    box-shadow: 0 0 10px gold;
   }
 
  

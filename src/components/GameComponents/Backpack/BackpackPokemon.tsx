@@ -5,6 +5,7 @@ import { IoWarning } from "react-icons/io5";
 interface BackPackPokemonProps {
   id: number;
   customClass?: string;
+  hideNumber?: boolean; 
 }
 
 interface PokemonData {
