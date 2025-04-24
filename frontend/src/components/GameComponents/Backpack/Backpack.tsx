@@ -80,7 +80,7 @@ const Backpack = () => {
                   onClick={() => handlePopUpClick(id)}
                 >
                   <img
-                    src="src/assets/images/release-grass.png"
+                    src="src/assets/gifs/animatedGrass.gif"
                     alt="release"
                   />
                 </button>
