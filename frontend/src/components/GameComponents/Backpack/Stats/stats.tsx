@@ -1,4 +1,5 @@
 import "./stats.css";
+import BattleHistory from "./BattleHistory/BattleHistory";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -8,13 +9,24 @@ const fetchPokemon = async (id: number) => {
   return response.json();
 };
 
-function Stats({ onClose, pokemonId }: { onClose: () => void; pokemonId: number }) {
-  const { data: pokemonData, isLoading, isError } = useQuery({
+function Stats({
+  onClose,
+  pokemonId,
+}: {
+  onClose: () => void;
+  pokemonId: number;
+}) {
+  const {
+    data: pokemonData,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["pokemon", pokemonId],
     queryFn: () => fetchPokemon(pokemonId),
   });
 
   const [pokemonLevel] = useState(Math.floor(Math.random() * 100) + 1);
+  const [showBox, setShowBox] = useState(false);
 
   return (
     <section className="stats-modal-page">
@@ -27,9 +39,29 @@ function Stats({ onClose, pokemonId }: { onClose: () => void; pokemonId: number 
           {isError && <p>Error al cargar</p>}
           {pokemonData && (
             <p className="stats-modal-info">
-              LVL {pokemonLevel} / {pokemonData.name.toUpperCase()} / #{pokemonId}
+              LVL {pokemonLevel} / {pokemonData.name.toUpperCase()} / #
+              {pokemonId}
             </p>
           )}
+          <button
+            className="open-records"
+            onClick={() => setShowBox(!showBox)}
+            style={{
+              backgroundColor: "white",
+              border: "none",
+              borderRadius: "20px",
+              marginLeft: "10px",
+            }}
+          >
+            <img
+              src="./src/assets/images/history.png"
+              style={{
+                width: "20px",
+                height: "20px",
+              }}
+            ></img>
+            {showBox && <BattleHistory pokemonId={pokemonId} />}
+          </button>
         </div>
 
         <div className="stats-modal-grid">
@@ -85,7 +117,10 @@ function Stats({ onClose, pokemonId }: { onClose: () => void; pokemonId: number 
             <div>
               <p className="stats-modal-xp-label">PROGRESS</p>
             </div>
-            <div className="stats-modal-progress-bar" style={{ "--wth": "40%" } as React.CSSProperties}></div>
+            <div
+              className="stats-modal-progress-bar"
+              style={{ "--wth": "40%" } as React.CSSProperties}
+            ></div>
           </div>
 
           <div className="stats-modal-moves">
