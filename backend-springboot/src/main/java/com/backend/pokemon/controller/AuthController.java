@@ -12,6 +12,8 @@ import com.backend.pokemon.service.EmailService;
 import com.backend.pokemon.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +29,11 @@ import java.time.LocalDateTime;
  * This controller specifically handles user login and registration requests.
  * It receives data from the frontend app and sends appropriate responses back.
  */
-@RestController // Tells Spring this class will handle web requests and return data (not web pages)
+@RestController // Tells Spring this class will handle web requests and return data (not web
+                // pages)
 @RequestMapping("/auth") // All URLs handled by this controller will start with "/api/auth"
-@RequiredArgsConstructor // Automatically creates a constructor for required final fields (authService)
+@RequiredArgsConstructor
+@Slf4j // Automatically creates a constructor for required final fields (authService)
 public class AuthController {
 
     private final AuthService authService; // The service that will do the actual authentication work
@@ -39,10 +43,12 @@ public class AuthController {
     /**
      * Register a new user.
      * 
-     * This is like filling out a membership form at a gym - you provide your details,
+     * This is like filling out a membership form at a gym - you provide your
+     * details,
      * and if everything looks good, you get signed up as a new member.
      * 
-     * @param signUpRequest Contains user registration details (username, email, password)
+     * @param signUpRequest Contains user registration details (username, email,
+     *                      password)
      * @return A message telling you if registration worked or why it failed
      */
     @PostMapping("/signup") // This method handles POST requests to "/api/auth/signup"
@@ -50,12 +56,13 @@ public class AuthController {
         try {
             // Ask the auth service to create a new user with the provided details
             User user = authService.registerUser(signUpRequest);
-            
+
             // If successful, return HTTP 200 (OK) with a success message
             return ResponseEntity.ok(ApiResponse.success(
                     "User registered successfully!", user.getUsername()));
         } catch (ResourceAlreadyExistsException e) {
-            // If username/email already exists, return HTTP 409 (Conflict) with error message
+            // If username/email already exists, return HTTP 409 (Conflict) with error
+            // message
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(ApiResponse.error(e.getMessage()));
         } catch (Exception e) {
@@ -68,18 +75,20 @@ public class AuthController {
     /**
      * Authenticate a user (log them in).
      * 
-     * This is like checking in at a hotel - you provide your ID and booking details,
+     * This is like checking in at a hotel - you provide your ID and booking
+     * details,
      * and if they match what's in the system, you get a room key (JWT token).
      * 
      * @param loginRequest Contains login credentials (email and password)
-     * @return If successful, returns a JWT token (like a digital ID card) that the user can use for future requests
+     * @return If successful, returns a JWT token (like a digital ID card) that the
+     *         user can use for future requests
      */
     @PostMapping("/login") // This method handles POST requests to "/api/auth/login"
     public ResponseEntity<ApiResponse<JwtResponse>> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             // Try to authenticate the user with provided credentials
             JwtResponse jwtResponse = authService.authenticateUser(loginRequest);
-            
+
             // If successful, return HTTP 200 (OK) with the JWT token and user details
             return ResponseEntity.ok(ApiResponse.success(
                     "Login successful", jwtResponse));
@@ -90,29 +99,43 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/send-reset-code") // Maneja POST a "/api/auth/send-reset-code"
-    public ResponseEntity<ApiResponse<String>> sendResetCode(@Valid @RequestBody SendResetCodeRequest sendResetCodeRequest) {
+    /**
+     * Sends verification code through email.
+     * 
+     * In case the user forgets its password, this will help them
+     * 
+     * @param sendResetCodeRequest Contains email
+     * @return If successful, returns a succesful message that the email was sent.
+     */
+    @PostMapping("/send-reset-code") // This method handles POST requests to "/api/auth/send-reset-code"
+    public ResponseEntity<ApiResponse<String>> sendResetCode(
+            @Valid @RequestBody SendResetCodeRequest sendResetCodeRequest) {
+        log.info("Trying to send verification code with email: {}", sendResetCodeRequest.getEmail());
         try {
-            // Buscar usuario por correo
+            // Search the user by the email
             User user = userRepository.findByEmail(sendResetCodeRequest.getEmail())
-                    .orElseThrow(() -> new ResourceNotFoundException("No user found with email: " + sendResetCodeRequest.getEmail()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "No user found with email: " + sendResetCodeRequest.getEmail()));
 
-            // Generar código de 6 dígitos
-            String code = String.valueOf((int)(Math.random() * 900000) + 100000);
+            // Generate 6 digit code
+            String code = String.valueOf((int) (Math.random() * 900000) + 100000);
 
-            // Guardar en el usuario
+            // Save inside the user
             user.setResetToken(code);
             user.setResetTokenExpiration(LocalDateTime.now().plusMinutes(10));
             user.setResetTokenUsed(false);
             userRepository.save(user);
 
-            // Enviar el correo
+            // Send verification code via email
             emailService.sendVerificationCode(sendResetCodeRequest.getEmail(), code);
 
+            log.info("Verification code sent successfully!", user.getEmail());
             return ResponseEntity.ok(ApiResponse.success("Verification code sent successfully!", user.getEmail()));
         } catch (ResourceNotFoundException e) {
+            log.info("An error occurred while sending the verification code");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
         } catch (Exception e) {
+            log.info("An error occurred while sending the verification code");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error("An error occurred while sending the verification code"));
         }
