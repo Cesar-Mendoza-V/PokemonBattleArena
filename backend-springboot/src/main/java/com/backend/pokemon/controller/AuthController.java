@@ -4,14 +4,19 @@ import com.backend.pokemon.dto.ApiResponse;
 import com.backend.pokemon.dto.JwtResponse;
 import com.backend.pokemon.dto.LoginRequest;
 import com.backend.pokemon.dto.SignupRequest;
+import com.backend.pokemon.dto.SendResetCodeRequest;
 import com.backend.pokemon.entity.User;
 import com.backend.pokemon.exception.ResourceAlreadyExistsException;
 import com.backend.pokemon.service.AuthService;
+import com.backend.pokemon.service.EmailService;
+import com.backend.pokemon.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.backend.pokemon.exception.ResourceNotFoundException;
+import java.time.LocalDateTime;
 
 /**
  * Controller for authentication endpoints.
@@ -28,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService; // The service that will do the actual authentication work
+    private final EmailService emailService;
+    private final UserRepository userRepository;
 
     /**
      * Register a new user.
@@ -80,6 +87,34 @@ public class AuthController {
             // If authentication fails, return HTTP 401 (Unauthorized)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.error("Invalid username or password"));
+        }
+    }
+
+    @PostMapping("/send-reset-code") // Maneja POST a "/api/auth/send-reset-code"
+    public ResponseEntity<ApiResponse<String>> sendResetCode(@Valid @RequestBody SendResetCodeRequest sendResetCodeRequest) {
+        try {
+            // Buscar usuario por correo
+            User user = userRepository.findByEmail(sendResetCodeRequest.getEmail())
+                    .orElseThrow(() -> new ResourceNotFoundException("No user found with email: " + sendResetCodeRequest.getEmail()));
+
+            // Generar código de 6 dígitos
+            String code = String.valueOf((int)(Math.random() * 900000) + 100000);
+
+            // Guardar en el usuario
+            user.setResetToken(code);
+            user.setResetTokenExpiration(LocalDateTime.now().plusMinutes(10));
+            user.setResetTokenUsed(false);
+            userRepository.save(user);
+
+            // Enviar el correo
+            emailService.sendVerificationCode(sendResetCodeRequest.getEmail(), code);
+
+            return ResponseEntity.ok(ApiResponse.success("Verification code sent successfully!", user.getEmail()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("An error occurred while sending the verification code"));
         }
     }
 }

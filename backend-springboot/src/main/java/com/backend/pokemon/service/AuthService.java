@@ -7,6 +7,8 @@ import com.backend.pokemon.entity.User;
 import com.backend.pokemon.exception.ResourceAlreadyExistsException;
 import com.backend.pokemon.repository.UserRepository;
 import com.backend.pokemon.security.JwtTokenProvider;
+import com.backend.pokemon.service.EmailService;
+import com.backend.pokemon.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -41,6 +44,7 @@ public class AuthService {
 
     private final UserRepository userRepository; // For finding and saving users in the database
     private final PasswordEncoder passwordEncoder; // For securely encrypting passwords
+    private final EmailService emailService;
     private final AuthenticationManager authenticationManager; // For verifying login credentials
     private final JwtTokenProvider tokenProvider; // For creating JWT tokens after successful login
 
