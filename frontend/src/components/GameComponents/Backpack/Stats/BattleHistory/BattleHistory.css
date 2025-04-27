@@ -1,18 +1,25 @@
 .battle-main-container {
-  min-width: 460px;
-  min-height: 520px;
+  width: 480px;
+  max-height: 520px;
   position: absolute;
-  top: 20;
+  top: 0;
   right: 0;
-  margin-top: 45px;
+  margin-top: 120px;
   margin-right: 30px;
   border-radius: 15px;
   border: 3px solid black;
+  overflow-y: overlay;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(19, 19, 19) rgb(239, 239, 239);
   background-color: white;
 }
 
-.battle-history-header {
-  margin-top: 30px;
+.battle-history-header h4 {
+  color: black;
+  text-align: center;
+  font-size: 45px;
+  font-style: italic;
+  margin-bottom: 10px;
 }
 
 .battle-history-records {
@@ -23,5 +30,88 @@
 
 .no-records {
   text-align: center;
-  color: rgb(107, 107, 107);
+  color: rgb(161, 180, 184);
+}
+
+/* CSS of records testing */
+.test-record-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  font-size: 15px;
+}
+
+.record-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  height: auto;
+  width: 90%;
+  border: 1px solid #e0e0e0;
+  animation: forwards;
+}
+
+.record-card:hover {
+  transition: 0.1s ease-in-out;
+  transform: scale(1.05);
+}
+
+.record-card.victory {
+  border: solid 2px green;
+}
+
+.record-card.victory:hover {
+  border: solid 2px rgb(0, 215, 0);
+}
+
+.record-card.defeat {
+  border: solid 2px rgb(171, 0, 0);
+}
+
+.record-card.defeat:hover {
+  border: solid 2px red;
+}
+
+.record-card:focus {
+  border: solid 3px blue;
+}
+
+.card-header,
+.card-values {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+.card-header p,
+.card-values p {
+  margin: 0;
+  text-align: center;
+  color: black;
+}
+
+.p-status.victory {
+  color: green;
+}
+
+.p-status.defeat {
+  color: red;
+}
+
+.card-header {
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+.card-values {
+  gap: 33px;
+}
+
+.card-header strong {
+  color: #555;
 }

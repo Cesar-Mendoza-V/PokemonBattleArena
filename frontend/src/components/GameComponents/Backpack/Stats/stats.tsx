@@ -54,14 +54,14 @@ function Stats({
             }}
           >
             <img
-              src="./src/assets/images/history.png"
+              src="./src/assets/images/battle-history.webp"
               style={{
-                width: "20px",
-                height: "20px",
+                width: "25px",
+                height: "25px",
               }}
             ></img>
-            {showBox && <BattleHistory pokemonId={pokemonId} />}
           </button>
+          {showBox && <BattleHistory pokemonId={pokemonId} />}
         </div>
 
         <div className="stats-modal-grid">
