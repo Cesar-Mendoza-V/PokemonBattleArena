@@ -135,6 +135,13 @@
             <scope>test</scope>
             <!-- Tools for testing security features -->
         </dependency>
+        <!-- Dependency to read .env files withing the backend folder -->
+
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
     <!-- 
