@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
+        <version>3.4.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     
@@ -138,6 +138,13 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
             <!-- Tools for testing security features -->
+        </dependency>
+        <!-- Dependency to read .env files withing the backend folder -->
+
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>3.0.0</version>
         </dependency>
     </dependencies>
 
