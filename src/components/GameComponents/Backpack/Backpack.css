@@ -11,7 +11,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #1c1c1c;
-  background-image: url('https://preview.redd.it/d9spuwer2c491.png?width=1050&format=png&auto=webp&s=9ca8c75c63da9f8bb134e955d73e2770d073375e'); /* Aquí estamos usando un fondo pixelado */
+  background-image: url('../../../assets/images/Fondoselva.jpg'); /* Aquí estamos usando un fondo pixelado */
   background-size: cover;
   background-attachment: fixed;
 }
@@ -20,7 +20,7 @@ body {
   width: 80%;
   margin-block: 2.5%;
   border-radius: 10px;
-  background-image: url('https://images.squarespace-cdn.com/content/v1/5fe4caeadae61a2f19719512/f0724a41-a8df-44a0-a1c2-fcfe4ea56970/Screenshot+%281692%29.jpg');
+  background-image: url('../../../assets/images/Fondonubes.jpg');
   padding: 2rem;
   display: flex;
   flex-direction: column;
