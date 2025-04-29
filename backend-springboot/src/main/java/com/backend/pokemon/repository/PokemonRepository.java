@@ -14,11 +14,9 @@ import java.util.Optional;
  * What is this interface? Think of it like a digital Pokédex that can search 
  * and retrieve Pokémon information from the database.
  * 
- * Just as a Pokédex lets trainers look up Pokémon by name or type,
- * this repository gives the application special methods to find
- * Pokémon stored in our database using different search criteria.
+ * The queries now use PostgreSQL's JSONB capabilities to search within the nested JSON data.
  */
-@Repository // Marks this as a repository that Spring should manage
+@Repository
 public interface PokemonRepository extends JpaRepository<Pokemon, Integer> {
     
     /**
@@ -26,6 +24,7 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Integer> {
      * 
      * Like searching "Pikachu" in a Pokédex and getting its full information.
      */
+    @Query(value = "SELECT * FROM pokemon WHERE data->>'name' = ?1", nativeQuery = true)
     Optional<Pokemon> findByName(String name);
     
     /**
@@ -34,7 +33,7 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Integer> {
      * Like asking a Pokédex "Show me all Electric-type Pokémon".
      * This uses a special PostgreSQL query to search inside the JSON data.
      */
-    @Query(value = "SELECT * FROM pokemon WHERE types @> ?1::jsonb", nativeQuery = true)
+    @Query(value = "SELECT * FROM pokemon WHERE data->'types' @> ?1::jsonb", nativeQuery = true)
     List<Pokemon> findByType(String typeJson);
     
     /**
