@@ -18,14 +18,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 
 /**
  * Service for authentication operations.
  * 
- * What is this class? Think of it like the customer service desk at a membership club.
+ * What is this class? Think of it like the customer service desk at a
+ * membership club.
  * 
  * This service handles two main tasks:
  * 1. Registering new users (like signing up new members)
@@ -43,6 +43,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder; // For securely encrypting passwords
     private final AuthenticationManager authenticationManager; // For verifying login credentials
     private final JwtTokenProvider tokenProvider; // For creating JWT tokens after successful login
+    private final EmailService emailService;
 
     /**
      * Register a new user in the system.
@@ -59,7 +60,7 @@ public class AuthService {
     @Transactional // Ensures this operation is atomic (all succeeds or all fails)
     public User registerUser(SignupRequest signUpRequest) {
         log.info("Attempting to register user: {}", signUpRequest.getUsername());
-        
+
         // Check if username is already taken
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             log.warn("Username is already taken: {}", signUpRequest.getUsername());
@@ -84,6 +85,10 @@ public class AuthService {
         // Save the user to the database
         User savedUser = userRepository.save(user);
         log.info("User registered successfully: {}", savedUser.getUsername());
+
+        // Sending email to new user
+        emailService.singUpEmail(signUpRequest.getEmail());
+        log.info("'Welcome' email sent succesfully to: {}", savedUser.getEmail());
         return savedUser;
     }
 
@@ -93,7 +98,8 @@ public class AuthService {
      * This is like checking in a member at a club:
      * 1. Look up the user by email
      * 2. Verify their password
-     * 3. If valid, create a digital ID card (JWT token) they can use for future requests
+     * 3. If valid, create a digital ID card (JWT token) they can use for future
+     * requests
      * 
      * @param loginRequest Contains the user's login credentials
      * @return A JWT response containing the token and user details
@@ -101,30 +107,29 @@ public class AuthService {
      */
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
         log.info("Attempting to authenticate user with email: {}", loginRequest.getEmail());
-        
+
         try {
             // Find the user by email
             User user = userRepository.findByEmail(loginRequest.getEmail())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + loginRequest.getEmail()));
-            
+                    .orElseThrow(() -> new UsernameNotFoundException(
+                            "User not found with email: " + loginRequest.getEmail()));
+
             // Attempt to authenticate with the provided credentials
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             user.getUsername(),
-                            loginRequest.getPassword()
-                    )
-            );
-            
+                            loginRequest.getPassword()));
+
             // Store the authentication in the security context
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            
+
             // Get the authenticated user details
-            org.springframework.security.core.userdetails.User userDetails = 
-                    (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-            
+            org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication
+                    .getPrincipal();
+
             // Get the user's permissions
             Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-            
+
             // Generate a JWT token
             String jwt = tokenProvider.generateToken(userDetails.getUsername(), authorities);
 

@@ -43,4 +43,20 @@ public class User {
 
     @Column(nullable = false) // Cannot be empty
     private LocalDateTime createdAt; // When this user account was created (date and time)
+
+    private String resetToken;
+    private LocalDateTime resetTokenExpiration;
+    private boolean resetTokenUsed;
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public void setResetTokenExpiration(LocalDateTime resetTokenExpiration) {
+        this.resetTokenExpiration = resetTokenExpiration;
+    }
+
+    public void setResetTokenUsed(boolean resetTokenUsed) {
+        this.resetTokenUsed = resetTokenUsed;
+    }
 }
