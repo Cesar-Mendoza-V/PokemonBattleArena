@@ -16,6 +16,10 @@ interface ResponseData {
   timestamp: string;
 }
 
+interface PostSendEmailData {
+  email: string;
+}
+
 const API_URL = import.meta.env.VITE_SERVER_HOST;
 
 export const postUserRequest = async (
@@ -76,4 +80,40 @@ export const isAuthenticated = (): boolean => {
 export const getCurrentUser = (): any => {
   const user = localStorage.getItem("user");
   return user ? JSON.parse(user) : null;
+};
+
+export const postSendEmail = async (
+  data: PostSendEmailData
+): Promise<ResponseData> => {
+  try {
+    const response = await fetch(`${API_URL}/auth/send-reset-code`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    return await response.json();
+  } catch (error) {
+    throw new Error("Error sending email: " + error);
+  }
+};
+
+export const postVerifyCode = async (data: {
+  code: string;
+}): Promise<ResponseData> => {
+  try {
+    const response = await fetch(`${API_URL}/auth/verify-code`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    return await response.json();
+  } catch (error) {
+    throw new Error("Error verifying code: " + error);
+  }
 };

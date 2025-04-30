@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PasswordInput from "./PasswordInput"; 
+import PasswordInput from "./PasswordInput";
 import "./Recover.css";
 import "../../styles/global.css";
+import { postSendEmail, postVerifyCode } from "../../api/postRequests";
 
 export default function Recover() {
   const [email, setEmail] = useState("");
@@ -10,10 +11,8 @@ export default function Recover() {
   const [showPopup, setShowPopup] = useState(false);
   const [code, setCode] = useState("");
   const [codeError, setCodeError] = useState("");
-  const [isCodeVerified, setIsCodeVerified] = useState(false); 
+  const [isCodeVerified, setIsCodeVerified] = useState(false);
   const navigate = useNavigate();
-
-  const correctCode = "123456";
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailValue = e.target.value;
@@ -34,9 +33,11 @@ export default function Recover() {
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       setError("Please enter a valid email address.");
     } else {
-      console.log("Email sent.");
-      setError("");
-      setShowPopup(true);
+      postSendEmail({ email: email }).then((response) => {
+        response.success
+          ? setShowPopup(true)
+          : setError("Failed to send email.");
+      });
     }
   };
 
@@ -48,14 +49,16 @@ export default function Recover() {
   const handleCodeVerification = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (code !== correctCode) {
-      setCodeError("Invalid code. Please try again.");
-    } else {
-      setCodeError("");
-      console.log("Code verified.");
-      setIsCodeVerified(true); 
-      setShowPopup(false); 
-    }
+    postVerifyCode({ code: code }).then((response) => {
+      if (response.success) {
+        setCodeError("");
+        console.log("Code verified.");
+        setIsCodeVerified(true);
+        setShowPopup(false);
+      } else {
+        setCodeError("Invalid code. Please try again.");
+      }
+    });
   };
 
   // Function to handle "Enter" key press for submit
