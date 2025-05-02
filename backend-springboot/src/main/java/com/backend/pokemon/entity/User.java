@@ -48,15 +48,28 @@ public class User {
     private LocalDateTime resetTokenExpiration;
     private boolean resetTokenUsed;
 
+    public String getResetToken() {
+        return resetToken;
+    }
+    
     public void setResetToken(String resetToken) {
         this.resetToken = resetToken;
     }
-
+    
+    public LocalDateTime getResetTokenExpiration() {
+        return resetTokenExpiration;
+    }
+    
     public void setResetTokenExpiration(LocalDateTime resetTokenExpiration) {
         this.resetTokenExpiration = resetTokenExpiration;
     }
-
+    
+    public boolean isResetTokenUsed() {
+        return resetTokenUsed;
+    }
+    
     public void setResetTokenUsed(boolean resetTokenUsed) {
         this.resetTokenUsed = resetTokenUsed;
     }
+    
 }

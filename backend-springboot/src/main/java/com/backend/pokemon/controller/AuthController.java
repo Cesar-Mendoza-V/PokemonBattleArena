@@ -5,6 +5,7 @@ import com.backend.pokemon.dto.JwtResponse;
 import com.backend.pokemon.dto.LoginRequest;
 import com.backend.pokemon.dto.SignupRequest;
 import com.backend.pokemon.dto.SendResetCodeRequest;
+import com.backend.pokemon.dto.VerifyCodeRequest;
 import com.backend.pokemon.entity.User;
 import com.backend.pokemon.exception.ResourceAlreadyExistsException;
 import com.backend.pokemon.service.AuthService;
@@ -13,7 +14,7 @@ import com.backend.pokemon.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ public class AuthController {
     private final AuthService authService; // The service that will do the actual authentication work
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Register a new user.
@@ -120,8 +122,11 @@ public class AuthController {
             // Generate 6 digit code
             String code = String.valueOf((int) (Math.random() * 900000) + 100000);
 
+            //encode the password
+            String encodedCode = passwordEncoder.encode(code);
+
             // Save inside the user
-            user.setResetToken(code);
+            user.setResetToken(encodedCode);
             user.setResetTokenExpiration(LocalDateTime.now().plusMinutes(10));
             user.setResetTokenUsed(false);
             userRepository.save(user);
@@ -140,4 +145,55 @@ public class AuthController {
                     .body(ApiResponse.error("An error occurred while sending the verification code"));
         }
     }
+
+    /**
+     * Validates users enters the same code as the one in the database.
+     * 
+     * In case the user forgets its password, this will help them
+     * 
+     * @param sendResetCodeRequest Contains email
+     * @return If successful, returns a succesful message that the code is correct.
+     */
+    @PostMapping("/verify-code")
+    public ResponseEntity<ApiResponse<String>> verifyCode(
+            @Valid @RequestBody VerifyCodeRequest verifyCodeRequest) {
+        log.info("Trying to validate verification code with email: {}", verifyCodeRequest.getEmail());
+        try {
+            // Find user by email
+            User user = userRepository.findByEmail(verifyCodeRequest.getEmail())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "No user found with email: " + verifyCodeRequest.getEmail()));
+
+            // Check if the token was already used
+            if (Boolean.TRUE.equals(user.isResetTokenUsed())) {
+                log.info("Token has already been used.");
+                return ResponseEntity.badRequest().body(ApiResponse.error("Token has already been used."));
+            }
+
+            // Check if the token has expired
+            if (user.getResetTokenExpiration() == null || user.getResetTokenExpiration().isBefore(LocalDateTime.now())) {
+                log.info("Verification code has expired.");
+                return ResponseEntity.badRequest().body(ApiResponse.error("Verification code has expired."));
+            }
+
+            // Check if the entered code matches the encrypted one
+            if (!passwordEncoder.matches(verifyCodeRequest.getCode(), user.getResetToken())) {
+                return ResponseEntity.badRequest().body(ApiResponse.error("Invalid verification code."));
+            }
+
+            // Mark token as used
+            user.setResetTokenUsed(true);
+            userRepository.save(user);
+
+            log.info("Verification code validated successfully for {}", user.getEmail());
+            return ResponseEntity.ok(ApiResponse.success("Verification code validated successfully.", user.getEmail()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Unexpected error while verifying the code", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("An error occurred while verifying the code"));
+        }
+    }
+
 }
