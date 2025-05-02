@@ -102,6 +102,7 @@ export const postSendEmail = async (
 
 export const postVerifyCode = async (data: {
   code: string;
+  email: string;
 }): Promise<ResponseData> => {
   try {
     const response = await fetch(`${API_URL}/auth/verify-code`, {

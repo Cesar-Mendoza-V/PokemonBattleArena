@@ -49,7 +49,7 @@ export default function Recover() {
   const handleCodeVerification = (event: React.FormEvent) => {
     event.preventDefault();
 
-    postVerifyCode({ code: code }).then((response) => {
+    postVerifyCode({ email: email, code: code }).then((response) => {
       if (response.success) {
         setCodeError("");
         console.log("Code verified.");
