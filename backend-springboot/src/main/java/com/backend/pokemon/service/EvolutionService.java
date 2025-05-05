@@ -84,7 +84,7 @@ public class EvolutionService {
             builder
                     .requiresItem(true)
                     .requiredItemName(requiredItem.getName())
-                    .requiredItemId(requiredItem.getId());
+                    .requiredItemId(requiredItem.getId().longValue());
             
             // Verificar si el usuario tiene el item
             Optional<UserItem> userItemOpt = userItemRepository.findByUserAndItem(userPokemon.getUser(), requiredItem);
@@ -154,7 +154,7 @@ public class EvolutionService {
         if (evolutionInfo.getRequiresItem()) {
             UserItem userItem = userItemRepository.findByUserAndItem(
                     userPokemon.getUser(), 
-                    itemRepository.findById(evolutionInfo.getRequiredItemId())
+                    itemRepository.findById(evolutionInfo.getRequiredItemId().intValue())
                             .orElseThrow(() -> new ResourceNotFoundException("Item no encontrado"))
             ).orElseThrow(() -> new ResourceNotFoundException("El usuario no posee el item requerido"));
             
