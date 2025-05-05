@@ -64,6 +64,30 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handle ResourceNotFoundException.
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ApiResponse<String> response = ApiResponse.<String>builder()
+                .success(false)
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handle EvolutionException.
+     */
+    @ExceptionHandler(EvolutionException.class)
+    public ResponseEntity<ApiResponse<String>> handleEvolutionException(EvolutionException ex) {
+        ApiResponse<String> response = ApiResponse.<String>builder()
+                .success(false)
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * Handle all other exceptions.
      */
     @ExceptionHandler(Exception.class) // This catches all other types of exceptions
