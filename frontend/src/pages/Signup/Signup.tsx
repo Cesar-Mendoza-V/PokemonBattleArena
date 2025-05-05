@@ -122,23 +122,22 @@ function Signup() {
         password: formData.password,
       };
 
-      toast.promise(postUserRequest(postData), {
-        pending: "Signing up user",
-        success: {
-          render: () => {
+      toast("Signing up user...", { type: "info", autoClose: 1000 });
+
+      postUserRequest(postData)
+        .then((response) => {
+          if (response.success) {
+            toast.success("User created successfully!", { autoClose: 1500 });
             setTimeout(() => {
               navigate("/signin");
             }, 1500);
-            return "User created successfully!";
-          },
-          autoClose: 1500,
-        },
-        error: {
-          render: ({ data }: any) => {
-            return data?.message || "Error creating user";
-          },
-        },
-      });
+          } else {
+            toast.error(response.message || "Error creating user", { autoClose: 3000 });
+          }
+        })
+        .catch(() => {
+          toast.error("Something went wrong. Please try again.", { autoClose: 3000 });
+        });
     } else {
       console.log("not valid data");
     }
