@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PasswordInput from "./PasswordInput";
-import { ToastContainer,toast } from "react-toastify";
+import { Id, ToastContainer, toast } from "react-toastify";
 import "./Recover.css";
 import "../../styles/global.css";
 import { postSendEmail, postVerifyCode } from "../../api/postRequests";
@@ -14,6 +14,8 @@ export default function Recover() {
   const [codeError, setCodeError] = useState("");
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const navigate = useNavigate();
+  const sendEmailToast = useRef<Id | null>(null);
+  const verifyCodeToast = useRef<Id | null>(null);
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailValue = e.target.value;
@@ -34,20 +36,27 @@ export default function Recover() {
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       setError("Please enter a valid email address.");
     } else {
+      sendEmailToast.current = toast("Sending email...", {
+        type: "info",
+        autoClose: false,
+      });
 
-      toast("Sending email...", { type: "info", autoClose: 12000 });
-    
-      postSendEmail({ email: email})
+      postSendEmail({ email: email })
         .then((response) => {
+          toast.dismiss(sendEmailToast.current!);
           if (response.success) {
             toast.success("Email sent successfully!", { autoClose: 1500 });
-            setShowPopup(true)
+            setShowPopup(true);
           } else {
-            toast.error(response.message || "Error sending email", { autoClose: 3000 });
+            toast.error(response.message || "Error sending email", {
+              autoClose: 3000,
+            });
           }
         })
         .catch(() => {
-          toast.error("Something went wrong. Please try again.", { autoClose: 3000 });
+          toast.error("Something went wrong. Please try again.", {
+            autoClose: 3000,
+          });
         });
     }
   };
@@ -60,21 +69,29 @@ export default function Recover() {
   const handleCodeVerification = (event: React.FormEvent) => {
     event.preventDefault();
 
-    toast("Verifying code...", { type: "info", autoClose: 1500 });
-    
+    verifyCodeToast.current = toast("Verifying code...", {
+      type: "info",
+      autoClose: false,
+    });
+
     postVerifyCode({ email: email, code: code })
       .then((response) => {
+        toast.dismiss(verifyCodeToast.current!);
         if (response.success) {
           toast.success("Code verified successfully!", { autoClose: 1500 });
           setCodeError("");
           setIsCodeVerified(true);
           setShowPopup(false);
         } else {
-          toast.error(response.message || "Error veryfing code", { autoClose: 3000 });
+          toast.error(response.message || "Error veryfing code", {
+            autoClose: 3000,
+          });
         }
       })
       .catch(() => {
-        toast.error("Something went wrong. Please try again.", { autoClose: 3000 });
+        toast.error("Something went wrong. Please try again.", {
+          autoClose: 3000,
+        });
       });
   };
 
@@ -93,7 +110,7 @@ export default function Recover() {
   return (
     <div className="fullscreen-containers">
       {isCodeVerified ? (
-        <PasswordInput emailParameter={email}/>
+        <PasswordInput emailParameter={email} />
       ) : (
         <div className="form-containers">
           <h3>Pokemon Battle Arena</h3>

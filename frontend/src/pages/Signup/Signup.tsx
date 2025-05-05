@@ -1,8 +1,8 @@
 import "./Signup.css";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ToastContainer, toast } from "react-toastify";
+import { Id, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { postUserRequest } from "../../api/postRequests";
 
@@ -48,6 +48,8 @@ function Signup() {
 
   const [confirmedPassText, setConfirmedPassText] = useState<boolean>(false);
   const [confirmedPass, setConfirmedPass] = useState<boolean>(false);
+
+  const signupToast = useRef<Id | null>(null);
 
   const [validPass, setValidPass] = useState<ValidPass>({
     length: false,
@@ -122,21 +124,29 @@ function Signup() {
         password: formData.password,
       };
 
-      toast("Signing up user...", { type: "info", autoClose: 1000 });
+      signupToast.current = toast("Signing up user...", {
+        type: "info",
+        autoClose: false,
+      });
 
       postUserRequest(postData)
         .then((response) => {
+          toast.dismiss(signupToast.current!);
           if (response.success) {
             toast.success("User created successfully!", { autoClose: 1500 });
             setTimeout(() => {
               navigate("/signin");
             }, 1500);
           } else {
-            toast.error(response.message || "Error creating user", { autoClose: 3000 });
+            toast.error(response.message || "Error creating user", {
+              autoClose: 3000,
+            });
           }
         })
         .catch(() => {
-          toast.error("Something went wrong. Please try again.", { autoClose: 3000 });
+          toast.error("Something went wrong. Please try again.", {
+            autoClose: 3000,
+          });
         });
     } else {
       console.log("not valid data");
