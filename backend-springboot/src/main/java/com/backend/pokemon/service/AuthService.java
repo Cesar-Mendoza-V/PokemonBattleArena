@@ -7,6 +7,7 @@ import com.backend.pokemon.entity.User;
 import com.backend.pokemon.exception.ResourceAlreadyExistsException;
 import com.backend.pokemon.repository.UserRepository;
 import com.backend.pokemon.security.JwtTokenProvider;
+import com.backend.pokemon.service.TokenBlacklistService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,6 +45,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager; // For verifying login credentials
     private final JwtTokenProvider tokenProvider; // For creating JWT tokens after successful login
     private final EmailService emailService;
+    private final TokenBlacklistService blacklistService;
 
     /**
      * Register a new user in the system.
@@ -145,6 +147,32 @@ public class AuthService {
         } catch (Exception e) {
             log.error("Authentication failed for email: {}", loginRequest.getEmail());
             throw e; // Re-throw the exception to be handled by the controller
+        }
+    }
+
+    /**
+     * Invalidar un token JWT (logout).
+     * 
+     * Este método añade el token a una blacklist en Redis con un tiempo de vida
+     * igual al tiempo restante hasta su expiración natural.
+     * 
+     * @param token El token JWT a invalidar
+     */
+    public void invalidateToken(String token) {
+        try {
+            // Calcular tiempo restante del token
+            long timeToLiveMillis = tokenProvider.getTokenTimeToLiveMillis(token);
+            
+            // Solo agregamos a la blacklist si todavía es válido
+            if (timeToLiveMillis > 0 && tokenProvider.validateToken(token)) {
+                blacklistService.addToBlacklist(token, timeToLiveMillis);
+                log.info("Token invalidado exitosamente");
+            } else {
+                log.info("No se invalidó el token porque ya está expirado o es inválido");
+            }
+        } catch (Exception e) {
+            log.error("Error al invalidar el token", e);
+            throw new RuntimeException("Error al procesar el logout", e);
         }
     }
 }

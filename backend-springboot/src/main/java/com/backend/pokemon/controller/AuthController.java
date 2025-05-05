@@ -196,4 +196,38 @@ public class AuthController {
         }
     }
 
+    /**
+     * Cierra la sesión del usuario invalidando su token JWT.
+     * 
+     * Este endpoint recibe el token del usuario y lo añade a la blacklist
+     * para que no pueda ser utilizado en futuras peticiones, efectivamente
+     * cerrando la sesión del usuario.
+     * 
+     * @param authHeader El encabezado de autorización que contiene el token JWT
+     * @return Un mensaje indicando el resultado de la operación de logout
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<String>> logoutUser(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        log.info("Procesando solicitud de logout");
+        
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("No se proporcionó un token válido"));
+        }
+        
+        try {
+            // Extraer el token del encabezado de autorización
+            String token = authHeader.substring(7); // Eliminar "Bearer "
+            
+            // Invalidar el token añadiéndolo a la blacklist
+            authService.invalidateToken(token);
+            
+            return ResponseEntity.ok(ApiResponse.success("Logout exitoso", null));
+        } catch (Exception e) {
+            log.error("Error durante el proceso de logout", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("Error durante el proceso de logout"));
+        }
+    }
+
 }

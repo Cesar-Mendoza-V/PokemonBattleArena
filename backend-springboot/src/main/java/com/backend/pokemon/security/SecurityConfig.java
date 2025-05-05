@@ -1,5 +1,6 @@
 package com.backend.pokemon.security;
 
+import com.backend.pokemon.service.TokenBlacklistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,7 @@ public class SecurityConfig {
 
     private final JwtTokenProvider tokenProvider; // The service that creates and validates JWT tokens
     private final CustomUserDetailsService userDetailsService; // The service that loads user data
+    private final TokenBlacklistService blacklistService; // The service that handles token blacklisting
 
     /**
      * Set up the authentication provider.
@@ -75,7 +77,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated() // All other endpoints require authentication
             )
             .authenticationProvider(authenticationProvider()) // Use our authentication provider
-            .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), 
+            .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, blacklistService), 
                             UsernamePasswordAuthenticationFilter.class); // Check JWT tokens before processing requests
         
         return http.build();

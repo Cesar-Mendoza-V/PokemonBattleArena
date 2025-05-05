@@ -143,4 +143,31 @@ public class JwtTokenProvider {
         // Create and return the authentication token Spring Security understands
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
+
+    /**
+     * Obtiene la fecha de expiración del token JWT.
+     * 
+     * @param token El token JWT
+     * @return Fecha de expiración
+     */
+    public Date getExpirationDateFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        
+        return claims.getExpiration();
+    }
+
+    /**
+     * Calcula el tiempo restante en milisegundos hasta que expire un token.
+     * 
+     * @param token El token JWT
+     * @return Tiempo restante en milisegundos
+     */
+    public long getTokenTimeToLiveMillis(String token) {
+        Date expiration = getExpirationDateFromToken(token);
+        return expiration.getTime() - System.currentTimeMillis();
+    }
 }

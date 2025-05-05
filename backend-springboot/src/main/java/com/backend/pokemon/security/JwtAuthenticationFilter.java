@@ -1,5 +1,6 @@
 package com.backend.pokemon.security;
 
+import com.backend.pokemon.service.TokenBlacklistService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider; // The service that verifies tokens
+    private final TokenBlacklistService blacklistService; // Service to check if a token is blacklisted
 
     @Override
     protected void doFilterInternal(
@@ -39,12 +41,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Step 1: Extract the JWT token from the request's Authorization header
             String jwt = getJwtFromRequest(request);
 
-            // Step 2: If a token exists and is valid, set up the user's authentication
-            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                // Get the user information from the token
-                Authentication authentication = tokenProvider.getAuthentication(jwt);
-                // Store the authenticated user in the security context (like a temporary badge)
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Step 2: If a token exists, check if it's blacklisted or valid
+            if (StringUtils.hasText(jwt)) {
+                // First, check if the token is blacklisted
+                if (blacklistService.isBlacklisted(jwt)) {
+                    log.warn("Attempt to use a blacklisted token");
+                } 
+                // If not blacklisted, validate the token
+                else if (tokenProvider.validateToken(jwt)) {
+                    // Get the user information from the token
+                    Authentication authentication = tokenProvider.getAuthentication(jwt);
+                    // Store the authenticated user in the security context (like a temporary badge)
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         } catch (Exception ex) {
             // If something goes wrong during authentication, log the error but let the request continue
