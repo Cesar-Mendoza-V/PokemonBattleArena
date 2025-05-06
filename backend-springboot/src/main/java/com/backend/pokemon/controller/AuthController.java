@@ -6,6 +6,7 @@ import com.backend.pokemon.dto.LoginRequest;
 import com.backend.pokemon.dto.SignupRequest;
 import com.backend.pokemon.dto.SendResetCodeRequest;
 import com.backend.pokemon.dto.VerifyCodeRequest;
+import com.backend.pokemon.dto.ChangePasswordRequest;
 import com.backend.pokemon.entity.User;
 import com.backend.pokemon.exception.ResourceAlreadyExistsException;
 import com.backend.pokemon.service.AuthService;
@@ -195,5 +196,46 @@ public class AuthController {
                     .body(ApiResponse.error("An error occurred while verifying the code"));
         }
     }
+
+    /**
+     * Validates users enters the same code as the one in the database.
+     * 
+     * In case the user forgets its password, this will help them
+     * 
+     * @param sendResetCodeRequest Contains email
+     * @return If successful, returns a succesful message that the code is correct.
+     */
+    @PostMapping("/change-password")
+public ResponseEntity<ApiResponse<String>> changePassword(
+        @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+    log.info("Changing password for email: {}", changePasswordRequest.getEmail());
+    try {
+        User user = userRepository.findByEmail(changePasswordRequest.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("No user found with email: " + changePasswordRequest.getEmail()));
+
+
+        // Change password
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
+
+        // Clean token and date
+        user.setResetToken(null);
+        user.setResetTokenExpiration(null);
+
+        userRepository.save(user);
+
+        // Send verification code via email
+        emailService.changePasswordEmail(changePasswordRequest.getEmail());
+
+        log.info("Password successfully changed for {}", user.getEmail());
+        return ResponseEntity.ok(ApiResponse.success("Password changed successfully.", user.getEmail()));
+    } catch (ResourceNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
+    } catch (Exception e) {
+        log.error("Unexpected error while changing password", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error("An error occurred while changing the password"));
+    }
+}
+
 
 }

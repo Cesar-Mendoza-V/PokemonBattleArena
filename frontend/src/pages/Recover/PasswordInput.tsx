@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import "./PasswordInput.css";
 import "../../styles/global.css";
+import { Id, ToastContainer, toast } from "react-toastify";
+import { postChangePassword } from "../../api/postRequests";
 
 // Function to show the password requirements
 const getPasswordRequirements = () => {
@@ -20,12 +22,17 @@ const getPasswordRequirements = () => {
   return requirements;
 };
 
-export default function PasswordInput() {
+export default function PasswordInput({
+  emailParameter,
+}: {
+  emailParameter: string;
+}) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
   const [passwordMatchError, setPasswordMatchError] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const changePasswordToast = useRef<Id | null>(null);
 
   // Function to validate via regex the passwords
   const validatePassword = (password: string) => {
@@ -67,7 +74,7 @@ export default function PasswordInput() {
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      handleSubmit(event as unknown as React.FormEvent); 
+      handleSubmit(event as unknown as React.FormEvent);
     }
   };
 
@@ -80,10 +87,33 @@ export default function PasswordInput() {
       password === confirmPassword;
 
     if (isValid) {
-      setShowPopup(true);
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 3000);
+      changePasswordToast.current = toast("Changing password...", {
+        type: "info",
+        autoClose: false,
+      });
+
+      postChangePassword({ password: password, email: emailParameter })
+        .then((response) => {
+          toast.dismiss(changePasswordToast.current!);
+          if (response.success) {
+            toast.success("Password changed successfully!", {
+              autoClose: 1500,
+            });
+            setShowPopup(true);
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 3000);
+          } else {
+            toast.error(response.message || "Error changing password", {
+              autoClose: 3000,
+            });
+          }
+        })
+        .catch(() => {
+          toast.error("Something went wrong. Please try again.", {
+            autoClose: 3000,
+          });
+        });
     }
   };
 
@@ -147,6 +177,7 @@ export default function PasswordInput() {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 }

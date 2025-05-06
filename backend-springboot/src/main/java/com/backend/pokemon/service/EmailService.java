@@ -25,6 +25,7 @@ public class EmailService {
 
                 You requested a new password.
                 Your request code is: %s.
+
                 Please note that this email is for notifications only. Any replies will not be answered.
                 Best regards, Your Service Team.
                 """.formatted(code));
@@ -44,6 +45,27 @@ public class EmailService {
                 Hi,
 
                 Welcome to Pokemon Battle Arena!
+
+                Please note that this email is for notifications only. Any replies will not be answered.
+                Best regards, Your Service Team.
+                """);
+        mailSender.send(message);
+    }
+
+    /*
+     * Sends notification that the password was changed through email
+     * 
+     * @param to - the receiver of the email
+     */
+    public void changePasswordEmail(String to) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Changed Password Succesfully.");
+        message.setText("""
+                Hi,
+
+                You changed you password succesfully.
+                
                 Please note that this email is for notifications only. Any replies will not be answered.
                 Best regards, Your Service Team.
                 """);
