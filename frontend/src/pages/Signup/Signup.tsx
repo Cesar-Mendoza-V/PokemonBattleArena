@@ -158,21 +158,23 @@ function Signup() {
   };
 
   return (
-    <div className="general-container">
+    <div className="container">
       <div>
-        <div className="side-container">
+        <div className="login-container">
+        <img src="/register_icon.png" alt="" className="login-icon" />
           <h1 className="signup-h1">Hello, your adventure awaits!</h1>
           <p className="signup-info-p">
             If you already have an account, login here and have fun.
           </p>
           <Link to="/signin">
-            <button className="signup-info-btn">Log in</button>
+            <button className="login-btn">Login</button>
           </Link>
         </div>
       </div>
       <div>
-        <div className="side-container">
-          <h1 className="signup-h1">Create an account</h1>
+        <div className="register-container">
+        <img src="/pokemon_title.png" alt="Pokémon Logo" className="pokemon-logo" />
+        <img src="/pokeballs.png" alt="Pokeballs" className="pokeballs" />
           <div className="signup-form-container">
             <form className="signup-form" onSubmit={handleSubmit}>
               <input
@@ -279,7 +281,7 @@ function Signup() {
                 type="submit"
                 disabled={!submitable}
               >
-                Sign up
+                Register
               </button>
             </form>
           </div>

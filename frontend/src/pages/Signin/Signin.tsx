@@ -11,7 +11,7 @@ function LoginPage() {
   const [loginError, setLoginError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Cargar email almacenado si "Remember Me" estuvo activado
+  // load stored email if "remember me" was enabled
   useEffect(() => {
     const storedEmail = localStorage.getItem("rememberedEmail");
     if (storedEmail) {
@@ -25,7 +25,7 @@ function LoginPage() {
     setEmail(value);
     setEmailError("");
 
-    // Validar el correo electrónico
+    // validate email
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(value)) {
       setEmailError("Please enter a valid email address");
@@ -61,7 +61,7 @@ function LoginPage() {
             localStorage.setItem("rememberedEmail", email);
           } else {
             sessionStorage.setItem("token", data.token);
-            localStorage.removeItem("rememberedEmail"); // Eliminar email guardado si no se recuerda
+            localStorage.removeItem("rememberedEmail"); // remove stored email if not remembered
           }
         }
         navigate("/Game");
@@ -74,10 +74,12 @@ function LoginPage() {
   };
 
   return (
-    <div className="container">
-      {/* Login Section */}
+    <div className="general-container">
+      {/* login section */}
       <div className="login-section">
-        <h2 className="title">Login.</h2>
+      <img src="/pokemon_title.png" alt="Pokémon Logo" className="pokemon-logo" />
+      <img src="/pokeballs.png" alt="Pokeballs" className="pokeballs" />
+
         <input
           type="email"
           placeholder="Email"
@@ -94,6 +96,7 @@ function LoginPage() {
           onChange={handlePasswordChange}
         />
         {loginError && <p className="error">{loginError}</p>}
+
         <div className="options">
           <label className="checkbox">
             <input
@@ -101,12 +104,14 @@ function LoginPage() {
               checked={rememberMe}
               onChange={() => setRememberMe(!rememberMe)}
             />
+            <span className="custom-checkbox"></span>
             Remember me
           </label>
           <Link to="/recover" className="forgot-password">
             Forgot password?
           </Link>
         </div>
+
         <button
           className="button login-button"
           onClick={handleLogin}
@@ -116,7 +121,9 @@ function LoginPage() {
         </button>
       </div>
 
+      {/* register section */}
       <div className="register-section">
+        <img src="/login_icon.png" alt="" className="login-icon" />
         <h2 className="title">
           {" "}
           Embark on <br /> your Pokemon <br /> adventure!{" "}

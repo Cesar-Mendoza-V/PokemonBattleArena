@@ -1,39 +1,74 @@
-body {
-  margin: 0;
-  font-family: sans-serif;
-}
-
-.container {
+.general-container {
   display: flex;
   width: 100vw;
   height: 100vh;
 }
 
-.login-section,
+.login-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background-image: url("/login_map.png");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.login-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.login-section * {
+  position: relative;
+  z-index: 1;
+}
+
+.login-button {
+  background-color: #3466AF;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  color: white;
+  font-size: 18px;
+  padding: 12px 24px;
+  border-radius: 25px;
+}
+
+.login-icon {
+  width: 70px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.pokemon-logo {
+  width: 300px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.pokeballs {
+  width: 150px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
 .register-section {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px;
-}
-
-.login-section {
-  background-color: white;
-}
-
-.register-section {
-  background-color: #a9b5c3;
+  padding: 2rem;
+  background-color: #F0EFF0;
   text-align: center;
-  margin-top: -20px;
-}
-
-.title {
-  font-size: 40px;
-  font-weight: 700;
-  color: #4a6085;
-  margin-bottom: 20px;
 }
 
 .description {
@@ -48,20 +83,22 @@ body {
   width: 70%;
   padding: 15px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f3f4f6;
+  border-radius: 20px;
+  background-color: #F0EFF0;
+  font-family: 'DM Sans', sans-serif;
   font-size: 18px;
+  border: none;
+  outline: none;
 }
 
 .input[type="email"],
 .input[type="password"] {
   padding: 20px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 50px;
+  border-radius: 20px;
   width: 400px;
   height: 65px;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .input[type="email"] {
@@ -73,70 +110,76 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 70%;
+  width: 82%;
   margin-top: 15px;
   margin-bottom: 15px;
   font-size: 16px;
 }
 
 .checkbox {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: auto;
-  color: #6b7280;
+  display: block;
+  text-align: center;
+  width: 200px;
+  height: 40px;
+  padding: 9px;
+  margin-right: 40px;
+  border-radius: 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  color: #4b5563;
   margin-bottom: 0;
+  background-color: #F0EFF0;
 }
 
 .forgot-password {
-  text-align: right;
-  width: auto;
-  color: #6b7280;
+  display: block;
+  padding: 9px;
+  border-radius: 20px;
+  text-align: center;
+  margin-left: 40px;
+  width: 200px;
+  height: 40px;
+  color: #4b5563;
   text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
   font-size: 16px;
+  background-color: #F0EFF0;
 }
 
 .button {
-  width: 70%;
+  width: 200px;
+  height: 50px;
   padding: 15px;
   border: none;
   border-radius: 50px;
-  font-weight: bold;
-  cursor: pointer;
   font-size: 18px;
-  width: 200px;
-}
-
-.login-button {
-  background-color: #496183;
-  color: white;
 }
 
 .register-button {
-  background-color: white;
-  color: #374151;
-  border: 1px solid #ccc;
+  background-color: #F22323;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  color: white;
+  font-size: 18px;
+  padding: 12px 24px;
+  border-radius: 25px;
 }
 
 .register-section .title {
   font-size: 50px;
   font-weight: 700;
-  color: #374151;
+  font-family: 'DM Sans', sans-serif;
+  color: #3466AF;
   max-width: 80%;
   line-height: 1.3;
 }
 
 .register-section .description {
-  font-size: 22px;
+  font-size: 20px;
   max-width: 80%;
-  color: #f5fafe;
+  color: #21386E;
+  font-family: 'DM Sans', sans-serif;
   margin-bottom: 20px;
-}
-
-.register-button {
-  font-size: 18px;
-  padding: 12px 24px;
-  border-radius: 25px;
 }
 
 .error {
@@ -144,4 +187,44 @@ body {
   font-size: 0.875em;
   margin-top: -10px;
   margin-bottom: 10px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.checkbox input {
+  display: none;
+}
+
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 2px solid #3466AF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.checkbox input:checked + .custom-checkbox {
+  background-color: #3466AF;
+  border-color: #3466AF;
+}
+
+.custom-checkbox::after {
+  content: "✓";
+  font-size: 14px;
+  color: white;
+  display: none;
+}
+
+.checkbox input:checked + .custom-checkbox::after {
+  display: block;
 }

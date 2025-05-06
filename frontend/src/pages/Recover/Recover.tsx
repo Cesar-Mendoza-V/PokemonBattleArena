@@ -76,8 +76,8 @@ export default function Recover() {
         <PasswordInput />
       ) : (
         <div className="form-containers">
-          <h3>Pokemon Battle Arena</h3>
-          <h5>Recover your password</h5>
+          <img src="/pokemon_title.png" alt="Pokémon Logo" className="pokemon-logo" />
+          <img src="/pokeballs.png" alt="Pokeballs" className="pokeballs" />
           <form
             className="form-inputs"
             onSubmit={handleEmailSubmission}
@@ -94,10 +94,10 @@ export default function Recover() {
             {error && <p className="error-message">{error}</p>}
             <div className="button-container">
               <button onClick={() => navigate("/")} className="back-btn">
-                Back
+                Back to login
               </button>
               <button type="submit" className="submit-email-btn">
-                Submit
+                Send login link
               </button>
             </div>
           </form>
