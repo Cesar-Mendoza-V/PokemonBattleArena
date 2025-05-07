@@ -24,8 +24,10 @@ const Battle = ({ playerPokemon, enemyPokemon, onBattleEnd }: BattleProps) => {
   const [realPlayerName, setRealPlayerName] = useState<string>("");
   const [playerMoves, setPlayerMoves] = useState<string[]>([]);
   const [dialogue, setDialogue] = useState<string>("¡Empieza la batalla!");
+  const [isWaiting, setIsWaiting] = useState<boolean>(false); // para evitar múltiples clics
 
-  const playerSpriteRef = useRef<HTMLImageElement>(null); 
+  const playerSpriteRef = useRef<HTMLImageElement>(null);
+  const enemySpriteRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const fetchSpritesAndMoves = async () => {
@@ -80,11 +82,17 @@ const Battle = ({ playerPokemon, enemyPokemon, onBattleEnd }: BattleProps) => {
     }
   };
 
-  const attack = (target: "enemy" | "player", moveName: string) => {
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+  const enemyMoves = ["tackle", "scary-face", "scratch", "bite"];
+
+  const attack = async (target: "enemy" | "player", moveName: string) => {
+    if (isWaiting) return;
+    setIsWaiting(true);
+
     const damage = getDamageForMove(moveName);
     let attackMessage = "";
 
-    // ANIMACIÓN si el jugador ataca
     if (target === "enemy" && playerSpriteRef.current) {
       const sprite = playerSpriteRef.current;
       sprite.classList.add("attack-animation");
@@ -115,9 +123,35 @@ const Battle = ({ playerPokemon, enemyPokemon, onBattleEnd }: BattleProps) => {
     }
 
     setDialogue(attackMessage);
+
+    // Esperar para mostrar el mensaje y luego contraatacar
+    if (target === "enemy") {
+      setTimeout(() => {
+        // Contraataque enemigo
+        const randomMove = enemyMoves[Math.floor(Math.random() * enemyMoves.length)];
+        enemyAttack(randomMove);
+      }, 1200);
+    } else {
+      setIsWaiting(false);
+    }
   };
 
-  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+  const enemyAttack = (moveName: string) => {
+    const damage = getDamageForMove(moveName);
+
+    if (enemySpriteRef.current) {
+      const sprite = enemySpriteRef.current;
+      sprite.classList.add("attack-animation");
+      setTimeout(() => sprite.classList.remove("attack-animation"), 400);
+    }
+
+    setPlayerHP((prev) => Math.max(0, prev - damage));
+    setDialogue(`¡${capitalize(realEnemyName)} usó ${capitalize(moveName)}! ¡El ataque del enemigo es fuerte!`);
+
+    setTimeout(() => {
+      setIsWaiting(false);
+    }, 1000);
+  };
 
   if (enemyHP <= 0) {
     return (
@@ -133,7 +167,6 @@ const Battle = ({ playerPokemon, enemyPokemon, onBattleEnd }: BattleProps) => {
       </div>
     );
   }
-  
 
   if (playerHP <= 0) {
     return (
@@ -146,12 +179,17 @@ const Battle = ({ playerPokemon, enemyPokemon, onBattleEnd }: BattleProps) => {
 
   return (
     <div className="battle-screen">
-      <img src={enemySprite} alt={realEnemyName} className="pokemon-sprite enemy-sprite" />
+      <img
+        src={enemySprite}
+        alt={realEnemyName}
+        className="pokemon-sprite enemy-sprite"
+        ref={enemySpriteRef}
+      />
       <img
         src={playerSprite}
         alt={realPlayerName}
         className="pokemon-sprite player-sprite"
-        ref={playerSpriteRef} 
+        ref={playerSpriteRef}
       />
 
       <div className="battle-enemy">
@@ -174,7 +212,12 @@ const Battle = ({ playerPokemon, enemyPokemon, onBattleEnd }: BattleProps) => {
 
       <div className="battle-actions">
         {playerMoves.map((move, index) => (
-          <button key={index} className="battle-button" onClick={() => attack("enemy", move)}>
+          <button
+            key={index}
+            className="battle-button"
+            onClick={() => attack("enemy", move)}
+            disabled={isWaiting}
+          >
             {move.replace(/-/g, " ")}
           </button>
         ))}
