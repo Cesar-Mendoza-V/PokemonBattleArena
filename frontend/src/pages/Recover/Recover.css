@@ -8,9 +8,25 @@
   align-items: center;
   height: 100vh;
   width: 100%;
+  background-image: url("/recover_map.png");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.fullscreen-containers::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .form-containers {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,6 +37,12 @@
   padding: 35px;
   margin: 10px;
   text-align: center;
+}
+
+.pokeballs {
+  width: 150px;
+  height: auto;
+  margin-bottom: 5px;
 }
 
 h3 {
@@ -45,15 +67,15 @@ h5 {
 }
 
 .form-controls {
-  height: 50px;
-  width: 75%;
-  padding: 10px;
-  font-size: 14px;
+  width: 70%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  background-color: #F0EFF0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
   border: none;
-  color: #496187;
-  background-color: #efefef;
-  border-radius: 10px;
-  margin-bottom: 10px;
+  outline: none;
 }
 
 .form-controls:focus {
@@ -73,19 +95,16 @@ h5 {
 
 .back-btn,
 .submit-email-btn {
-  width: 120px;
-  height: 40px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  background-color: #496187;
+  background-color: #3466AF;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
   color: white;
-  cursor: pointer;
-}
-
-.back-btn:hover,
-.submit-email-btn:hover {
-  background-color: #2b4566;
+  font-size: 18px;
+  padding: 12px 24px;
+  width: 200px;
+  height: 50px;
+  border: none;
+  border-radius: 50px;
 }
 
 .error-message {
