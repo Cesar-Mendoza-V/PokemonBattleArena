@@ -123,7 +123,7 @@ public class AuthController {
             // Generate 6 digit code
             String code = String.valueOf((int) (Math.random() * 900000) + 100000);
 
-            //encode the password
+            // encode the password
             String encodedCode = passwordEncoder.encode(code);
 
             // Save inside the user
@@ -172,7 +172,8 @@ public class AuthController {
             }
 
             // Check if the token has expired
-            if (user.getResetTokenExpiration() == null || user.getResetTokenExpiration().isBefore(LocalDateTime.now())) {
+            if (user.getResetTokenExpiration() == null
+                    || user.getResetTokenExpiration().isBefore(LocalDateTime.now())) {
                 log.info("Verification code has expired.");
                 return ResponseEntity.badRequest().body(ApiResponse.error("Verification code has expired."));
             }
@@ -206,36 +207,35 @@ public class AuthController {
      * @return If successful, returns a succesful message that the code is correct.
      */
     @PostMapping("/change-password")
-public ResponseEntity<ApiResponse<String>> changePassword(
-        @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-    log.info("Changing password for email: {}", changePasswordRequest.getEmail());
-    try {
-        User user = userRepository.findByEmail(changePasswordRequest.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("No user found with email: " + changePasswordRequest.getEmail()));
+    public ResponseEntity<ApiResponse<String>> changePassword(
+            @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+        log.info("Changing password for email: {}", changePasswordRequest.getEmail());
+        try {
+            User user = userRepository.findByEmail(changePasswordRequest.getEmail())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "No user found with email: " + changePasswordRequest.getEmail()));
 
+            // Change password
+            user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
 
-        // Change password
-        user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
+            // Clean token and date
+            user.setResetToken(null);
+            user.setResetTokenExpiration(null);
 
-        // Clean token and date
-        user.setResetToken(null);
-        user.setResetTokenExpiration(null);
+            userRepository.save(user);
 
-        userRepository.save(user);
+            // Send verification code via email
+            emailService.changePasswordEmail(changePasswordRequest.getEmail());
 
-        // Send verification code via email
-        emailService.changePasswordEmail(changePasswordRequest.getEmail());
-
-        log.info("Password successfully changed for {}", user.getEmail());
-        return ResponseEntity.ok(ApiResponse.success("Password changed successfully.", user.getEmail()));
-    } catch (ResourceNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
-    } catch (Exception e) {
-        log.error("Unexpected error while changing password", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error("An error occurred while changing the password"));
+            log.info("Password successfully changed for {}", user.getEmail());
+            return ResponseEntity.ok(ApiResponse.success("Password changed successfully.", user.getEmail()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Unexpected error while changing password", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("An error occurred while changing the password"));
+        }
     }
-}
-
 
 }
