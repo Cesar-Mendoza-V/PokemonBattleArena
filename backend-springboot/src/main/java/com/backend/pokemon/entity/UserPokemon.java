@@ -5,15 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 /**
  * Entity representing a Pokemon owned by a user.
  * 
- * What is this class? Think of it like a digital Pokémon that you've caught in the game.
- * Just as a real Pokémon trainer would have their own unique Pokémon with nicknames,
- * levels, and special moves, this class tracks all the details about each Pokémon
+ * What is this class? Think of it like a digital Pokémon that you've caught in
+ * the game.
+ * Just as a real Pokémon trainer would have their own unique Pokémon with
+ * nicknames,
+ * levels, and special moves, this class tracks all the details about each
+ * Pokémon
  * that a user has captured in the game.
  * 
  * This information is stored in the 'user_pokemon' table in the database.
@@ -43,14 +45,20 @@ public class UserPokemon {
 
     private Integer experience; // The experience points earned toward the next level
 
-    @Column(name = "current_hp") 
+    @Column(name = "last_training_at")
+    private LocalDateTime lastTrainingAt; // The last time this Pokémon was trained
+
+    @Column(name = "cooldown_seconds")
+    private Integer cooldownSeconds; // The time in seconds before the Pokémon can be trained again
+
+    @Column(name = "current_hp")
     private Integer currentHp; // The Pokémon's current health points
 
-    @Column(name = "custom_stats", columnDefinition = "jsonb") 
-    private String customStats;  // The Pokémon's individual stats stored as JSON
+    @Column(name = "custom_stats", columnDefinition = "jsonb")
+    private String customStats; // The Pokémon's individual stats stored as JSON
 
     @Column(columnDefinition = "jsonb")
-    private String moveset;  // The specific moves this Pokémon knows stored as JSON
+    private String moveset; // The specific moves this Pokémon knows stored as JSON
 
     @Column(name = "captured_at")
     private LocalDateTime capturedAt; // When this Pokémon was first caught by the user
@@ -58,7 +66,9 @@ public class UserPokemon {
     @PrePersist // This method runs automatically before saving a new Pokémon to the database
     protected void onCreate() {
         capturedAt = LocalDateTime.now(); // Set the current time as capture time
-        if (level == null) level = 5; // If no level was specified, default to level 5
-        if (experience == null) experience = 0; // If no experience was specified, default to 0
+        if (level == null)
+            level = 5; // If no level was specified, default to level 5
+        if (experience == null)
+            experience = 0; // If no experience was specified, default to 0
     }
 }
