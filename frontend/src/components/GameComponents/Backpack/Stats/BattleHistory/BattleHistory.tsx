@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import "./BattleHistory.css";
 
-// Props of battle
+// props of battle
 interface BattleHistoryProps {
   pokemonId: number;
   battles?: {
@@ -9,11 +10,46 @@ interface BattleHistoryProps {
     duration: string;
     pokemonId: number;
   }[];
+  pokemonInfo?: {
+    id: number;
+    level: number;
+  };
 }
 
-/*
-Using this function only for testing, waiting for battles
-*/
+/* function to count the number of defeats for a given pokemon */
+
+function countDefeats(battles: BattleHistoryProps["battles"], pokemonId: number) {
+  if (!battles) return 0;
+
+  return battles.filter(
+    (battle) => battle.pokemonId === pokemonId && battle.status === "Defeat"
+  ).length;
+}
+
+/* function to evaluate the battle status of a given pokemon, given level and defeats */
+
+function evaluateBattleStatus(level: number, defeats: number) {
+  if (defeats === 2) {
+    if (level <= 20) {
+      return "warning_low_level"; // the user will lose the pokemon
+    } else {
+      return "warning_high_level"; // the pokemon will lose two levels
+    }
+  }
+
+  if (defeats >= 3) {
+    if (level <= 20) {
+      return "remove_pokemon"; // the user loses the pokemon
+    } else {
+      return "danger_high_level"; // the pokemon lost two levels
+    }
+  }
+
+  return "ok"; // the pokemon is ok
+}
+
+/* using this function only for testing, waiting for battles */
+
 function BattleRecordsTest() {
   // array simulating a battle record
   const testingArray = [
@@ -91,14 +127,28 @@ function BattleRecordsTest() {
   );
 }
 
-// Function for showing battle history
-function BattleHistory({ battles, pokemonId }: BattleHistoryProps) {
-  // When battles implemented we receive the data of the
+/* this function will be used to show the battle history of a given pokemon */
+
+function BattleHistory({ battles, pokemonId, pokemonInfo }: BattleHistoryProps) {
   const validBattles = battles ?? [];
-  // Verify if the records is for the pokemon that are we checking
   const filteredBattles = validBattles.filter(
     (battle) => battle.pokemonId === pokemonId
   );
+
+  const defeats = countDefeats(battles, pokemonId);
+  const status = evaluateBattleStatus(pokemonInfo?.level ?? 0, defeats);
+
+  useEffect(() => {
+    if (status === "warning_low_level") {
+      alert("Warning! If you lose the next battle, you'll lose this pokemon permanently!");
+    } else if (status === "warning_high_level") {
+      alert("Warning! If you lose the next battle, this pokemon will lose two levels!");
+    } else if (status === "remove_pokemon") {
+      alert("You lost this pokemon!");
+    } else if (status === "danger_high_level") {
+      alert("Warning! This pokemon lost two levels!");
+    }
+  }, [status]);
 
   return (
     <main className="battle-main-container">
@@ -106,21 +156,23 @@ function BattleHistory({ battles, pokemonId }: BattleHistoryProps) {
         <h4>Battle History</h4>
       </section>
 
+      {/*test component*/}
       <section className="battle-records-test">{<BattleRecordsTest />}</section>
 
-      {/*<section className="battle-history-records">
+      <section className="battle-history-records">
         {filteredBattles.length === 0 ? (
           <p className="no-records">No Battle History Yet!</p>
         ) : (
           filteredBattles.map((battle, index) => (
-            <div key={index} className="record-card">
+            <div key={index} className={`record-card ${battle.status.toLowerCase()}`}>
               <p>Versus: {battle.oponent}</p>
               <p>Status: {battle.status}</p>
               <p>Duration: {battle.duration}</p>
             </div>
           ))
         )}
-      </section>*/}
+      </section>
+      
     </main>
   );
 }

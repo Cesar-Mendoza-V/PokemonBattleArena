@@ -6,83 +6,71 @@
   right: 0;
   margin-top: 120px;
   margin-right: 30px;
-  border-radius: 15px;
-  border: 3px solid black;
-  overflow-y: overlay;
+  border-radius: 20px;
+  border: 3px solid #3466AF;
+  overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgb(19, 19, 19) rgb(239, 239, 239);
-  background-color: white;
+  scrollbar-color: #3466AF #f0eff0;
+  background-color: #F0EFF0;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .battle-history-header h4 {
-  color: black;
+  color: #3466AF;
   text-align: center;
-  font-size: 45px;
-  font-style: italic;
-  margin-bottom: 10px;
+  font-size: 40px;
+  font-weight: 700;
+  margin: 20px 0;
 }
 
 .battle-history-records {
-  height: 100%;
-  position: relative;
-  top: 220px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
 }
 
 .no-records {
   text-align: center;
-  color: rgb(161, 180, 184);
-}
-
-/* CSS of records testing */
-.test-record-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  font-size: 15px;
+  color: #4b5563;
+  font-size: 18px;
 }
 
 .record-card {
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  height: auto;
+  border-radius: 20px;
+  padding: 20px;
   width: 90%;
-  border: 1px solid #e0e0e0;
-  animation: forwards;
+  border: 2px solid #e0e0e0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .record-card:hover {
-  transition: 0.1s ease-in-out;
-  transform: scale(1.05);
+  transform: scale(1.03);
+  border-color: #3466AF;
 }
 
 .record-card.victory {
-  border: solid 2px green;
+  border: 2px solid #00C851;
 }
 
 .record-card.victory:hover {
-  border: solid 2px rgb(0, 215, 0);
+  border: 2px solid #007E33;
 }
 
 .record-card.defeat {
-  border: solid 2px rgb(171, 0, 0);
+  border: 2px solid #ff4444;
 }
 
 .record-card.defeat:hover {
-  border: solid 2px red;
-}
-
-.record-card:focus {
-  border: solid 3px blue;
+  border: 2px solid #CC0000;
 }
 
 .card-header,
 .card-values {
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 25px;
@@ -92,15 +80,16 @@
 .card-values p {
   margin: 0;
   text-align: center;
-  color: black;
+  color: #21386E;
+  font-size: 16px;
 }
 
 .p-status.victory {
-  color: green;
+  color: #00C851;
 }
 
 .p-status.defeat {
-  color: red;
+  color: #ff4444;
 }
 
 .card-header {
@@ -114,4 +103,5 @@
 
 .card-header strong {
   color: #555;
+  font-weight: 500;
 }
