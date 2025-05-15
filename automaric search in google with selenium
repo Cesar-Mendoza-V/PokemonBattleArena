@@ -1,0 +1,60 @@
+import time
+import os
+import random
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+HOME_DIRECTORY = os.environ.get('HOME')
+
+options = webdriver.FirefoxOptions()
+
+options.add_argument("--width=800");
+
+options.add_argument("--height=640");
+
+profile = webdriver.FirefoxProfile(HOME_DIRECTORY + "/.mozilla/firefox/fao18bjc.default")
+
+options.binary_location = "/usr/bin/firefox"
+
+browser = webdriver.Firefox(firefox_profile=profile,firefox_options=options)         
+
+print("Navegando a google...")
+
+browser.get('https://www.google.co.ve')
+
+try:
+    element = WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.ID, "hplogo"))
+    )
+finally:
+
+    archivo = open("search.txt", "r")
+
+    def busqueda(palabra):
+        search = browser.find_element_by_name('q')
+        search.send_keys(palabra, Keys.ENTER)
+        print("Buscando... " + palabra)
+        time.sleep(20)
+        try:
+            element = WebDriverWait(browser, 30).until(
+                EC.presence_of_element_located((By.ID, "logo"))
+            )
+        finally:
+            links = browser.find_elements_by_xpath("//div[@class='g']//h3/a")
+            for link in links:
+                print(link.get_attribute("href"))
+            link = random.choice(links)
+            print("Navegando a " + link.get_attribute("href"))
+            link = browser.find_element_by_xpath("//a[starts-with(@href,'"+ link.get_attribute('href') + "')]")
+            link.click()
+            time.sleep(20)      
+            print("Navegando a google...")
+            browser.get('https://www.google.co.ve')     
+
+    for palabra in archivo.readlines():     
+        busqueda(palabra)
+
+    browser.close()
