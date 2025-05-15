@@ -1,0 +1,33 @@
+   import org.openqa.selenium.By;
+   import org.openqa.selenium.WebDriver;
+   import org.openqa.selenium.WebElement;
+   import org.openqa.selenium.chrome.ChromeDriver; // o FirefoxDriver, EdgeDriver, etc.
+   import java.util.List;
+
+   public class GoogleSearchAutomation {
+
+       public static void main(String[] args) {
+           // Configurar el WebDriver
+           System.setProperty("webdriver.chrome.driver", "ruta/a/tu/chromedriver.exe"); // o la ruta al WebDriver de Firefox, etc.
+           WebDriver driver = new ChromeDriver();
+
+           // Navegar a Google
+           driver.get("https://www.google.com");
+
+           // Introducir la consulta de búsqueda
+           WebElement searchBox = driver.findElement(By.name("q"));
+           searchBox.sendKeys("tu consulta de búsqueda");
+
+           // Realizar la búsqueda
+           searchBox.submit(); // o realizar el clic en el botón de búsqueda
+
+           // Extraer los resultados
+           List<WebElement> results = driver.findElements(By.cssSelector("h3.h30r4e")); // o el selector CSS adecuado
+           for (WebElement result : results) {
+               System.out.println(result.getText()); // o extraer el enlace, descripción, etc.
+           }
+
+           // Cerrar el navegador
+           driver.quit();
+       }
+   }
